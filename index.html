@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebook Platform - Developer Requirement Deck & Prototype</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        dark: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        .reader-sepia {
+            background-color: #fbf0d9 !important;
+            color: #5f4b32 !important;
+        }
+        .reader-dark {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+        }
+        .reader-light {
+            background-color: #ffffff !important;
+            color: #1a1a1a !important;
+        }
+    </style>
+</head>
+<body class="bg-dark-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Top Master Control Bar -->
+    <header class="bg-dark-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <div class="bg-brand-500 text-dark-950 p-2 rounded-lg font-bold">
+                <i class="fa-solid fa-book-open text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-heading text-lg font-bold text-white tracking-wide">Ebook Platform Spec</h1>
+                <p class="text-xs text-slate-400">Developer Requirements & Interactive UI Prototypes</p>
+            </div>
+        </div>
+
+        <!-- Slide Navigator Buttons -->
+        <div class="flex items-center space-x-1 bg-dark-800 p-1 rounded-xl border border-slate-700/60 overflow-x-auto max-w-2xl">
+            <button onclick="switchSlide(1)" id="nav-btn-1" class="nav-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-brand-500 text-dark-950">1. Library</button>
+            <button onclick="switchSlide(2)" id="nav-btn-2" class="nav-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white">2. Book Detail</button>
+            <button onclick="switchSlide(3)" id="nav-btn-3" class="nav-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white">3. Author Index</button>
+            <button onclick="switchSlide(4)" id="nav-btn-4" class="nav-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white">4. Reader UI</button>
+            <button onclick="switchSlide(5)" id="nav-btn-5" class="nav-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white">5. About & Legal</button>
+            <button onclick="switchSlide(6)" id="nav-btn-6" class="nav-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white">6. Tech Guidelines</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <button id="toggle-mode-btn" onclick="toggleViewMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-medium text-slate-200 transition">
+                <i class="fa-solid fa-desktop mr-1.5 text-brand-500"></i><span id="mode-label">Toggle Full Interactive Screen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Slide Area -->
+    <main class="flex-grow flex flex-col p-6 max-w-[1600px] w-full mx-auto">
+
+        <!-- SLIDE 1: LIBRARY PAGE -->
+        <section id="slide-1" class="slide-pane flex flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Requirements Panel -->
+                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Slide 01 Specs</span>
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-image mr-1"></i> Based on Sketch p1</span>
+                        </div>
+                        <h2 class="text-2xl font-heading font-bold text-white mb-2">Library Page (Catalog & Browse)</h2>
+                        <p class="text-slate-400 text-sm mb-6">Netflix-style horizontal rows and grid browsing with instant filters and hover preview popovers.</p>
+
+                        <div class="space-y-4 text-sm text-slate-300">
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Persistent Top Banner & Announcement:</strong>
+                                    Project logo stays fixed on all pages. Homepage features top "Contact & Announcements" banner sector (Page 1 only).
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Left Filter Bar:</strong>
+                                    Search input, Category/Genre checkboxes, Publication Years slider, and Language/Translated toggles.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Top Toolbar Controls:</strong>
+                                    Icon View (Grid) vs. List View toggle, alongside Sort by (Popularity, Title, Date).
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Hover Preview Popover:</strong>
+                                    Hovering over any cover triggers a floating metadata card showing rating, summary snippet, and "View Details" button.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+                        <span>Dev Scope: Catalog API, State Management</span>
+                        <span>UI Prototype Live Below &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Interactive UI Prototype Canvas -->
+                <div class="lg:col-span-2 bg-dark-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col min-h-[600px] shadow-2xl">
+                    <!-- Prototype Header -->
+                    <div class="bg-slate-950 border-b border-slate-800 px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                            <span class="font-mono ml-2 text-slate-300">https://ebook-app.com/library</span>
+                        </div>
+                        <span class="bg-slate-800 px-2 py-0.5 rounded text-[10px] text-slate-300 font-mono">Interactive Prototype</span>
+                    </div>
+
+                    <!-- Prototype Top Banner (Sketched Requirement) -->
+                    <div class="bg-gradient-to-r from-brand-900/60 to-slate-900 border-b border-brand-500/20 px-6 py-2.5 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2 text-brand-100">
+                            <i class="fa-solid fa-bullhorn text-brand-500"></i>
+                            <span><strong>Announcements:</strong> New 2026 Translated Classic Literature collection released!</span>
+                        </div>
+                        <a href="#" class="text-brand-500 hover:underline text-[11px] font-semibold">Contact Us &rarr;</a>
+                    </div>
+
+                    <!-- Prototype Application Screen -->
+                    <div class="flex-grow flex flex-col md:flex-row overflow-hidden">
+                        <!-- Left Filter Sidebar -->
+                        <aside class="w-full md:w-64 bg-slate-900/80 border-r border-slate-800 p-4 text-xs space-y-5 flex-shrink-0">
+                            <div>
+                                <label class="text-slate-400 font-bold block mb-2 uppercase tracking-wider text-[10px]">Search Catalog</label>
+                                <div class="relative">
+                                    <input type="text" placeholder="Search title, author..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-2 text-slate-200 focus:outline-none focus:border-brand-500 text-xs">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="text-slate-400 font-bold block mb-2 uppercase tracking-wider text-[10px]">Categories</label>
+                                <div class="space-y-1.5 text-slate-300">
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-white"><input type="checkbox" checked class="rounded bg-slate-950 border-slate-800 text-brand-500 focus:ring-0"> Classic Fiction</label>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-white"><input type="checkbox" checked class="rounded bg-slate-950 border-slate-800 text-brand-500 focus:ring-0"> Philosophy</label>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-white"><input type="checkbox" class="rounded bg-slate-950 border-slate-800 text-brand-500 focus:ring-0"> Science & Tech</label>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-white"><input type="checkbox" class="rounded bg-slate-950 border-slate-800 text-brand-500 focus:ring-0"> History & Bio</label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="text-slate-400 font-bold block mb-2 uppercase tracking-wider text-[10px]">Publication Era</label>
+                                <select class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:outline-none text-xs">
+                                    <option>All Years</option>
+                                    <option>2020 - Present</option>
+                                    <option>2000 - 2019</option>
+                                    <option>Classic (Pre-2000)</option>
+                                </select>
+                            </div>
+                        </aside>
+
+                        <!-- Main Catalog Grid Area -->
+                        <main class="flex-grow p-5 bg-dark-950 flex flex-col overflow-y-auto custom-scrollbar">
+                            <!-- Top Sorting & View Toggles -->
+                            <div class="flex items-center justify-between mb-6 border-b border-slate-800/80 pb-3">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs text-slate-400 font-medium">View Mode:</span>
+                                    <div class="bg-slate-900 border border-slate-800 p-1 rounded-lg flex space-x-1">
+                                        <button id="view-grid-btn" onclick="setLibraryView('grid')" class="p-1.5 px-2.5 rounded text-xs bg-brand-500 text-dark-950 font-bold"><i class="fa-solid fa-grip mr-1"></i> Grid</button>
+                                        <button id="view-list-btn" onclick="setLibraryView('list')" class="p-1.5 px-2.5 rounded text-xs text-slate-400 hover:text-white"><i class="fa-solid fa-list mr-1"></i> List</button>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center space-x-2 text-xs">
+                                    <span class="text-slate-400">Sort By:</span>
+                                    <select class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-200 font-medium focus:outline-none">
+                                        <option>Most Popular</option>
+                                        <option>Newest Release</option>
+                                        <option>Alphabetical (A-Z)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Books Section - Horizontal Carousel / Grid Mode -->
+                            <div id="library-content-container" class="space-y-6">
+                                <div>
+                                    <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-brand-500"></span> Trending Now (Netflix Carousel View)
+                                    </h3>
+                                    
+                                    <!-- Book Grid with Hover Cards -->
+                                    <div id="book-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                        <!-- Book Item 1 -->
+                                        <div class="group relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-brand-500/50 transition duration-300">
+                                            <div class="h-48 bg-gradient-to-br from-blue-900 to-indigo-950 relative p-3 flex flex-col justify-end">
+                                                <div class="absolute top-2 right-2 bg-slate-950/80 px-2 py-0.5 rounded text-[10px] text-amber-400 font-bold">
+                                                    <i class="fa-solid fa-star"></i> 4.9
+                                                </div>
+                                                <span class="text-xs uppercase tracking-wider text-blue-300 font-semibold">Classic</span>
+                                                <h4 class="font-heading font-bold text-white text-sm line-clamp-1">The Great Gatsby</h4>
+                                            </div>
+                                            <div class="p-3 text-xs">
+                                                <p class="text-slate-400 text-[11px]">F. Scott Fitzgerald</p>
+                                                <p class="text-slate-500 text-[10px] mt-1">1925 • Fiction</p>
+                                            </div>
+
+                                            <!-- Hover Meta Card Popover -->
+                                            <div class="absolute inset-0 bg-slate-900/95 p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-brand-500 rounded-xl">
+                                                <div>
+                                                    <h5 class="font-bold text-white text-xs mb-1">The Great Gatsby</h5>
+                                                    <span class="text-[10px] text-brand-400 block mb-2">By F. Scott Fitzgerald</span>
+                                                    <p class="text-[11px] text-slate-300 line-clamp-4 leading-relaxed">A story of ambition, obsession, and the tragic pursuit of the American Dream during the Roaring Twenties.</p>
+                                                </div>
+                                                <button onclick="switchSlide(2)" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold py-1.5 rounded text-xs transition">View Details &rarr;</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Book Item 2 -->
+                                        <div class="group relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-brand-500/50 transition duration-300">
+                                            <div class="h-48 bg-gradient-to-br from-emerald-900 to-teal-950 relative p-3 flex flex-col justify-end">
+                                                <div class="absolute top-2 right-2 bg-slate-950/80 px-2 py-0.5 rounded text-[10px] text-amber-400 font-bold">
+                                                    <i class="fa-solid fa-star"></i> 4.8
+                                                </div>
+                                                <span class="text-xs uppercase tracking-wider text-emerald-300 font-semibold">Sci-Fi</span>
+                                                <h4 class="font-heading font-bold text-white text-sm line-clamp-1">Dune Chronicles</h4>
+                                            </div>
+                                            <div class="p-3 text-xs">
+                                                <p class="text-slate-400 text-[11px]">Frank Herbert</p>
+                                                <p class="text-slate-500 text-[10px] mt-1">1965 • Science Fiction</p>
+                                            </div>
+                                            <!-- Hover Meta -->
+                                            <div class="absolute inset-0 bg-slate-900/95 p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-brand-500 rounded-xl">
+                                                <div>
+                                                    <h5 class="font-bold text-white text-xs mb-1">Dune Chronicles</h5>
+                                                    <span class="text-[10px] text-brand-400 block mb-2">By Frank Herbert</span>
+                                                    <p class="text-[11px] text-slate-300 line-clamp-4 leading-relaxed">Set on the desert planet Arrakis, Dune is the story of Paul Atreides and political intrigue over the universe's most valuable substance.</p>
+                                                </div>
+                                                <button onclick="switchSlide(2)" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold py-1.5 rounded text-xs transition">View Details &rarr;</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Book Item 3 -->
+                                        <div class="group relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-brand-500/50 transition duration-300">
+                                            <div class="h-48 bg-gradient-to-br from-purple-900 to-slate-900 relative p-3 flex flex-col justify-end">
+                                                <div class="absolute top-2 right-2 bg-slate-950/80 px-2 py-0.5 rounded text-[10px] text-amber-400 font-bold">
+                                                    <i class="fa-solid fa-star"></i> 4.7
+                                                </div>
+                                                <span class="text-xs uppercase tracking-wider text-purple-300 font-semibold">Philosophy</span>
+                                                <h4 class="font-heading font-bold text-white text-sm line-clamp-1">Beyond Good and Evil</h4>
+                                            </div>
+                                            <div class="p-3 text-xs">
+                                                <p class="text-slate-400 text-[11px]">Friedrich Nietzsche</p>
+                                                <p class="text-slate-500 text-[10px] mt-1">1886 • Philosophy</p>
+                                            </div>
+                                            <!-- Hover Meta -->
+                                            <div class="absolute inset-0 bg-slate-900/95 p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-brand-500 rounded-xl">
+                                                <div>
+                                                    <h5 class="font-bold text-white text-xs mb-1">Beyond Good and Evil</h5>
+                                                    <span class="text-[10px] text-brand-400 block mb-2">By Friedrich Nietzsche</span>
+                                                    <p class="text-[11px] text-slate-300 line-clamp-4 leading-relaxed">A dramatic critique of traditional morality and philosophical dogma in search of future free spirits.</p>
+                                                </div>
+                                                <button onclick="switchSlide(2)" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold py-1.5 rounded text-xs transition">View Details &rarr;</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Book Item 4 -->
+                                        <div class="group relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-brand-500/50 transition duration-300">
+                                            <div class="h-48 bg-gradient-to-br from-amber-900 to-red-950 relative p-3 flex flex-col justify-end">
+                                                <div class="absolute top-2 right-2 bg-slate-950/80 px-2 py-0.5 rounded text-[10px] text-amber-400 font-bold">
+                                                    <i class="fa-solid fa-star"></i> 4.9
+                                                </div>
+                                                <span class="text-xs uppercase tracking-wider text-amber-300 font-semibold">Dystopian</span>
+                                                <h4 class="font-heading font-bold text-white text-sm line-clamp-1">1984</h4>
+                                            </div>
+                                            <div class="p-3 text-xs">
+                                                <p class="text-slate-400 text-[11px]">George Orwell</p>
+                                                <p class="text-slate-500 text-[10px] mt-1">1949 • Dystopian</p>
+                                            </div>
+                                            <!-- Hover Meta -->
+                                            <div class="absolute inset-0 bg-slate-900/95 p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-brand-500 rounded-xl">
+                                                <div>
+                                                    <h5 class="font-bold text-white text-xs mb-1">1984</h5>
+                                                    <span class="text-[10px] text-brand-400 block mb-2">By George Orwell</span>
+                                                    <p class="text-[11px] text-slate-300 line-clamp-4 leading-relaxed">A startling political satire depicting a totalitarian world governed by Big Brother and omnipresent surveillance.</p>
+                                                </div>
+                                                <button onclick="switchSlide(2)" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold py-1.5 rounded text-xs transition">View Details &rarr;</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: BOOK DETAIL PAGE -->
+        <section id="slide-2" class="slide-pane hidden flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Requirements Panel -->
+                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Slide 02 Specs</span>
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-image mr-1"></i> Based on Sketch p1</span>
+                        </div>
+                        <h2 class="text-2xl font-heading font-bold text-white mb-2">Book Detail Page</h2>
+                        <p class="text-slate-400 text-sm mb-6">Hero section featuring book cover artwork, primary reading launch action, and structured eBook metadata grid.</p>
+
+                        <div class="space-y-4 text-sm text-slate-300">
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Hero Split Layout:</strong>
+                                    Book cover graphic on the left column; Book Title, Author link, and synopsis on the right column.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Primary Read CTA Button:</strong>
+                                    Prominent "Read Now" button immediately launching the reader module for this specific book.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">"About This Ebook" Data Table:</strong>
+                                    Structured metadata matrix listing Author, Category, Published Year, Language, Publisher, and ISBN.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+                        <span>API Route: /api/books/:id</span>
+                        <span>Click "Read Now" to test Reader &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Interactive UI Prototype Canvas -->
+                <div class="lg:col-span-2 bg-dark-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-2xl p-6">
+                    <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-8">
+                        <!-- Left Cover -->
+                        <div class="w-full md:w-56 flex-shrink-0">
+                            <div class="h-72 bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 rounded-xl p-5 border border-slate-700 shadow-xl flex flex-col justify-between">
+                                <span class="bg-brand-500/20 text-brand-300 border border-brand-500/30 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded w-max">eBook Classic</span>
+                                <div>
+                                    <h3 class="font-serif font-bold text-white text-xl leading-tight">The Great Gatsby</h3>
+                                    <p class="text-xs text-slate-300 mt-1">F. Scott Fitzgerald</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Info & Action -->
+                        <div class="flex-grow flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="text-amber-400 text-sm"><i class="fa-solid fa-star"></i> 4.9 / 5.0</span>
+                                    <span class="text-slate-600">•</span>
+                                    <span class="text-xs text-slate-400">Published 1925</span>
+                                </div>
+                                <h1 class="text-3xl font-heading font-bold text-white mb-3">The Great Gatsby</h1>
+                                <p class="text-slate-300 text-sm leading-relaxed mb-6">Set in Jazz Age New York, the novel tells the tragic story of Jay Gatsby, a self-made millionaire, and his pursuit of Daisy Buchanan, a wealthy young woman he loved in his youth.</p>
+                                
+                                <button onclick="switchSlide(4)" class="bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold px-8 py-3 rounded-xl transition flex items-center gap-3 text-sm shadow-lg shadow-brand-500/20">
+                                    <i class="fa-solid fa-book-open"></i> Read eBook Now
+                                </button>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-slate-800">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">About This Ebook Specs</h4>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+                                    <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">AUTHOR</span>
+                                        <span class="text-white font-medium">F. Scott Fitzgerald</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">CATEGORY</span>
+                                        <span class="text-white font-medium">Classic / Fiction</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">PUBLISHED YEAR</span>
+                                        <span class="text-white font-medium">1925</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">LANGUAGE</span>
+                                        <span class="text-white font-medium">English</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">PUBLISHER</span>
+                                        <span class="text-white font-medium">Scribner</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">ISBN</span>
+                                        <span class="text-white font-medium">978-0743273565</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: AUTHOR INDEX PAGE -->
+        <section id="slide-3" class="slide-pane hidden flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Requirements Panel -->
+                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Slide 03 Specs</span>
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-image mr-1"></i> Based on Sketch p1</span>
+                        </div>
+                        <h2 class="text-2xl font-heading font-bold text-white mb-2">Author Index Page</h2>
+                        <p class="text-slate-400 text-sm mb-6">Alphabetically classified author catalog with interactive hover popovers and author bibliographies.</p>
+
+                        <div class="space-y-4 text-sm text-slate-300">
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Alphabet Navigation Bar:</strong>
+                                    A–Z quick jump header bar allowing users to filter authors instantly by starting letter.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Author Hover Popover:</strong>
+                                    Hovering over an author entry pops up details including profile photo, bio, birth/death years, and external Wikipedia link.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div>
+                                    <strong class="text-white block">Bottom Bibliography Grid:</strong>
+                                    Selecting an author renders a filtered list of all their books available in the ebook store at the bottom.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+                        <span>Database Query: author_id &rarr; books</span>
+                        <span>Test A-Z filters on right &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Interactive UI Prototype Canvas -->
+                <div class="lg:col-span-2 bg-dark-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col p-6 shadow-2xl">
+                    <!-- A-Z Navigation Header -->
+                    <div class="flex flex-wrap gap-1 bg-slate-950 p-3 rounded-xl border border-slate-800 mb-6 justify-center text-xs">
+                        <button class="px-2 py-1 bg-brand-500 text-dark-950 font-bold rounded">ALL</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">A</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">B</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">C</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">D</button>
+                        <button class="px-2 py-1 text-brand-400 font-bold bg-slate-800 rounded">F</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">G</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">H</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">N</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">O</button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded">Z</button>
+                    </div>
+
+                    <!-- Authors List with Hover Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <!-- Author 1 Card -->
+                        <div class="group relative bg-slate-950 p-4 rounded-xl border border-slate-800 hover:border-brand-500 transition flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-brand-400 font-bold text-sm">
+                                    FF
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">F. Scott Fitzgerald</h4>
+                                    <span class="text-xs text-slate-400">1896 – 1940 • American Novelist</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-brand-500 font-medium">3 Books &rarr;</span>
+
+                            <!-- Hover Popover Preview -->
+                            <div class="absolute left-0 top-full mt-2 w-80 bg-slate-900 border border-brand-500 p-4 rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition duration-200 pointer-events-none group-hover:pointer-events-auto z-20">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div class="w-12 h-12 rounded-full bg-blue-900 flex items-center justify-center font-bold text-white">FF</div>
+                                    <div>
+                                        <h5 class="font-bold text-white text-sm">F. Scott Fitzgerald</h5>
+                                        <a href="https://wikipedia.org" target="_blank" class="text-[10px] text-brand-400 hover:underline"><i class="fa-solid fa-arrow-up-right-from-square"></i> Wikipedia Profile</a>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed mb-2">Francis Scott Key Fitzgerald was an American novelist, essayist, and short story writer widely known for his depictions of the Jazz Age.</p>
+                                <span class="text-[10px] text-slate-400 block font-mono">Born: Sept 24, 1896 • St. Paul, MN</span>
+                            </div>
+                        </div>
+
+                        <!-- Author 2 Card -->
+                        <div class="group relative bg-slate-950 p-4 rounded-xl border border-slate-800 hover:border-brand-500 transition flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold text-sm">
+                                    FH
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Frank Herbert</h4>
+                                    <span class="text-xs text-slate-400">1920 – 1986 • Sci-Fi Author</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-brand-500 font-medium">6 Books &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Author's Book List Bottom Section (As Sketched) -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Selected Author Bibliography: F. Scott Fitzgerald</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                                <span class="font-bold text-white block">The Great Gatsby</span>
+                                <span class="text-[10px] text-slate-400">1925 • Classic</span>
+                            </div>
+                            <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                                <span class="font-bold text-white block">Tender Is the Night</span>
+                                <span class="text-[10px] text-slate-400">1934 • Novel</span>
+                            </div>
+                            <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                                <span class="font-bold text-white block">This Side of Paradise</span>
+                                <span class="text-[10px] text-slate-400">1920 • Fiction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: INTERACTIVE READER PAGE -->
+        <section id="slide-4" class="slide-pane hidden flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Requirements Panel -->
+                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Slide 04 Specs</span>
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-image mr-1"></i> Based on Sketch p2</span>
+                        </div>
+                        <h2 class="text-2xl font-heading font-bold text-white mb-2">Interactive Reader Page</h2>
+                        <p class="text-slate-400 text-sm mb-6">eBook reading canvas with top control toolbar, theme settings, font sizing, and bottom page navigation.</p>
+
+                        <div class="space-y-3 text-xs text-slate-300">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-sliders text-brand-500 mt-0.5"></i>
+                                <div><strong class="text-white">Top Bar Left Controls:</strong> TOC Drawer button, Bookmark panel hover, and inline search input.</div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-font text-brand-500 mt-0.5"></i>
+                                <div><strong class="text-white">Top Bar Right Controls:</strong> Font size controls (<code class="bg-slate-800 px-1">A-</code> / <code class="bg-slate-800 px-1">A+</code>), Theme switcher (Night, Sepia, Light), and Gearbox settings pane.</div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-book-open text-brand-500 mt-0.5"></i>
+                                <div><strong class="text-white">Main Reading Area:</strong> Single page or responsive 2-column spread based on viewport orientation.</div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-chart-line text-brand-500 mt-0.5"></i>
+                                <div><strong class="text-white">Bottom Navigation Bar:</strong> Interactive progress bar indicator paired with Prev/Next page action buttons.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+                        <span>State: LocalStorage persist</span>
+                        <span>Try controls on right &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Reader UI Prototype Canvas -->
+                <div class="lg:col-span-2 bg-dark-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-2xl min-h-[620px]">
+                    <!-- Reader Top Toolbar (Sketched Requirement) -->
+                    <div class="bg-slate-900 border-b border-slate-800 p-3 flex items-center justify-between text-xs">
+                        <!-- Left Tools -->
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleTOC()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-ul text-brand-500"></i> TOC
+                            </button>
+                            <button class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium flex items-center gap-1.5">
+                                <i class="fa-solid fa-bookmark text-amber-500"></i> Bookmark
+                            </button>
+                            <div class="hidden sm:flex items-center bg-slate-950 rounded px-2 py-1 border border-slate-800">
+                                <input type="text" placeholder="Search in book..." class="bg-transparent border-none text-xs text-slate-200 focus:outline-none w-28">
+                                <i class="fa-solid fa-magnifying-glass text-slate-500"></i>
+                            </div>
+                        </div>
+
+                        <!-- Right Settings Tools -->
+                        <div class="flex items-center space-x-2">
+                            <!-- Font Sizing -->
+                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded p-0.5">
+                                <button onclick="changeFontSize(-1)" class="px-2 py-1 text-slate-300 hover:text-white font-bold">A-</button>
+                                <button onclick="changeFontSize(1)" class="px-2 py-1 text-slate-300 hover:text-white font-bold">A+</button>
+                            </div>
+
+                            <!-- Themes -->
+                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded p-1 space-x-1">
+                                <button onclick="setTheme('light')" class="w-5 h-5 rounded-full bg-white border border-slate-400" title="Light Theme"></button>
+                                <button onclick="setTheme('sepia')" class="w-5 h-5 rounded-full bg-[#fbf0d9] border border-amber-600" title="Sepia Theme"></button>
+                                <button onclick="setTheme('dark')" class="w-5 h-5 rounded-full bg-slate-900 border border-slate-600" title="Night Mode"></button>
+                            </div>
+
+                            <button onclick="toggleSpread()" id="spread-btn" class="px-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded font-medium">
+                                <i class="fa-solid fa-columns"></i> 2-Col
+                            </button>
+
+                            <button class="p-1.5 text-slate-400 hover:text-white">
+                                <i class="fa-solid fa-gear text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reader Main Area (With TOC Drawer Pane) -->
+                    <div class="flex-grow relative flex overflow-hidden">
+                        <!-- TOC Drawer Overlay -->
+                        <div id="toc-drawer" class="absolute left-0 top-0 bottom-0 w-64 bg-slate-900 border-r border-slate-800 p-4 z-20 transform -translate-x-full transition-transform duration-300 text-xs">
+                            <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[10px] text-brand-500">Table of Contents</h4>
+                            <ul class="space-y-2 text-slate-300">
+                                <li class="hover:text-white cursor-pointer font-bold text-brand-400">Chapter I: In My Younger Years</li>
+                                <li class="hover:text-white cursor-pointer">Chapter II: The Valley of Ashes</li>
+                                <li class="hover:text-white cursor-pointer">Chapter III: Gatsby's Mansion Party</li>
+                                <li class="hover:text-white cursor-pointer">Chapter IV: Lunch in New York</li>
+                            </ul>
+                        </div>
+
+                        <!-- Main Reading Canvas Text -->
+                        <div id="reader-canvas" class="flex-grow p-8 reader-dark font-serif text-slate-200 transition-all duration-300 overflow-y-auto custom-scrollbar flex items-center justify-center">
+                            <div id="reader-text-container" class="max-w-2xl text-base leading-relaxed space-y-4">
+                                <h2 class="font-heading text-2xl font-bold mb-4 text-center">Chapter I</h2>
+                                <p id="reader-paragraph-1">In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since.</p>
+                                <p id="reader-paragraph-2">“Whenever you feel like criticizing any one,” he told me, “just remember that all the people in this world haven’t had the advantages that you’ve had.”</p>
+                                <p id="reader-paragraph-3">He didn’t say any more, but we’ve always been unusually communicative in a reserved way, and I understood that he meant a great deal more than that.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reader Bottom Navigation Bar (Sketched Requirement) -->
+                    <div class="bg-slate-900 border-t border-slate-800 px-6 py-3 flex items-center justify-between text-xs">
+                        <button class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-semibold flex items-center gap-1">
+                            &larr; Prev Page
+                        </button>
+
+                        <div class="flex flex-col items-center flex-grow max-w-xs mx-4">
+                            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800 mb-1">
+                                <div class="bg-brand-500 h-full w-[35%]"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">Page 35 of 180 (35%)</span>
+                        </div>
+
+                        <button class="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold rounded flex items-center gap-1">
+                            Next Page &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: ABOUT US & LEGAL PAGE -->
+        <section id="slide-5" class="slide-pane hidden flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Requirements Panel -->
+                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Slide 05 Specs</span>
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-image mr-1"></i> Based on Sketch p2</span>
+                        </div>
+                        <h2 class="text-2xl font-heading font-bold text-white mb-2">About Us & Legal Page</h2>
+                        <p class="text-slate-400 text-sm mb-6">Comprehensive project background, contact channels, and statutory legal disclaimers.</p>
+
+                        <div class="space-y-4 text-sm text-slate-300">
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div><strong class="text-white block">Project Background:</strong> Executive mission statement and introduction to the eBook platform.</div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div><strong class="text-white block">Contact Info Section:</strong> Interactive support channels, contact form, and corporate communication details.</div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                                <div><strong class="text-white block">Legal Footer Sub-Sections:</strong> Consolidated Terms & Conditions, Copyright Protection, and Disclaimers.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+                        <span>Static Routing Specification</span>
+                        <span>View mockup right &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Interactive UI Prototype Canvas -->
+                <div class="lg:col-span-2 bg-dark-900 border border-slate-800 rounded-2xl overflow-hidden p-6 shadow-2xl flex flex-col justify-between space-y-6">
+                    <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
+                        <h3 class="text-lg font-bold text-white font-heading">Project Background & Introduction</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">Our mission is to create a seamless digital eBook reading experience that bridges classical literature with high-performance modern web technologies.</p>
+
+                        <div class="pt-4 border-t border-slate-800">
+                            <h4 class="text-sm font-bold text-white mb-2">Contact Information</h4>
+                            <p class="text-xs text-slate-400">Have questions regarding digital publishing or copyrights? Contact our developer support team at <span class="text-brand-400">support@ebook-platform.com</span>.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legal Sections Grid (As Sketched) -->
+                    <div class="bg-slate-950 p-6 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Legal Framework & Statements</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                <span class="font-bold text-white block mb-1">Terms & Conditions</span>
+                                <p class="text-[11px] text-slate-400">Rules governing user access, platform use, and account subscriptions.</p>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                <span class="font-bold text-white block mb-1">Copyright Statement</span>
+                                <p class="text-[11px] text-slate-400">Protected literary property and DRM compliance policies.</p>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                <span class="font-bold text-white block mb-1">Disclaimer</span>
+                                <p class="text-[11px] text-slate-400">Liability limits regarding external web links and author biographical sources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: TECHNICAL GUIDELINES -->
+        <section id="slide-6" class="slide-pane hidden flex-col gap-6">
+            <div class="bg-dark-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Slide 06 Technical Specs</span>
+                        <h2 class="text-2xl font-heading font-bold text-white mt-2">Developer Architecture Guidelines</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">Frontend Stack: React / Tailwind / HTML5 Canvas Reader</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                        <div class="text-brand-500 text-lg mb-2"><i class="fa-solid fa-link"></i></div>
+                        <h3 class="font-bold text-white">1. State & URL Synchronization</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Active search terms, applied category filters, and active view modes (Grid vs. List) must bind directly to URL query params (e.g. <code class="text-brand-400">?genre=fiction&view=grid</code>) for shareable deep links.</p>
+                    </div>
+
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                        <div class="text-brand-500 text-lg mb-2"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <h3 class="font-bold text-white">2. Responsive Breakpoints</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">The left library filter column must collapse into a mobile slide-out drawer below 768px. The e-reader canvas must switch automatically from 2-column spread to single-column vertical scroll on mobile viewports.</p>
+                    </div>
+
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                        <div class="text-brand-500 text-lg mb-2"><i class="fa-solid fa-bolt"></i></div>
+                        <h3 class="font-bold text-white">3. Image Lazy-Loading</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">All book cover images and author avatar thumbnails must utilize lazy loading and WebP formats to guarantee instant initial page loads during infinite scrolling.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Master Control Bar -->
+    <footer class="bg-dark-900 border-t border-slate-800 px-6 py-3 flex items-center justify-between text-xs text-slate-400">
+        <div>
+            <span>Ebook Platform Developer Deck • Based on Hand Sketch Drawings</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="prevSlide()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded font-medium">&larr; Previous Slide</button>
+            <span id="slide-counter" class="font-mono text-brand-400 font-bold">Slide 1 / 6</span>
+            <button onclick="nextSlide()" class="px-3 py-1 bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold rounded">Next Slide &rarr;</button>
+        </div>
+    </footer>
+
+    <!-- JavaScript Controller Logic -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+        let readerFontSize = 16;
+
+        function switchSlide(slideNum) {
+            currentSlide = slideNum;
+            document.querySelectorAll('.slide-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`slide-${slideNum}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('bg-brand-500', 'text-dark-950');
+                el.classList.add('text-slate-400');
+            });
+
+            const activeBtn = document.getElementById(`nav-btn-${slideNum}`);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-brand-500', 'text-dark-950');
+                activeBtn.classList.remove('text-slate-400');
+            }
+
+            document.getElementById('slide-counter').innerText = `Slide ${slideNum} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            if(currentSlide < totalSlides) switchSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if(currentSlide > 1) switchSlide(currentSlide - 1);
+        }
+
+        // Library View Mode Toggle
+        function setLibraryView(mode) {
+            const gridBtn = document.getElementById('view-grid-btn');
+            const listBtn = document.getElementById('view-list-btn');
+            const container = document.getElementById('book-grid');
+
+            if(mode === 'list') {
+                container.className = 'grid grid-cols-1 gap-3';
+                gridBtn.className = 'p-1.5 px-2.5 rounded text-xs text-slate-400 hover:text-white';
+                listBtn.className = 'p-1.5 px-2.5 rounded text-xs bg-brand-500 text-dark-950 font-bold';
+            } else {
+                container.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4';
+                gridBtn.className = 'p-1.5 px-2.5 rounded text-xs bg-brand-500 text-dark-950 font-bold';
+                listBtn.className = 'p-1.5 px-2.5 rounded text-xs text-slate-400 hover:text-white';
+            }
+        }
+
+        // Reader Interactive Controls
+        function toggleTOC() {
+            const drawer = document.getElementById('toc-drawer');
+            drawer.classList.toggle('-translate-x-full');
+        }
+
+        function changeFontSize(delta) {
+            readerFontSize += delta;
+            document.getElementById('reader-text-container').style.fontSize = `${readerFontSize}px`;
+        }
+
+        function setTheme(theme) {
+            const canvas = document.getElementById('reader-canvas');
+            canvas.className = `flex-grow p-8 font-serif transition-all duration-300 overflow-y-auto custom-scrollbar flex items-center justify-center reader-${theme}`;
+        }
+
+        function toggleSpread() {
+            const container = document.getElementById('reader-text-container');
+            container.classList.toggle('max-w-4xl');
+            container.classList.toggle('grid');
+            container.classList.toggle('grid-cols-2');
+            container.classList.toggle('gap-8');
+        }
+
+        function toggleViewMode() {
+            document.querySelector('main').classList.toggle('max-w-[1600px]');
+        }
+    </script>
+</body>
+</html>
