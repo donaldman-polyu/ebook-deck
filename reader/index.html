@@ -1,93 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foliate Reader</title>
+    <title>EPUB Reader</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sepia: {
+                            50: '#faf7f0',
+                            100: '#f4ecd8',
+                            800: '#433422',
+                            900: '#281e12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Import Local Foliate JS Web Component -->
+    <script type="module" src="./foliate-js/view.js"></script>
 
     <style>
         :root {
             --bg-color: #ffffff;
             --text-color: #333333;
-            --ui-bg: #f4f4f4;
-            --ui-border: #cccccc;
-            --active-item: #0066cc;
+            --ui-bg: #f8fafc;
+            --ui-border: #e2e8f0;
+            --active-item: #2563eb;
+            --highlight-bg: #fef08a;
         }
 
-        body.dark-mode {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --ui-bg: #1e1e1e;
-            --ui-border: #444444;
-            --active-item: #bb86fc;
+        .dark {
+            --bg-color: #0f172a;
+            --text-color: #f1f5f9;
+            --ui-bg: #1e293b;
+            --ui-border: #334155;
+            --active-item: #60a5fa;
+            --highlight-bg: #854d0e;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: system-ui, -apple-system, sans-serif;
-            overflow: hidden;
+        foliate-view {
+            width: 100%;
+            height: 100%;
+            display: block;
+            outline: none;
         }
 
-        /* Top Toolbar */
-        #toolbar {
-            display: flex;
-            gap: 8px;
-            padding: 8px 12px;
-            background: var(--ui-bg);
-            border-bottom: 1px solid var(--ui-border);
-            align-items: center;
-            flex-wrap: wrap;
-            z-index: 10;
-        }
-
-        button, input, select {
-            padding: 6px 10px;
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--ui-border);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        button:hover, select:hover {
-            opacity: 0.85;
-        }
-
-        #main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Loading Overlay & Empty Placeholder */
-        #loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            gap: 12px;
-            font-size: 15px;
-            color: var(--text-color);
+        .sidebar-transition {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .spinner {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border: 4px solid var(--ui-border);
             border-top: 4px solid var(--active-item);
             border-radius: 50%;
@@ -99,154 +75,209 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Sidebars */
-        .sidebar {
-            width: 320px;
-            background: var(--ui-bg);
-            border-right: 1px solid var(--ui-border);
-            display: none;
-            flex-direction: column;
-            padding: 10px;
-            overflow-y: auto;
-            z-index: 5;
+        mark {
+            background-color: var(--highlight-bg);
+            color: inherit;
+            padding: 0 2px;
+            border-radius: 2px;
         }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-
-        .sidebar li {
-            padding: 8px;
-            border-bottom: 1px solid var(--ui-border);
-            cursor: pointer;
-            font-size: 13px;
-            line-height: 1.4;
-            border-left: 3px solid transparent;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-
-        .sidebar li:hover {
-            background: var(--bg-color);
-        }
-
-        .sidebar li.active {
-            border-left-color: var(--active-item);
-            font-weight: bold;
-            background: var(--bg-color);
-            color: var(--active-item);
-        }
-
-        /* Reader Area */
-        foliate-view {
-            flex: 1;
-            height: 100%;
-            width: 100%;
-            display: block;
-        }
-
-        /* Bottom Footer */
-        #footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 8px 15px;
-            background: var(--ui-bg);
-            border-top: 1px solid var(--ui-border);
-            font-size: 13px;
-            z-index: 10;
-        }
-
-        #progress-slider {
-            flex: 1;
-            cursor: pointer;
-        }
-
-        #page-info {
-            white-space: nowrap;
-            font-size: 12px;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 3px;
         }
     </style>
 </head>
-<body>
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans antialiased overflow-hidden transition-colors duration-200">
 
-    <!-- CONTROL TOOLBAR -->
-    <div id="toolbar">
-        <input type="file" id="file-input" accept=".epub" />
+    <!-- TOP TOOLBAR -->
+    <header id="toolbar" class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur flex items-center justify-between px-3 sm:px-4 z-20 shrink-0">
         
-        <button id="btn-prev">⬅️ Prev</button>
-        <button id="btn-next">Next ➡️</button>
+        <!-- Left Group: File Loader, TOC & Search -->
+        <div class="flex items-center space-x-1 sm:space-x-2">
+            <label class="cursor-pointer flex items-center space-x-1.5 px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-md shadow-sm transition-colors shrink-0">
+                <i data-lucide="folder-open" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Open EPUB</span>
+                <input type="file" id="file-input" accept=".epub,.mobi,.azw3,.fb2,.cbz" class="hidden" />
+            </label>
 
-        <button id="btn-toggle-toc">📖 TOC</button>
+            <button id="btn-toggle-toc" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-1 text-xs font-medium" title="Table of Contents">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                <span class="hidden md:inline">TOC</span>
+            </button>
 
-        <!-- Layout Mode Control -->
-        <select id="select-flow">
-            <option value="paginated">Paginated</option>
-            <option value="scrolled">Scrolled Continuous</option>
-        </select>
-
-        <!-- Writing Direction Control -->
-        <select id="select-dir">
-            <option value="ltr">Horizontal (LTR)</option>
-            <option value="vertical">Vertical</option>
-        </select>
-
-        <!-- Font Controls -->
-        <button id="btn-font-dec">A-</button>
-        <span id="font-size-label">100%</span>
-        <button id="btn-font-inc">A+</button>
-
-        <!-- Theme Toggle -->
-        <button id="btn-theme">🌙 Night Mode</button>
-
-        <!-- Search Input -->
-        <input type="text" id="search-input" placeholder="Search book text..." />
-        <button id="btn-search">Search</button>
-    </div>
-
-    <!-- MAIN WORKSPACE -->
-    <div id="main-container">
-        <!-- Loading Overlay -->
-        <div id="loading-overlay">
-            <div id="loading-spinner" class="spinner" style="display: none;"></div>
-            <span id="loading-text">Please select an EPUB file or pass ?book=filename.epub in URL.</span>
+            <button id="btn-open-search" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-1 text-xs font-medium" title="Search Book">
+                <i data-lucide="search" class="w-4 h-4"></i>
+                <span class="hidden md:inline">Search</span>
+            </button>
         </div>
 
-        <!-- TOC Sidebar -->
-        <div id="toc-sidebar" class="sidebar">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong>Table of Contents</strong>
-                <button id="btn-close-toc" style="padding:2px 6px;">X</button>
+        <!-- Right Group: Font Size (Main Toolbar), Bookmarks & Gear Settings Popover -->
+        <div class="flex items-center space-x-1 sm:space-x-2">
+            
+            <!-- Font Size Scaling (Exposed directly on toolbar) -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 mr-1">
+                <button id="btn-font-dec" class="px-2 py-1 rounded bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors shadow-sm" title="Decrease Font Size">A-</button>
+                <span id="font-size-label" class="px-2 text-xs font-semibold text-slate-700 dark:text-slate-200 min-w-[3.25rem] text-center">100%</span>
+                <button id="btn-font-inc" class="px-2 py-1 rounded bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors shadow-sm" title="Increase Font Size">A+</button>
             </div>
-            <ul id="toc-list"></ul>
-        </div>
 
-        <!-- Search Results Sidebar -->
-        <div id="search-sidebar" class="sidebar">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong>Search Results</strong>
-                <button id="btn-close-search" style="padding:2px 6px;">X</button>
+            <!-- Bookmarks Trigger -->
+            <div class="relative">
+                <button id="btn-bookmark" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors" title="Bookmarks">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                </button>
+
+                <!-- Bookmarks Floating Overlay -->
+                <div id="bookmark-overlay" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-3 z-50 text-xs">
+                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-slate-200 dark:border-slate-700">
+                        <strong class="font-bold text-slate-700 dark:text-slate-200">Bookmarks</strong>
+                        <button id="btn-add-bookmark" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-[11px] font-medium transition-colors">+ Add Current</button>
+                    </div>
+                    <ul id="bookmark-list" class="space-y-1 max-h-64 overflow-y-auto">
+                        <li class="text-slate-400 italic text-center py-4">No bookmarks saved yet.</li>
+                    </ul>
+                </div>
             </div>
-            <ul id="search-results"></ul>
+
+            <!-- Gear Settings Popover -->
+            <div class="relative">
+                <button id="btn-settings" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors" title="Display & Typography Settings">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                </button>
+
+                <!-- Settings Popover Menu -->
+                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs space-y-4">
+                    <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center justify-between">
+                        <span>Display & Typography</span>
+                        <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Theme Selector -->
+                    <div>
+                        <label class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Theme</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-theme-light" class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 transition-colors font-medium">
+                                <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+                                <span>Day</span>
+                            </button>
+                            <button id="btn-theme-dark" class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 transition-colors font-medium">
+                                <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+                                <span>Night</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Font Family Override Selection -->
+                    <div>
+                        <label for="select-font-family" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Font Typography</label>
+                        <select id="select-font-family" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="publisher">Publisher Default</option>
+                            <option value="sans-serif">Sans-Serif (System UI)</option>
+                            <option value="serif">Serif (Georgia / Times)</option>
+                            <option value="monospace">Monospace (Code / Fixed)</option>
+                        </select>
+                    </div>
+
+                    <!-- Layout Mode (Flow) -->
+                    <div>
+                        <label for="select-flow" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Layout Mode</label>
+                        <select id="select-flow" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="paginated">Paginated</option>
+                            <option value="scrolled">Scrolled Continuous</option>
+                        </select>
+                    </div>
+
+                    <!-- Reading Direction -->
+                    <div>
+                        <label for="select-dir" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Reading Direction</label>
+                        <select id="select-dir" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="ltr">Horizontal (LTR)</option>
+                            <option value="vertical">Vertical</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div id="main-container" class="relative flex-1 flex overflow-hidden">
+
+        <!-- LOADING OVERLAY -->
+        <div id="loading-overlay" class="absolute inset-0 bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center z-40 gap-3 text-sm text-slate-600 dark:text-slate-300 p-4 text-center">
+            <div id="loading-spinner" class="spinner hidden"></div>
+            <span id="loading-text" class="font-medium">Please select an EPUB file to begin reading.</span>
         </div>
 
-        <!-- Ebook Render Component -->
-        <foliate-view id="view"></foliate-view>
+        <!-- TOC SIDEBAR -->
+        <aside id="toc-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <strong class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Table of Contents</strong>
+                <button id="btn-close-toc" class="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-3">
+                <ul id="toc-list" class="space-y-1 text-xs"></ul>
+            </div>
+        </aside>
+
+        <!-- SEARCH SIDEBAR -->
+        <aside id="search-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <strong id="search-count-header" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Search Results</strong>
+                <button id="btn-close-search" class="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="p-3 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex gap-2">
+                    <input type="text" id="search-input" placeholder="Search book text..." class="flex-1 px-3 py-1.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-md text-xs focus:ring-2 focus:ring-indigo-500 outline-none" />
+                    <button id="btn-search" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-md transition-colors">Search</button>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-3">
+                <ul id="search-results" class="space-y-2 text-xs"></ul>
+            </div>
+        </aside>
+
+        <!-- NAVIGATION ARROWS -->
+        <button id="btn-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2.5 bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full shadow-lg backdrop-blur transition-all border border-slate-200/50 dark:border-slate-700/50" title="Previous Page">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <button id="btn-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2.5 bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full shadow-lg backdrop-blur transition-all border border-slate-200/50 dark:border-slate-700/50" title="Next Page">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+
+        <!-- READER CANVAS VIEWPORT -->
+        <main class="flex-1 h-full w-full relative">
+            <foliate-view id="view" tabindex="0"></foliate-view>
+        </main>
     </div>
 
-    <!-- BOTTOM PAGINATION BAR -->
-    <div id="footer">
-        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" />
-        <span id="page-info">No book loaded</span>
-    </div>
+    <!-- FOOTER -->
+    <footer id="footer" class="h-10 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between gap-4 text-xs z-10 shrink-0">
+        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" class="flex-1 accent-indigo-600 cursor-pointer h-1 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+        <span id="page-info" class="text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap">No book loaded</span>
+    </footer>
 
+    <!-- LOGIC MODULE -->
     <script type="module">
-        import './foliate-js/view.js';
+        lucide.createIcons();
 
         const view = document.getElementById('view');
         const fileInput = document.getElementById('file-input');
-        
         const loadingOverlay = document.getElementById('loading-overlay');
         const loadingSpinner = document.getElementById('loading-spinner');
         const loadingText = document.getElementById('loading-text');
@@ -255,38 +286,58 @@
         const searchSidebar = document.getElementById('search-sidebar');
         const tocList = document.getElementById('toc-list');
         const resultsList = document.getElementById('search-results');
+        const searchCountHeader = document.getElementById('search-count-header');
 
         const selectFlow = document.getElementById('select-flow');
         const selectDir = document.getElementById('select-dir');
+        const selectFontFamily = document.getElementById('select-font-family');
         const progressSlider = document.getElementById('progress-slider');
         const pageInfo = document.getElementById('page-info');
 
-        let currentBook = null;
+        const btnBookmark = document.getElementById('btn-bookmark');
+        const bookmarkOverlay = document.getElementById('bookmark-overlay');
+        const btnAddBookmark = document.getElementById('btn-add-bookmark');
+        const bookmarkList = document.getElementById('bookmark-list');
+
+        const btnSettings = document.getElementById('btn-settings');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const btnCloseSettings = document.getElementById('btn-close-settings');
+        const btnThemeLight = document.getElementById('btn-theme-light');
+        const btnThemeDark = document.getElementById('btn-theme-dark');
+
         let currentFontSize = 100;
         let isDarkMode = false;
+        let currentBookKey = null;
+        let currentLocation = null;
         const tocItemToElementMap = new Map();
 
         // -------------------------------------------------------------
-        // 1. FILE & URL LOADING WITH COVER / PAGE 1 AUTO-LOAD
+        // 1. INITIALIZATION & EPUB LOADING
         // -------------------------------------------------------------
         window.addEventListener('DOMContentLoaded', async () => {
+            await customElements.whenDefined('foliate-view');
+
             const urlParams = new URLSearchParams(window.location.search);
             const bookParam = urlParams.get('book');
 
             if (bookParam) {
-                const bookPath = `./books/${bookParam}`;
-                loadBookFromUrl(bookPath);
+                await openBookSource(`./books/${bookParam}`);
+            } else {
+                loadingSpinner.classList.add('hidden');
+                loadingText.textContent = "Please select an EPUB file using 'Open EPUB' to start reading.";
             }
         });
 
-        fileInput.addEventListener('change', (e) => {
+        fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if (file) loadBook(file);
+            if (file) {
+                await openBookSource(file);
+            }
         });
 
         function showLoading(msg) {
             loadingOverlay.style.display = 'flex';
-            loadingSpinner.style.display = 'block';
+            loadingSpinner.classList.remove('hidden');
             loadingText.textContent = msg || 'Loading book...';
         }
 
@@ -294,75 +345,47 @@
             loadingOverlay.style.display = 'none';
         }
 
-        async function loadBookFromUrl(url) {
-            showLoading(`Fetching ${url.split('/').pop()}...`);
+        async function openBookSource(source) {
+            showLoading(typeof source === 'string' ? `Fetching ${source.split('/').pop()}...` : 'Opening file...');
             try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const blob = await response.blob();
-                const file = new File([blob], url.split('/').pop(), { type: 'application/epub+zip' });
-                await loadBook(file);
-            } catch (err) {
-                console.error("URL Load Error:", err);
-                loadingSpinner.style.display = 'none';
-                loadingText.textContent = "Could not load EPUB file from URL. Check if file exists in ./books/ folder.";
-            }
-        }
+                await view.open(source);
 
-        async function loadBook(fileOrBlob) {
-            showLoading('Parsing EPUB data...');
-            try {
-                await view.open(fileOrBlob);
-                currentBook = view.book;
+                const bookObj = view.book;
+                const bookTitle = bookObj?.metadata?.title 
+                    ? (typeof bookObj.metadata.title === 'string' ? bookObj.metadata.title : bookObj.metadata.title?.en)
+                    : (source.name || 'loaded_book');
 
-                // UPDATE WINDOW TITLE
-                updateWindowTitle();
+                currentBookKey = `foliate_saved_${bookTitle}`;
+                document.title = `${bookTitle} - EPUB Reader`;
 
-                // UPDATE LAYOUT CONFIG
                 updateLayoutConfig();
 
-                // BUILD TOC
-                if (currentBook && currentBook.toc) {
-                    renderTOC(currentBook.toc);
+                if (bookObj && bookObj.toc) {
+                    renderTOC(bookObj.toc);
                 }
 
                 applyStyles();
-                setupWheelListener();
 
-                // FORCE NAVIGATE TO START / COVER / PAGE 1
-                await view.goTo(0);
-
-                // HIDE LOADING OVERLAY WHEN RENDERED
-                hideLoading();
-                console.log("Book successfully loaded!");
-            } catch (err) {
-                console.error("Failed to load book:", err);
-                loadingSpinner.style.display = 'none';
-                loadingText.textContent = "Error rendering EPUB file.";
-            }
-        }
-
-        function updateWindowTitle() {
-            if (!currentBook) return;
-            
-            let title = 'EPUB Reader';
-            if (currentBook.metadata) {
-                if (typeof currentBook.metadata.title === 'string') {
-                    title = currentBook.metadata.title;
-                } else if (currentBook.metadata.title && currentBook.metadata.title.en) {
-                    title = currentBook.metadata.title.en;
+                const savedCfi = localStorage.getItem(`${currentBookKey}_last_read`);
+                if (savedCfi) {
+                    await view.goTo(savedCfi);
                 }
+
+                renderBookmarks();
+                attachIframeKeyListeners();
+                hideLoading();
+            } catch (err) {
+                console.error("Error opening book source:", err);
+                loadingSpinner.classList.add('hidden');
+                loadingText.textContent = "Could not open EPUB file. Please ensure local server is running and the file is valid.";
             }
-            
-            document.title = `${title} - Foliate Reader`;
         }
 
         // -------------------------------------------------------------
-        // 2. CONTINUOUS SCROLLING & HORIZONTAL/VERTICAL MODE
+        // 2. LAYOUT & TYPOGRAPHY STYLING
         // -------------------------------------------------------------
         function updateLayoutConfig() {
             if (!view) return;
-
             const flow = selectFlow.value;
             const dir = selectDir.value;
 
@@ -378,161 +401,38 @@
         selectFlow.addEventListener('change', updateLayoutConfig);
         selectDir.addEventListener('change', updateLayoutConfig);
 
-        // -------------------------------------------------------------
-        // 3. MOUSE WHEEL SCROLLING IN PAGINATED MODE
-        // -------------------------------------------------------------
-        let wheelDebounce = false;
-
-        function handleWheelScroll(e) {
-            if (selectFlow.value === 'paginated') {
-                if (wheelDebounce) return;
-                
-                e.preventDefault();
-                
-                wheelDebounce = true;
-                setTimeout(() => wheelDebounce = false, 200);
-
-                if (e.deltaY > 0 || e.deltaX > 0) {
-                    view.goRight();
-                } else if (e.deltaY < 0 || e.deltaX < 0) {
-                    view.goLeft();
-                }
-            }
-        }
-
-        function setupWheelListener() {
-            window.removeEventListener('wheel', handleWheelScroll);
-            window.addEventListener('wheel', handleWheelScroll, { passive: false });
-
-            if (view.renderer && view.renderer.shadowRoot) {
-                const iframe = view.renderer.shadowRoot.querySelector('iframe');
-                if (iframe && iframe.contentWindow) {
-                    iframe.contentWindow.removeEventListener('wheel', handleWheelScroll);
-                    iframe.contentWindow.addEventListener('wheel', handleWheelScroll, { passive: false });
-                }
-            }
-        }
-
-        view.addEventListener('load', () => setupWheelListener());
-
-        // -------------------------------------------------------------
-        // 4. NAVIGATION & TOC SYNCING
-        // -------------------------------------------------------------
-        document.getElementById('btn-prev').addEventListener('click', () => view.goLeft());
-        document.getElementById('btn-next').addEventListener('click', () => view.goRight());
-
-        window.addEventListener('keydown', (e) => {
-            if (document.activeElement.tagName === 'INPUT') return;
-
-            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-                e.preventDefault();
-                view.goLeft();
-            } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-                e.preventDefault();
-                view.goRight();
-            }
-        });
-
-        function renderTOC(tocItems) {
-            tocList.innerHTML = '';
-            tocItemToElementMap.clear();
-
-            if (!tocItems || tocItems.length === 0) {
-                tocList.innerHTML = '<li>No Table of Contents available.</li>';
-                return;
-            }
-
-            function appendTocNodes(nodes, container) {
-                nodes.forEach(node => {
-                    const li = document.createElement('li');
-                    li.textContent = node.label ? node.label.trim() : 'Chapter';
-                    tocItemToElementMap.set(node, li);
-
-                    li.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (node.href) view.goTo(node.href);
-                    });
-
-                    container.appendChild(li);
-
-                    if (node.subitems && node.subitems.length > 0) {
-                        const nestedUl = document.createElement('ul');
-                        nestedUl.style.paddingLeft = '12px';
-                        appendTocNodes(node.subitems, nestedUl);
-                        container.appendChild(nestedUl);
-                    }
-                });
-            }
-
-            appendTocNodes(tocItems, tocList);
-        }
-
-        function syncTOC(tocItem) {
-            if (!tocItem) return;
-            tocList.querySelectorAll('li.active').forEach(el => el.classList.remove('active'));
-
-            const activeLi = tocItemToElementMap.get(tocItem);
-            if (activeLi) {
-                activeLi.classList.add('active');
-                activeLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            }
-        }
-
-        document.getElementById('btn-toggle-toc').addEventListener('click', () => {
-            searchSidebar.style.display = 'none';
-            tocSidebar.style.display = tocSidebar.style.display === 'flex' ? 'none' : 'flex';
-        });
-        document.getElementById('btn-close-toc').addEventListener('click', () => tocSidebar.style.display = 'none');
-
-        // -------------------------------------------------------------
-        // 5. RELOCATE EVENTS & PAGINATION
-        // -------------------------------------------------------------
-        view.addEventListener('relocate', (e) => {
-            const { detail } = e;
-            const { fraction, location, total, tocItem } = detail;
-
-            if (tocItem) syncTOC(tocItem);
-
-            if (fraction !== undefined) progressSlider.value = fraction;
-
-            const current = location?.current ?? 0;
-            const totalPages = total ?? 0;
-            const pct = Math.round((fraction || 0) * 100);
-
-            if (totalPages > 0) {
-                pageInfo.textContent = `Page ${current} / ${totalPages} (${pct}%)`;
-            } else {
-                pageInfo.textContent = `${pct}%`;
-            }
-        });
-
-        progressSlider.addEventListener('change', (e) => {
-            const fraction = parseFloat(e.target.value);
-            if (view) view.goToFraction(fraction);
-        });
-
-        // -------------------------------------------------------------
-        // 6. FONT & NIGHT MODE
-        // -------------------------------------------------------------
         function applyStyles() {
             if (!view) return;
 
+            // Handle Font Typography Override
+            const chosenFont = selectFontFamily.value;
+            let fontFamilyCss = '';
+            if (chosenFont !== 'publisher') {
+                fontFamilyCss = `font-family: ${chosenFont}, sans-serif !important;`;
+            }
+
             const themeCSS = `
-                body {
+                body, p, div, span, h1, h2, h3, h4, h5, h6 {
                     font-size: ${currentFontSize}% !important;
-                    background-color: ${isDarkMode ? '#121212' : '#ffffff'} !important;
-                    color: ${isDarkMode ? '#e0e0e0' : '#333333'} !important;
+                    ${fontFamilyCss}
+                    background-color: ${isDarkMode ? '#0f172a' : '#ffffff'} !important;
+                    color: ${isDarkMode ? '#f1f5f9' : '#333333'} !important;
                 }
                 a {
-                    color: ${isDarkMode ? '#bb86fc' : '#0066cc'} !important;
+                    color: ${isDarkMode ? '#60a5fa' : '#2563eb'} !important;
+                }
+                ::selection {
+                    background: ${isDarkMode ? '#3b82f6' : '#bfdbfe'};
                 }
             `;
-
             if (view.renderer && view.renderer.setStyles) {
                 view.renderer.setStyles(themeCSS);
             }
         }
 
+        selectFontFamily.addEventListener('change', applyStyles);
+
+        // Font Size Controls (Exposed on Toolbar)
         document.getElementById('btn-font-inc').addEventListener('click', () => {
             currentFontSize += 10;
             document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
@@ -547,72 +447,338 @@
             }
         });
 
-        const themeBtn = document.getElementById('btn-theme');
-        themeBtn.addEventListener('click', () => {
-            isDarkMode = !isDarkMode;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            themeBtn.textContent = isDarkMode ? '☀️ Day Mode' : '🌙 Night Mode';
+        // Theme Switcher Controls
+        function setTheme(dark) {
+            isDarkMode = dark;
+            document.documentElement.classList.toggle('dark', isDarkMode);
+            
+            if (isDarkMode) {
+                btnThemeDark.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
+                btnThemeLight.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
+            } else {
+                btnThemeLight.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
+                btnThemeDark.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
+            }
+            
             applyStyles();
+        }
+
+        btnThemeLight.addEventListener('click', () => setTheme(false));
+        btnThemeDark.addEventListener('click', () => setTheme(true));
+        setTheme(false); // default light theme UI highlight
+
+        // Settings Popover Toggle
+        btnSettings.addEventListener('click', (e) => {
+            e.stopPropagation();
+            bookmarkOverlay.classList.add('hidden');
+            settingsOverlay.classList.toggle('hidden');
+        });
+
+        btnCloseSettings.addEventListener('click', () => {
+            settingsOverlay.classList.add('hidden');
         });
 
         // -------------------------------------------------------------
-        // 7. FULL-TEXT SEARCH
+        // 3. KEYBOARD & FLANK NAVIGATION
+        // -------------------------------------------------------------
+        document.getElementById('btn-prev').addEventListener('click', () => view.goLeft());
+        document.getElementById('btn-next').addEventListener('click', () => view.goRight());
+
+        function handleKeyDown(e) {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                view.goLeft();
+            } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                view.goRight();
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        function attachIframeKeyListeners() {
+            setTimeout(() => {
+                const iframes = view.shadowRoot ? view.shadowRoot.querySelectorAll('iframe') : view.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    try {
+                        iframe.contentWindow?.removeEventListener('keydown', handleKeyDown);
+                        iframe.contentWindow?.addEventListener('keydown', handleKeyDown);
+                    } catch (e) {}
+                });
+            }, 300);
+        }
+
+        // -------------------------------------------------------------
+        // 4. TOC & SIDEBARS
+        // -------------------------------------------------------------
+        function renderTOC(tocItems) {
+            tocList.innerHTML = '';
+            tocItemToElementMap.clear();
+
+            if (!tocItems || tocItems.length === 0) {
+                tocList.innerHTML = '<li class="text-slate-400 italic">No Table of Contents found.</li>';
+                return;
+            }
+
+            function appendTocNodes(nodes, container) {
+                nodes.forEach(node => {
+                    const li = document.createElement('li');
+                    li.className = 'py-1.5 px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-slate-700 dark:text-slate-300';
+                    li.textContent = node.label ? node.label.trim() : 'Chapter';
+                    tocItemToElementMap.set(node, li);
+
+                    li.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (node.href) view.goTo(node.href);
+                        if (window.innerWidth < 768) closeSidebars();
+                    });
+
+                    container.appendChild(li);
+
+                    if (node.subitems && node.subitems.length > 0) {
+                        const nestedUl = document.createElement('ul');
+                        nestedUl.className = 'pl-3 mt-1 space-y-1 border-l border-slate-200 dark:border-slate-800';
+                        appendTocNodes(node.subitems, nestedUl);
+                        container.appendChild(nestedUl);
+                    }
+                });
+            }
+
+            appendTocNodes(tocItems, tocList);
+        }
+
+        function syncTOC(tocItem) {
+            if (!tocItem) return;
+            tocList.querySelectorAll('li').forEach(el => el.classList.remove('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800'));
+
+            const activeLi = tocItemToElementMap.get(tocItem);
+            if (activeLi) {
+                activeLi.classList.add('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800');
+                activeLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        function closeSidebars() {
+            tocSidebar.classList.add('-translate-x-full');
+            searchSidebar.classList.add('-translate-x-full');
+        }
+
+        document.getElementById('btn-toggle-toc').addEventListener('click', () => {
+            searchSidebar.classList.add('-translate-x-full');
+            tocSidebar.classList.toggle('-translate-x-full');
+        });
+
+        document.getElementById('btn-open-search').addEventListener('click', () => {
+            tocSidebar.classList.add('-translate-x-full');
+            searchSidebar.classList.toggle('-translate-x-full');
+        });
+
+        document.getElementById('btn-close-toc').addEventListener('click', closeSidebars);
+        document.getElementById('btn-close-search').addEventListener('click', closeSidebars);
+
+        view.addEventListener('relocate', (e) => {
+            attachIframeKeyListeners();
+            const { detail } = e;
+            const { fraction, location, total, tocItem, cfi } = detail;
+
+            if (tocItem) syncTOC(tocItem);
+
+            if (fraction !== undefined) progressSlider.value = fraction;
+            const current = location?.current ?? 0;
+            const totalPages = total ?? 0;
+            const pct = Math.round((fraction || 0) * 100);
+
+            if (totalPages > 0) {
+                pageInfo.textContent = `Page ${current} / ${totalPages} (${pct}%)`;
+            } else {
+                pageInfo.textContent = `${pct}%`;
+            }
+
+            currentLocation = {
+                cfi,
+                chapterTitle: tocItem?.label || 'Current Section',
+                percentage: pct
+            };
+
+            if (cfi && currentBookKey) {
+                localStorage.setItem(`${currentBookKey}_last_read`, cfi);
+            }
+        });
+
+        progressSlider.addEventListener('change', (e) => {
+            const fraction = parseFloat(e.target.value);
+            if (view) view.goToFraction(fraction);
+        });
+
+        // -------------------------------------------------------------
+        // 5. BOOKMARKS OVERLAY & GLOBAL POPOVER CLOSE
+        // -------------------------------------------------------------
+        function getSavedBookmarks() {
+            if (!currentBookKey) return [];
+            return JSON.parse(localStorage.getItem(`${currentBookKey}_bookmarks`) || '[]');
+        }
+
+        function saveBookmarks(bookmarks) {
+            if (!currentBookKey) return;
+            localStorage.setItem(`${currentBookKey}_bookmarks`, JSON.stringify(bookmarks));
+        }
+
+        function renderBookmarks() {
+            bookmarkList.innerHTML = '';
+            const bookmarks = getSavedBookmarks();
+
+            if (bookmarks.length === 0) {
+                bookmarkList.innerHTML = '<li class="text-slate-400 italic text-center py-4">No bookmarks saved yet.</li>';
+                return;
+            }
+
+            bookmarks.forEach((bm, index) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors border-b border-slate-100 dark:border-slate-800';
+                const metaText = `${bm.percentage !== null ? bm.percentage + '% · ' : ''}${new Date(bm.timestamp).toLocaleDateString()}`;
+
+                li.innerHTML = `
+                    <div class="bookmark-info flex-1 min-w-0 mr-2">
+                        <p class="font-semibold text-slate-700 dark:text-slate-200 truncate">${bm.chapterTitle}</p>
+                        <p class="text-[10px] text-slate-400">${metaText}</p>
+                    </div>
+                    <button class="btn-remove-bm text-red-500 hover:text-red-700 p-1 text-sm">&times;</button>
+                `;
+
+                li.querySelector('.bookmark-info').addEventListener('click', () => {
+                    view.goTo(bm.cfi);
+                    bookmarkOverlay.classList.add('hidden');
+                });
+
+                li.querySelector('.btn-remove-bm').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const updated = getSavedBookmarks();
+                    updated.splice(index, 1);
+                    saveBookmarks(updated);
+                    renderBookmarks();
+                });
+
+                bookmarkList.appendChild(li);
+            });
+        }
+
+        btnBookmark.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!currentBookKey) {
+                alert('Please load an EPUB file first.');
+                return;
+            }
+            settingsOverlay.classList.add('hidden');
+            bookmarkOverlay.classList.toggle('hidden');
+        });
+
+        btnAddBookmark.addEventListener('click', () => {
+            if (!currentLocation || !currentLocation.cfi) return;
+            const bookmarks = getSavedBookmarks();
+            if (bookmarks.some(b => b.cfi === currentLocation.cfi)) return;
+
+            bookmarks.unshift({
+                cfi: currentLocation.cfi,
+                chapterTitle: currentLocation.chapterTitle,
+                percentage: currentLocation.percentage,
+                timestamp: Date.now()
+            });
+
+            saveBookmarks(bookmarks);
+            renderBookmarks();
+        });
+
+        // Close popovers on click outside
+        document.addEventListener('click', (e) => {
+            if (!bookmarkOverlay.contains(e.target) && !btnBookmark.contains(e.target)) {
+                bookmarkOverlay.classList.add('hidden');
+            }
+            if (!settingsOverlay.contains(e.target) && !btnSettings.contains(e.target)) {
+                settingsOverlay.classList.add('hidden');
+            }
+        });
+
+        // -------------------------------------------------------------
+        // 6. SEARCH ENGINE
         // -------------------------------------------------------------
         const searchInput = document.getElementById('search-input');
         const searchBtn = document.getElementById('btn-search');
 
-        searchBtn.addEventListener('click', async () => {
+        async function executeSearch() {
             const query = searchInput.value.trim();
-            if (!query || !currentBook) return;
+            if (!query) return;
 
-            tocSidebar.style.display = 'none';
-            resultsList.innerHTML = '<li>Searching book...</li>';
-            searchSidebar.style.display = 'flex';
+            if (!view.book) {
+                alert('Please load an EPUB file before searching.');
+                return;
+            }
+
+            tocSidebar.classList.add('-translate-x-full');
+            searchSidebar.classList.remove('-translate-x-full');
+            resultsList.innerHTML = '';
+            searchCountHeader.textContent = 'Searching...';
+
+            let matchCount = 0;
 
             try {
-                resultsList.innerHTML = '';
-                let matchCount = 0;
-
-                if (typeof currentBook.search === 'function') {
-                    const searchIter = currentBook.search(query);
-
-                    for await (const sectionResult of searchIter) {
-                        const subitems = sectionResult.subitems || sectionResult.results || [];
-                        
-                        for (const item of subitems) {
+                const searchGen = view.search(query);
+                if (searchGen) {
+                    for await (const result of searchGen) {
+                        const matches = result.subitems || result.results || (Array.isArray(result) ? result : []);
+                        for (const item of matches) {
                             matchCount++;
-                            const li = document.createElement('li');
-                            const excerpt = item.excerpt || item.text || item.snippet || query;
-                            
-                            li.innerHTML = `<strong>Match:</strong> ...${excerpt}...`;
-
-                            li.addEventListener('click', () => {
-                                if (item.cfi) {
-                                    view.goTo(item.cfi);
-                                } else if (item.href) {
-                                    view.goTo(item.href);
-                                }
-                            });
-
-                            resultsList.appendChild(li);
+                            appendSearchResult(
+                                item.excerpt || item.text || query,
+                                item.cfi || item.href,
+                                result.label || `Match ${matchCount}`,
+                                query
+                            );
                         }
                     }
                 }
 
                 if (matchCount === 0) {
-                    resultsList.innerHTML = '<li>No matches found for search query.</li>';
+                    searchCountHeader.textContent = 'Search Results';
+                    resultsList.innerHTML = '<li class="p-2 text-slate-400 italic">No results found.</li>';
+                } else {
+                    searchCountHeader.textContent = `Found ${matchCount} matches`;
                 }
+
             } catch (err) {
-                console.error("Search failed:", err);
-                resultsList.innerHTML = '<li>Error executing search. Check console.</li>';
+                console.error("Search Error:", err);
+                searchCountHeader.textContent = 'Search Error';
+                resultsList.innerHTML = '<li class="p-2 text-red-500">Error executing search.</li>';
+            }
+        }
+
+        function appendSearchResult(snippet, target, label, query) {
+            const li = document.createElement('li');
+            li.className = 'p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border-b border-slate-100 dark:border-slate-800 transition-colors';
+            
+            const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const highlightedText = snippet.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark>$1</mark>');
+
+            li.innerHTML = `
+                <div class="font-semibold text-[11px] mb-1 text-indigo-600 dark:text-indigo-400 truncate">${label}</div>
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed">...${highlightedText}...</div>
+            `;
+
+            li.addEventListener('click', () => {
+                if (target !== undefined) view.goTo(target);
+                if (window.innerWidth < 768) closeSidebars();
+            });
+
+            resultsList.appendChild(li);
+        }
+
+        searchBtn.addEventListener('click', executeSearch);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                executeSearch();
             }
         });
-
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') searchBtn.click();
-        });
-
-        document.getElementById('btn-close-search').addEventListener('click', () => searchSidebar.style.display = 'none');
     </script>
 </body>
 </html>
