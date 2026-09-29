@@ -118,7 +118,7 @@
             </button>
         </div>
 
-        <!-- Right Group: Font Size (Main Toolbar), Bookmarks & Gear Settings Popover -->
+        <!-- Right Group: Font Size (Main Toolbar), Bookmarks & Settings Popover -->
         <div class="flex items-center space-x-1 sm:space-x-2">
             
             <!-- Font Size Scaling (Exposed directly on toolbar) -->
@@ -153,9 +153,9 @@
                 </button>
 
                 <!-- Settings Popover Menu -->
-                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs space-y-4">
+                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs space-y-3.5 max-h-[85vh] overflow-y-auto">
                     <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center justify-between">
-                        <span>Display & Typography</span>
+                        <span>Display & Typography Settings</span>
                         <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                             <i data-lucide="x" class="w-3.5 h-3.5"></i>
                         </button>
@@ -163,7 +163,7 @@
 
                     <!-- Theme Selector -->
                     <div>
-                        <label class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Theme</label>
+                        <label class="block font-medium text-slate-600 dark:text-slate-300 mb-1">Theme</label>
                         <div class="grid grid-cols-2 gap-2">
                             <button id="btn-theme-light" class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 transition-colors font-medium">
                                 <i data-lucide="sun" class="w-3.5 h-3.5"></i>
@@ -176,9 +176,9 @@
                         </div>
                     </div>
 
-                    <!-- Font Family Override Selection -->
+                    <!-- Font Family Selection -->
                     <div>
-                        <label for="select-font-family" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Font Typography</label>
+                        <label for="select-font-family" class="block font-medium text-slate-600 dark:text-slate-300 mb-1">Font Typography</label>
                         <select id="select-font-family" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="publisher">Publisher Default</option>
                             <option value="sans-serif">Sans-Serif (System UI)</option>
@@ -187,9 +187,48 @@
                         </select>
                     </div>
 
+                    <!-- Font Weight -->
+                    <div>
+                        <label for="select-font-weight" class="block font-medium text-slate-600 dark:text-slate-300 mb-1">Font Weight</label>
+                        <select id="select-font-weight" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="normal" selected>Normal (400)</option>
+                            <option value="300">Light (300)</option>
+                            <option value="500">Medium (500)</option>
+                            <option value="600">Semi-Bold (600)</option>
+                            <option value="bold">Bold (700)</option>
+                        </select>
+                    </div>
+
+                    <!-- Line Height & Letter Spacing Controls -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="slider-line-height" class="font-medium text-slate-600 dark:text-slate-300">Line Height</label>
+                                <span id="val-line-height" class="text-[10px] text-slate-400 font-mono">1.5</span>
+                            </div>
+                            <input type="range" id="slider-line-height" min="1.0" max="2.5" step="0.1" value="1.5" class="w-full accent-indigo-600 cursor-pointer h-1 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="slider-letter-spacing" class="font-medium text-slate-600 dark:text-slate-300">Spacing</label>
+                                <span id="val-letter-spacing" class="text-[10px] text-slate-400 font-mono">0px</span>
+                            </div>
+                            <input type="range" id="slider-letter-spacing" min="-1" max="5" step="0.5" value="0" class="w-full accent-indigo-600 cursor-pointer h-1 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+                        </div>
+                    </div>
+
+                    <!-- Fluid Typography Scaling (clamp) Toggle -->
+                    <div class="pt-1 border-t border-slate-100 dark:border-slate-700/50">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="font-medium text-slate-600 dark:text-slate-300">Fluid Typography <span class="text-[10px] text-slate-400 font-normal">(clamp())</span></span>
+                            <input type="checkbox" id="toggle-fluid-type" class="sr-only peer" />
+                            <div class="w-8 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-indigo-600 relative"></div>
+                        </label>
+                    </div>
+
                     <!-- Layout Mode (Flow) -->
                     <div>
-                        <label for="select-flow" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Layout Mode</label>
+                        <label for="select-flow" class="block font-medium text-slate-600 dark:text-slate-300 mb-1">Layout Mode</label>
                         <select id="select-flow" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="paginated">Paginated</option>
                             <option value="scrolled">Scrolled Continuous</option>
@@ -198,7 +237,7 @@
 
                     <!-- Reading Direction -->
                     <div>
-                        <label for="select-dir" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Reading Direction</label>
+                        <label for="select-dir" class="block font-medium text-slate-600 dark:text-slate-300 mb-1">Reading Direction</label>
                         <select id="select-dir" class="w-full text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="ltr">Horizontal (LTR)</option>
                             <option value="vertical">Vertical</option>
@@ -291,6 +330,13 @@
         const selectFlow = document.getElementById('select-flow');
         const selectDir = document.getElementById('select-dir');
         const selectFontFamily = document.getElementById('select-font-family');
+        const selectFontWeight = document.getElementById('select-font-weight');
+        const sliderLineHeight = document.getElementById('slider-line-height');
+        const sliderLetterSpacing = document.getElementById('slider-letter-spacing');
+        const toggleFluidType = document.getElementById('toggle-fluid-type');
+        const valLineHeight = document.getElementById('val-line-height');
+        const valLetterSpacing = document.getElementById('val-letter-spacing');
+
         const progressSlider = document.getElementById('progress-slider');
         const pageInfo = document.getElementById('page-info');
 
@@ -382,7 +428,7 @@
         }
 
         // -------------------------------------------------------------
-        // 2. LAYOUT & TYPOGRAPHY STYLING
+        // 2. LAYOUT & TYPOGRAPHY STYLING (FLUID CLAMP SUPPORT)
         // -------------------------------------------------------------
         function updateLayoutConfig() {
             if (!view) return;
@@ -404,17 +450,34 @@
         function applyStyles() {
             if (!view) return;
 
-            // Handle Font Typography Override
+            // Typography Controls
             const chosenFont = selectFontFamily.value;
-            let fontFamilyCss = '';
-            if (chosenFont !== 'publisher') {
-                fontFamilyCss = `font-family: ${chosenFont}, sans-serif !important;`;
+            const chosenWeight = selectFontWeight.value;
+            const lineHeight = sliderLineHeight.value;
+            const letterSpacing = sliderLetterSpacing.value;
+            const isFluid = toggleFluidType.checked;
+
+            valLineHeight.textContent = lineHeight;
+            valLetterSpacing.textContent = `${letterSpacing}px`;
+
+            let fontFamilyCss = chosenFont !== 'publisher' ? `font-family: ${chosenFont}, sans-serif !important;` : '';
+            
+            // Calculate font sizing: standard percent scaling vs responsive CSS clamp()
+            let fontSizeCss = `font-size: ${currentFontSize}% !important;`;
+            if (isFluid) {
+                const basePx = (16 * (currentFontSize / 100)).toFixed(1);
+                const minPx = (basePx * 0.85).toFixed(1);
+                const maxPx = (basePx * 1.25).toFixed(1);
+                fontSizeCss = `font-size: clamp(${minPx}px, ${basePx * 0.8}px + 1vw, ${maxPx}px) !important;`;
             }
 
             const themeCSS = `
                 body, p, div, span, h1, h2, h3, h4, h5, h6 {
-                    font-size: ${currentFontSize}% !important;
+                    ${fontSizeCss}
                     ${fontFamilyCss}
+                    font-weight: ${chosenWeight} !important;
+                    line-height: ${lineHeight} !important;
+                    letter-spacing: ${letterSpacing}px !important;
                     background-color: ${isDarkMode ? '#0f172a' : '#ffffff'} !important;
                     color: ${isDarkMode ? '#f1f5f9' : '#333333'} !important;
                 }
@@ -425,12 +488,18 @@
                     background: ${isDarkMode ? '#3b82f6' : '#bfdbfe'};
                 }
             `;
+
             if (view.renderer && view.renderer.setStyles) {
                 view.renderer.setStyles(themeCSS);
             }
         }
 
+        // Attach listeners for settings changes
         selectFontFamily.addEventListener('change', applyStyles);
+        selectFontWeight.addEventListener('change', applyStyles);
+        sliderLineHeight.addEventListener('input', applyStyles);
+        sliderLetterSpacing.addEventListener('input', applyStyles);
+        toggleFluidType.addEventListener('change', applyStyles);
 
         // Font Size Controls (Exposed on Toolbar)
         document.getElementById('btn-font-inc').addEventListener('click', () => {
@@ -465,7 +534,7 @@
 
         btnThemeLight.addEventListener('click', () => setTheme(false));
         btnThemeDark.addEventListener('click', () => setTheme(true));
-        setTheme(false); // default light theme UI highlight
+        setTheme(false); // default light theme
 
         // Settings Popover Toggle
         btnSettings.addEventListener('click', (e) => {
