@@ -14,10 +14,13 @@
                 extend: {
                     colors: {
                         sepia: {
-                            50: '#faf7f0',
-                            100: '#f4ecd8',
-                            800: '#433422',
-                            900: '#281e12',
+                            50: '#fff7e6',
+                            100: '#fbf0d9', // Exact background from screenshot
+                            200: '#f3e1b9',
+                            300: '#e6cc92',
+                            700: '#73582c', // Heading brown
+                            800: '#5c4a31', // Exact body text from screenshot
+                            900: '#3d2e1b',
                         }
                     }
                 }
@@ -35,6 +38,7 @@
         :root {
             --bg-color: #ffffff;
             --text-color: #333333;
+            --heading-color: #111827;
             --ui-bg: #f8fafc;
             --ui-border: #e2e8f0;
             --active-item: #2563eb;
@@ -44,14 +48,25 @@
         .dark {
             --bg-color: #0f172a;
             --text-color: #f1f5f9;
+            --heading-color: #ffffff;
             --ui-bg: #1e293b;
             --ui-border: #334155;
             --active-item: #60a5fa;
             --highlight-bg: #854d0e;
         }
 
-        /* Prevent unwanted double-tap zoom & text selection on iOS buttons/toolbars */
-        button, input, select, label, header, footer, .prevent-zoom {
+        .sepia {
+            --bg-color: #fbf0d9;
+            --text-color: #5c4a31;
+            --heading-color: #73582c;
+            --ui-bg: #fff7e6;
+            --ui-border: #f3e1b9;
+            --active-item: #73582c;
+            --highlight-bg: #fef08a;
+        }
+
+        /* Touch & Layout handling */
+        button, input, select, label, header, footer {
             touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
@@ -102,7 +117,6 @@
             border-radius: 3px;
         }
 
-        /* Safe area support for modern iOS notch and bottom bar */
         header {
             padding-top: env(safe-area-inset-top, 0px);
         }
@@ -111,103 +125,152 @@
         }
     </style>
 </head>
-<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans antialiased overflow-hidden transition-colors duration-200 select-none">
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 sepia:bg-sepia-100 sepia:text-sepia-800 flex flex-col font-sans antialiased overflow-hidden transition-colors duration-200 select-none">
 
     <!-- TOP TOOLBAR -->
-    <header id="toolbar" class="min-h-[3.5rem] border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur flex items-center justify-between px-3 sm:px-4 z-20 shrink-0">
+    <header id="toolbar" class="min-h-[3.5rem] border-b border-slate-200 dark:border-slate-800 sepia:border-sepia-200 bg-white/95 dark:bg-slate-900/95 sepia:bg-sepia-50/95 backdrop-blur flex items-center justify-between px-3 sm:px-4 z-20 shrink-0 gap-2">
         
-        <!-- Left Group: File Loader, TOC & Search -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <label class="cursor-pointer flex items-center space-x-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg shadow-sm transition-colors shrink-0">
+        <!-- Left Group: Open File, TOC & Search -->
+        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            <label class="cursor-pointer flex items-center space-x-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 sepia:bg-sepia-700 sepia:hover:bg-sepia-800 text-white text-xs sm:text-sm font-medium rounded-lg shadow-sm transition-colors shrink-0">
                 <i data-lucide="folder-open" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 <span class="hidden sm:inline">Open EPUB</span>
                 <input type="file" id="file-input" accept=".epub,.mobi,.azw3,.fb2,.cbz" class="hidden" />
             </label>
 
-            <button id="btn-toggle-toc" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-1 text-xs sm:text-sm font-medium" title="Table of Contents">
+            <button id="btn-toggle-toc" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 text-slate-600 dark:text-slate-300 sepia:text-sepia-800 transition-colors flex items-center space-x-1 text-xs sm:text-sm font-medium" title="Table of Contents">
                 <i data-lucide="book-open" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 <span class="hidden md:inline">TOC</span>
             </button>
 
-            <button id="btn-open-search" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-1 text-xs sm:text-sm font-medium" title="Search Book">
+            <button id="btn-open-search" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 text-slate-600 dark:text-slate-300 sepia:text-sepia-800 transition-colors flex items-center space-x-1 text-xs sm:text-sm font-medium" title="Search Book">
                 <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 <span class="hidden md:inline">Search</span>
             </button>
         </div>
 
-        <!-- Right Group: Font Size (Main Toolbar), Bookmarks & Settings Popover -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-            
-            <!-- Font Size Scaling (Exposed directly on toolbar) -->
-            <div class="flex items-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 mr-0.5 sm:mr-1">
-                <button id="btn-font-dec" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-colors shadow-sm" title="Decrease Font Size">A-</button>
-                <span id="font-size-label" class="px-1.5 sm:px-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 min-w-[3rem] sm:min-w-[3.5rem] text-center">100%</span>
-                <button id="btn-font-inc" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-colors shadow-sm" title="Increase Font Size">A+</button>
+        <!-- Middle Group: Title / Info Trigger -->
+        <div class="relative flex items-center justify-center min-w-0 flex-1 max-w-md mx-2">
+            <button id="btn-book-info" class="p-2 sm:py-2 sm:px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 text-slate-600 dark:text-slate-300 sepia:text-sepia-800 transition-colors flex items-center space-x-1.5 max-w-full" title="Book Details & Metadata">
+                <i data-lucide="info" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400 sepia:text-sepia-700 shrink-0"></i>
+                <span id="toolbar-book-title" class="hidden sm:inline-block text-xs sm:text-sm font-medium truncate max-w-[180px] md:max-w-[280px] lg:max-w-[360px]">No book loaded</span>
+            </button>
+
+            <!-- Book Info Popover Menu -->
+            <div id="info-overlay" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 sepia:bg-sepia-50 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 p-4 z-50 text-xs sm:text-sm space-y-3 max-h-[80vh] overflow-y-auto">
+                <div class="font-bold text-slate-800 dark:text-slate-100 sepia:text-sepia-900 border-b border-slate-200 dark:border-slate-700 sepia:border-sepia-200 pb-2 flex items-center justify-between">
+                    <span class="flex items-center space-x-2">
+                        <i data-lucide="book-marked" class="w-4 h-4 text-indigo-600 dark:text-indigo-400 sepia:text-sepia-700"></i>
+                        <span>Book Details</span>
+                    </span>
+                    <button id="btn-close-info" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 sepia:hover:text-sepia-900 p-1">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-2.5 text-slate-600 dark:text-slate-300 sepia:text-sepia-800">
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400 sepia:text-sepia-700/60">Title</span>
+                        <p id="meta-title" class="font-semibold text-slate-800 dark:text-slate-100 sepia:text-sepia-900">No book loaded</p>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400 sepia:text-sepia-700/60">Author(s)</span>
+                        <p id="meta-author" class="font-medium">--</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400 sepia:text-sepia-700/60">Publisher</span>
+                            <p id="meta-publisher" class="font-medium">--</p>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400 sepia:text-sepia-700/60">Language</span>
+                            <p id="meta-language" class="font-medium">--</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400 sepia:text-sepia-700/60">Subject / Category</span>
+                        <p id="meta-subject" class="font-medium">--</p>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400 sepia:text-sepia-700/60">Description</span>
+                        <p id="meta-description" class="text-xs text-slate-500 dark:text-slate-400 sepia:text-sepia-800/80 leading-relaxed max-h-32 overflow-y-auto pt-1">--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Group: Font Controls & Settings -->
+        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 sepia:bg-sepia-200/60 border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 rounded-lg p-0.5 mr-0.5 sm:mr-1">
+                <button id="btn-font-dec" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-700 sepia:bg-sepia-50 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 font-bold text-xs sm:text-sm transition-colors shadow-sm" title="Decrease Font Size">A-</button>
+                <span id="font-size-label" class="px-1.5 sm:px-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 sepia:text-sepia-900 min-w-[3rem] sm:min-w-[3.5rem] text-center">100%</span>
+                <button id="btn-font-inc" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-700 sepia:bg-sepia-50 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 font-bold text-xs sm:text-sm transition-colors shadow-sm" title="Increase Font Size">A+</button>
             </div>
 
             <!-- Bookmarks Trigger -->
             <div class="relative">
-                <button id="btn-bookmark" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors" title="Bookmarks">
+                <button id="btn-bookmark" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 text-slate-600 dark:text-slate-300 sepia:text-sepia-800 transition-colors" title="Bookmarks">
                     <i data-lucide="bookmark" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
 
-                <!-- Bookmarks Floating Overlay -->
-                <div id="bookmark-overlay" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-3.5 z-50 text-xs sm:text-sm">
-                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-slate-200 dark:border-slate-700">
-                        <strong class="font-bold text-slate-700 dark:text-slate-200">Bookmarks</strong>
-                        <button id="btn-add-bookmark" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-medium transition-colors">+ Add Current</button>
+                <div id="bookmark-overlay" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-slate-800 sepia:bg-sepia-50 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 p-3.5 z-50 text-xs sm:text-sm">
+                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-slate-200 dark:border-slate-700 sepia:border-sepia-200">
+                        <strong class="font-bold text-slate-700 dark:text-slate-200 sepia:text-sepia-900">Bookmarks</strong>
+                        <button id="btn-add-bookmark" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 sepia:bg-sepia-700 sepia:hover:bg-sepia-800 text-white rounded text-xs font-medium transition-colors">+ Add Current</button>
                     </div>
                     <ul id="bookmark-list" class="space-y-1 max-h-64 overflow-y-auto">
-                        <li class="text-slate-400 italic text-center py-4">No bookmarks saved yet.</li>
+                        <li class="text-slate-400 sepia:text-sepia-700/50 italic text-center py-4">No bookmarks saved yet.</li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Gear Settings Popover -->
+            <!-- Settings Popover -->
             <div class="relative">
-                <button id="btn-settings" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors" title="Display & Typography Settings">
+                <button id="btn-settings" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 text-slate-600 dark:text-slate-300 sepia:text-sepia-800 transition-colors" title="Display & Typography Settings">
                     <i data-lucide="settings" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
 
-                <!-- Settings Popover Menu -->
-                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs sm:text-sm space-y-4 max-h-[85vh] overflow-y-auto">
-                    <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center justify-between">
+                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 sepia:bg-sepia-50 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 p-4 z-50 text-xs sm:text-sm space-y-4 max-h-[85vh] overflow-y-auto">
+                    <div class="font-bold text-slate-800 dark:text-slate-100 sepia:text-sepia-900 border-b border-slate-200 dark:border-slate-700 sepia:border-sepia-200 pb-2 flex items-center justify-between">
                         <span>Display & Typography Settings</span>
-                        <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                        <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 sepia:hover:text-sepia-900 p-1">
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                     </div>
 
                     <!-- Theme Selector -->
                     <div>
-                        <label class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Theme</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button id="btn-theme-light" class="flex items-center justify-center space-x-1.5 py-2 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 transition-colors font-medium">
-                                <i data-lucide="sun" class="w-4 h-4"></i>
+                        <label class="block font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800 mb-1.5">Theme</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button id="btn-theme-light" class="flex items-center justify-center space-x-1 py-2 px-2 rounded-lg border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 hover:bg-slate-100 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 transition-colors font-medium text-xs">
+                                <i data-lucide="sun" class="w-3.5 h-3.5"></i>
                                 <span>Day</span>
                             </button>
-                            <button id="btn-theme-dark" class="flex items-center justify-center space-x-1.5 py-2 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 transition-colors font-medium">
-                                <i data-lucide="moon" class="w-4 h-4"></i>
+                            <button id="btn-theme-sepia" class="flex items-center justify-center space-x-1 py-2 px-2 rounded-lg border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 bg-amber-50 dark:bg-slate-900 sepia:bg-sepia-100 hover:bg-amber-100 text-amber-900 dark:text-slate-200 sepia:text-sepia-900 transition-colors font-medium text-xs">
+                                <i data-lucide="coffee" class="w-3.5 h-3.5 text-sepia-700"></i>
+                                <span>Sepia</span>
+                            </button>
+                            <button id="btn-theme-dark" class="flex items-center justify-center space-x-1 py-2 px-2 rounded-lg border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 hover:bg-slate-100 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 transition-colors font-medium text-xs">
+                                <i data-lucide="moon" class="w-3.5 h-3.5"></i>
                                 <span>Night</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Font Family Selection -->
+                    <!-- Typography Options -->
                     <div>
-                        <label for="select-font-family" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Font Typography</label>
-                        <select id="select-font-family" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-font-family" class="block font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800 mb-1.5">Font Typography</label>
+                        <select id="select-font-family" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="publisher">Publisher Default</option>
                             <option value="sans-serif">Sans-Serif (System UI)</option>
-                            <option value="serif">Serif (Georgia / Times)</option>
+                            <option value="serif" selected>Serif (Georgia / Times)</option>
                             <option value="monospace">Monospace (Code / Fixed)</option>
                         </select>
                     </div>
 
-                    <!-- Font Weight -->
                     <div>
-                        <label for="select-font-weight" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Font Weight</label>
-                        <select id="select-font-weight" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-font-weight" class="block font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800 mb-1.5">Font Weight</label>
+                        <select id="select-font-weight" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="normal" selected>Normal (400)</option>
                             <option value="300">Light (300)</option>
                             <option value="500">Medium (500)</option>
@@ -216,46 +279,42 @@
                         </select>
                     </div>
 
-                    <!-- Line Height & Letter Spacing Controls -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <label for="slider-line-height" class="font-medium text-slate-600 dark:text-slate-300">Line Height</label>
-                                <span id="val-line-height" class="text-xs text-slate-400 font-mono">1.5</span>
+                                <label for="slider-line-height" class="font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800">Line Height</label>
+                                <span id="val-line-height" class="text-xs text-slate-400 sepia:text-sepia-700/60 font-mono">1.5</span>
                             </div>
-                            <input type="range" id="slider-line-height" min="1.0" max="2.5" step="0.1" value="1.5" class="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+                            <input type="range" id="slider-line-height" min="1.0" max="2.5" step="0.1" value="1.5" class="w-full accent-indigo-600 sepia:accent-sepia-700 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 sepia:bg-sepia-200 rounded-lg appearance-none" />
                         </div>
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <label for="slider-letter-spacing" class="font-medium text-slate-600 dark:text-slate-300">Spacing</label>
-                                <span id="val-letter-spacing" class="text-xs text-slate-400 font-mono">0px</span>
+                                <label for="slider-letter-spacing" class="font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800">Spacing</label>
+                                <span id="val-letter-spacing" class="text-xs text-slate-400 sepia:text-sepia-700/60 font-mono">0px</span>
                             </div>
-                            <input type="range" id="slider-letter-spacing" min="-1" max="5" step="0.5" value="0" class="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+                            <input type="range" id="slider-letter-spacing" min="-1" max="5" step="0.5" value="0" class="w-full accent-indigo-600 sepia:accent-sepia-700 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 sepia:bg-sepia-200 rounded-lg appearance-none" />
                         </div>
                     </div>
 
-                    <!-- Fluid Typography Scaling (clamp) Toggle -->
-                    <div class="pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-700/50 sepia:border-sepia-200">
                         <label class="flex items-center justify-between cursor-pointer">
-                            <span class="font-medium text-slate-600 dark:text-slate-300">Fluid Typography <span class="text-xs text-slate-400 font-normal">(clamp())</span></span>
-                            <input type="checkbox" id="toggle-fluid-type" class="sr-only peer" />
-                            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-indigo-600 relative"></div>
+                            <span class="font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800">Fluid Typography <span class="text-xs text-slate-400 sepia:text-sepia-700/60 font-normal">(clamp())</span></span>
+                            <input type="checkbox" id="toggle-fluid-type" class="sr-only peer" checked />
+                            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 sepia:bg-sepia-200 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-indigo-600 sepia:peer-checked:bg-sepia-700 relative"></div>
                         </label>
                     </div>
 
-                    <!-- Layout Mode (Flow) -->
                     <div>
-                        <label for="select-flow" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Layout Mode</label>
-                        <select id="select-flow" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-flow" class="block font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800 mb-1.5">Layout Mode</label>
+                        <select id="select-flow" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="paginated">Paginated</option>
                             <option value="scrolled">Scrolled Continuous</option>
                         </select>
                     </div>
 
-                    <!-- Reading Direction -->
                     <div>
-                        <label for="select-dir" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Reading Direction</label>
-                        <select id="select-dir" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-dir" class="block font-medium text-slate-600 dark:text-slate-300 sepia:text-sepia-800 mb-1.5">Reading Direction</label>
+                        <select id="select-dir" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 sepia:text-sepia-900 outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="ltr">Horizontal (LTR)</option>
                             <option value="vertical">Vertical</option>
                         </select>
@@ -271,16 +330,16 @@
     <div id="main-container" class="relative flex-1 flex overflow-hidden">
 
         <!-- LOADING OVERLAY -->
-        <div id="loading-overlay" class="absolute inset-0 bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center z-40 gap-3 text-sm text-slate-600 dark:text-slate-300 p-4 text-center">
+        <div id="loading-overlay" class="absolute inset-0 bg-slate-50 dark:bg-slate-900 sepia:bg-sepia-100 flex flex-col items-center justify-center z-40 gap-3 text-sm text-slate-600 dark:text-slate-300 sepia:text-sepia-800 p-4 text-center">
             <div id="loading-spinner" class="spinner hidden"></div>
             <span id="loading-text" class="font-medium">Please select an EPUB file to begin reading.</span>
         </div>
 
         <!-- TOC SIDEBAR -->
-        <aside id="toc-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
-            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                <strong class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Table of Contents</strong>
-                <button id="btn-close-toc" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
+        <aside id="toc-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 sepia:bg-sepia-50 border-r border-slate-200 dark:border-slate-800 sepia:border-sepia-200 z-30 transform -translate-x-full flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 sepia:border-sepia-200 bg-slate-50 dark:bg-slate-800/50 sepia:bg-sepia-100/50">
+                <strong class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 sepia:text-sepia-700/60">Table of Contents</strong>
+                <button id="btn-close-toc" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 sepia:hover:bg-sepia-200 text-slate-500 sepia:text-sepia-800">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -290,17 +349,17 @@
         </aside>
 
         <!-- SEARCH SIDEBAR -->
-        <aside id="search-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
-            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                <strong id="search-count-header" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Search Results</strong>
-                <button id="btn-close-search" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
+        <aside id="search-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 sepia:bg-sepia-50 border-r border-slate-200 dark:border-slate-800 sepia:border-sepia-200 z-30 transform -translate-x-full flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 sepia:border-sepia-200 bg-slate-50 dark:bg-slate-800/50 sepia:bg-sepia-100/50">
+                <strong id="search-count-header" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 sepia:text-sepia-700/60">Search Results</strong>
+                <button id="btn-close-search" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 sepia:hover:bg-sepia-200 text-slate-500 sepia:text-sepia-800">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="p-3 border-b border-slate-200 dark:border-slate-800 sepia:border-sepia-200">
                 <div class="flex gap-2">
-                    <input type="text" id="search-input" placeholder="Search book text..." class="flex-1 px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
-                    <button id="btn-search" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors">Search</button>
+                    <input type="text" id="search-input" placeholder="Search book text..." class="flex-1 px-3 py-2 border border-slate-200 dark:border-slate-700 sepia:border-sepia-200 dark:bg-slate-800 sepia:bg-sepia-100 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
+                    <button id="btn-search" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 sepia:bg-sepia-700 sepia:hover:bg-sepia-800 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors">Search</button>
                 </div>
             </div>
             <div class="flex-1 overflow-y-auto p-3">
@@ -308,11 +367,11 @@
             </div>
         </aside>
 
-        <!-- NAV ARROWS: 10% Opacity Idle -> 50% Opacity Hover/Click -->
-        <button id="btn-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-slate-900/10 dark:bg-slate-100/10 opacity-10 hover:opacity-50 active:opacity-60 text-slate-900 dark:text-slate-100 rounded-full shadow-md backdrop-blur-sm transition-opacity border border-slate-500/20" title="Previous Page">
+        <!-- NAV ARROWS -->
+        <button id="btn-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-slate-900/10 dark:bg-slate-100/10 sepia:bg-sepia-900/10 opacity-10 hover:opacity-50 active:opacity-60 text-slate-900 dark:text-slate-100 sepia:text-sepia-900 rounded-full shadow-md backdrop-blur-sm transition-opacity border border-slate-500/20" title="Previous Page">
             <i data-lucide="chevron-left" class="w-6 h-6"></i>
         </button>
-        <button id="btn-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-slate-900/10 dark:bg-slate-100/10 opacity-10 hover:opacity-50 active:opacity-60 text-slate-900 dark:text-slate-100 rounded-full shadow-md backdrop-blur-sm transition-opacity border border-slate-500/20" title="Next Page">
+        <button id="btn-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-slate-900/10 dark:bg-slate-100/10 sepia:bg-sepia-900/10 opacity-10 hover:opacity-50 active:opacity-60 text-slate-900 dark:text-slate-100 sepia:text-sepia-900 rounded-full shadow-md backdrop-blur-sm transition-opacity border border-slate-500/20" title="Next Page">
             <i data-lucide="chevron-right" class="w-6 h-6"></i>
         </button>
 
@@ -323,9 +382,9 @@
     </div>
 
     <!-- FOOTER -->
-    <footer id="footer" class="min-h-[2.75rem] bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between gap-4 text-xs sm:text-sm z-10 shrink-0">
-        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" class="flex-1 accent-indigo-600 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
-        <span id="page-info" class="text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap min-w-[7rem] text-right">No book loaded</span>
+    <footer id="footer" class="min-h-[2.75rem] bg-white dark:bg-slate-900 sepia:bg-slate-900 border-t border-slate-200 dark:border-slate-800 sepia:border-slate-800 px-4 flex items-center justify-between gap-4 text-xs sm:text-sm z-10 shrink-0">
+        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" class="flex-1 accent-indigo-600 sepia:accent-emerald-500 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 sepia:bg-slate-800 rounded-lg appearance-none" />
+        <span id="page-info" class="text-slate-500 dark:text-slate-400 sepia:text-slate-300 font-mono whitespace-nowrap min-w-[7rem] text-right">No book loaded</span>
     </footer>
 
     <!-- LOGIC MODULE -->
@@ -366,27 +425,25 @@
         const settingsOverlay = document.getElementById('settings-overlay');
         const btnCloseSettings = document.getElementById('btn-close-settings');
         const btnThemeLight = document.getElementById('btn-theme-light');
+        const btnThemeSepia = document.getElementById('btn-theme-sepia');
         const btnThemeDark = document.getElementById('btn-theme-dark');
 
+        const btnBookInfo = document.getElementById('btn-book-info');
+        const toolbarBookTitle = document.getElementById('toolbar-book-title');
+        const infoOverlay = document.getElementById('info-overlay');
+        const btnCloseInfo = document.getElementById('btn-close-info');
+        const metaTitle = document.getElementById('meta-title');
+        const metaAuthor = document.getElementById('meta-author');
+        const metaPublisher = document.getElementById('meta-publisher');
+        const metaLanguage = document.getElementById('meta-language');
+        const metaSubject = document.getElementById('meta-subject');
+        const metaDescription = document.getElementById('meta-description');
+
         let currentFontSize = 100;
-        let isDarkMode = false;
+        let currentTheme = 'sepia'; // Default to sepia mode
         let currentBookKey = null;
         let currentLocation = null;
         const tocItemToElementMap = new Map();
-
-        // -------------------------------------------------------------
-        // PREVENT IOS DOUBLE-TAP ZOOM BUG
-        // -------------------------------------------------------------
-        //let lastTouchEnd = 0;
-        //document.addEventListener('touchend', (e) => {
-        //    const now = Date.now();
-        //    if (now - lastTouchEnd <= 300) {
-        //        if (e.target.closest('button, label, select, input, a')) {
-        //            e.preventDefault();
-        //        }
-        //    }
-        //    lastTouchEnd = now;
-        //}, { passive: false });
 
         // -------------------------------------------------------------
         // 1. INITIALIZATION & EPUB LOADING
@@ -428,13 +485,37 @@
                 await view.open(source);
 
                 const bookObj = view.book;
-                const bookTitle = bookObj?.metadata?.title 
-                    ? (typeof bookObj.metadata.title === 'string' ? bookObj.metadata.title : bookObj.metadata.title?.en)
-                    : (source.name || 'loaded_book');
+                
+                const parseMetaField = (val) => {
+                    if (!val) return 'Unknown';
+                    if (typeof val === 'string') return val;
+                    if (Array.isArray(val)) {
+                        return val.map(item => typeof item === 'string' ? item : (item.name || item.en || JSON.stringify(item))).join(', ');
+                    }
+                    if (typeof val === 'object') {
+                        return val.name || val.en || Object.values(val)[0] || 'Unknown';
+                    }
+                    return String(val);
+                };
+
+                const bookTitle = parseMetaField(bookObj?.metadata?.title) || (source.name || 'loaded_book');
 
                 currentBookKey = `foliate_saved_${bookTitle}`;
                 document.title = `${bookTitle} - EPUB Reader`;
 
+                toolbarBookTitle.textContent = bookTitle;
+
+                metaTitle.textContent = bookTitle;
+                metaAuthor.textContent = parseMetaField(bookObj?.metadata?.creator || bookObj?.metadata?.author);
+                metaPublisher.textContent = parseMetaField(bookObj?.metadata?.publisher);
+                metaLanguage.textContent = parseMetaField(bookObj?.metadata?.language);
+                metaSubject.textContent = parseMetaField(bookObj?.metadata?.subject);
+
+                const rawDesc = parseMetaField(bookObj?.metadata?.description);
+                const cleanDesc = rawDesc !== 'Unknown' ? rawDesc.replace(/<[^>]*>?/gm, '') : 'No description available for this book.';
+                metaDescription.textContent = cleanDesc;
+
+                loadSavedSettings();
                 updateLayoutConfig();
 
                 if (bookObj && bookObj.toc) {
@@ -446,6 +527,8 @@
                 const savedCfi = localStorage.getItem(`${currentBookKey}_last_read`);
                 if (savedCfi) {
                     await view.goTo(savedCfi);
+                } else {
+                    await skipBlankInitialPages();
                 }
 
                 renderBookmarks();
@@ -458,9 +541,98 @@
             }
         }
 
+        async function skipBlankInitialPages() {
+            let attempts = 0;
+            const maxAttempts = 3;
+
+            while (attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, 150));
+
+                const iframes = view.shadowRoot 
+                    ? view.shadowRoot.querySelectorAll('iframe') 
+                    : view.querySelectorAll('iframe');
+
+                let hasValidContent = false;
+
+                iframes.forEach(iframe => {
+                    try {
+                        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+                        if (doc && doc.body) {
+                            const textContent = (doc.body.innerText || doc.body.textContent || '').trim();
+                            const hasGraphics = doc.body.querySelectorAll('img, svg, image, picture, canvas').length > 0;
+                            const bodyHTML = doc.body.innerHTML.toLowerCase();
+                            const isTitlePage = 
+                                bodyHTML.includes('titlepage') || 
+                                bodyHTML.includes('epub-cover') || 
+                                doc.querySelector('[aria-label*="cover" i], [id*="cover" i], [class*="cover" i], [id*="title" i], [class*="title" i]') !== null;
+
+                            if (textContent.length > 0 || hasGraphics || isTitlePage) {
+                                hasValidContent = true;
+                            }
+                        }
+                    } catch (e) {
+                        hasValidContent = true; 
+                    }
+                });
+
+                if (hasValidContent) break;
+
+                attempts++;
+                if (view.next) {
+                    await view.next();
+                } else if (view.goRight) {
+                    await view.goRight();
+                }
+            }
+        }
+
         // -------------------------------------------------------------
-        // 2. LAYOUT & TYPOGRAPHY STYLING (FLUID CLAMP SUPPORT)
+        // 2. LAYOUT & TYPOGRAPHY STYLING
         // -------------------------------------------------------------
+        function loadSavedSettings() {
+            if (!currentBookKey) return;
+            const savedSettings = JSON.parse(localStorage.getItem(`${currentBookKey}_settings`) || 'null');
+
+            if (savedSettings) {
+                currentFontSize = savedSettings.fontSize ?? 100;
+                selectFontFamily.value = savedSettings.fontFamily ?? 'serif';
+                selectFontWeight.value = savedSettings.fontWeight ?? 'normal';
+                sliderLineHeight.value = savedSettings.lineHeight ?? 1.5;
+                sliderLetterSpacing.value = savedSettings.letterSpacing ?? 0;
+                toggleFluidType.checked = savedSettings.fluidType ?? true;
+                selectFlow.value = savedSettings.flow ?? 'paginated';
+                selectDir.value = savedSettings.dir ?? 'ltr';
+                setTheme(savedSettings.theme ?? 'sepia');
+            } else {
+                currentFontSize = 100;
+                selectFontFamily.value = 'serif';
+                selectFontWeight.value = 'normal';
+                sliderLineHeight.value = 1.5;
+                sliderLetterSpacing.value = 0;
+                toggleFluidType.checked = true;
+                selectFlow.value = 'paginated';
+                selectDir.value = 'ltr';
+                setTheme('sepia');
+            }
+            document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
+        }
+
+        function saveCurrentSettings() {
+            if (!currentBookKey) return;
+            const settings = {
+                fontSize: currentFontSize,
+                fontFamily: selectFontFamily.value,
+                fontWeight: selectFontWeight.value,
+                lineHeight: sliderLineHeight.value,
+                letterSpacing: sliderLetterSpacing.value,
+                fluidType: toggleFluidType.checked,
+                flow: selectFlow.value,
+                dir: selectDir.value,
+                theme: currentTheme
+            };
+            localStorage.setItem(`${currentBookKey}_settings`, JSON.stringify(settings));
+        }
+
         function updateLayoutConfig() {
             if (!view) return;
             const flow = selectFlow.value;
@@ -473,6 +645,7 @@
                 view.renderer.setAttribute('flow', flow === 'scrolled' ? 'scrolled' : 'paginated');
                 view.renderer.setAttribute('writing-mode', dir === 'vertical' ? 'vertical-rl' : 'horizontal-tb');
             }
+            saveCurrentSettings();
         }
 
         selectFlow.addEventListener('change', updateLayoutConfig);
@@ -490,7 +663,7 @@
             valLineHeight.textContent = lineHeight;
             valLetterSpacing.textContent = `${letterSpacing}px`;
 
-            let fontFamilyCss = chosenFont !== 'publisher' ? `font-family: ${chosenFont}, sans-serif !important;` : '';
+            let fontFamilyCss = chosenFont !== 'publisher' ? `font-family: ${chosenFont}, Georgia, serif !important;` : '';
             
             let fontSizeCss = `font-size: ${currentFontSize}% !important;`;
             if (isFluid) {
@@ -500,27 +673,55 @@
                 fontSizeCss = `font-size: clamp(${minPx}px, ${basePx * 0.8}px + 1vw, ${maxPx}px) !important;`;
             }
 
+            // Theme color mappings matching screenshot
+            let bgHex = '#ffffff';
+            let textHex = '#333333';
+            let headingHex = '#111827';
+            let linkHex = '#2563eb';
+            let selectionHex = '#bfdbfe';
+
+            if (currentTheme === 'dark') {
+                bgHex = '#0f172a';
+                textHex = '#f1f5f9';
+                headingHex = '#ffffff';
+                linkHex = '#60a5fa';
+                selectionHex = '#3b82f6';
+            } else if (currentTheme === 'sepia') {
+                bgHex = '#fbf0d9';      // Exact background from screenshot
+                textHex = '#5c4a31';    // Exact body text from screenshot
+                headingHex = '#73582c'; // Exact chapter title heading brown
+                linkHex = '#73582c';
+                selectionHex = '#f3e1b9';
+            }
+
             const themeCSS = `
-                body, p, div, span, h1, h2, h3, h4, h5, h6 {
+                body, p, div, span {
                     ${fontSizeCss}
                     ${fontFamilyCss}
                     font-weight: ${chosenWeight} !important;
                     line-height: ${lineHeight} !important;
                     letter-spacing: ${letterSpacing}px !important;
-                    background-color: ${isDarkMode ? '#0f172a' : '#ffffff'} !important;
-                    color: ${isDarkMode ? '#f1f5f9' : '#333333'} !important;
+                    background-color: ${bgHex} !important;
+                    color: ${textHex} !important;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    ${fontFamilyCss}
+                    color: ${headingHex} !important;
+                    font-weight: 700 !important;
                 }
                 a {
-                    color: ${isDarkMode ? '#60a5fa' : '#2563eb'} !important;
+                    color: ${linkHex} !important;
                 }
                 ::selection {
-                    background: ${isDarkMode ? '#3b82f6' : '#bfdbfe'};
+                    background: ${selectionHex};
                 }
             `;
 
             if (view.renderer && view.renderer.setStyles) {
                 view.renderer.setStyles(themeCSS);
             }
+
+            saveCurrentSettings();
         }
 
         selectFontFamily.addEventListener('change', applyStyles);
@@ -543,33 +744,54 @@
             }
         });
 
-        function setTheme(dark) {
-            isDarkMode = dark;
-            document.documentElement.classList.toggle('dark', isDarkMode);
-            
-            if (isDarkMode) {
-                btnThemeDark.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
-                btnThemeLight.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
-            } else {
-                btnThemeLight.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
-                btnThemeDark.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-slate-800');
+        function setTheme(themeMode) {
+            currentTheme = themeMode;
+
+            document.documentElement.classList.remove('dark', 'sepia');
+            if (currentTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (currentTheme === 'sepia') {
+                document.documentElement.classList.add('sepia');
             }
-            
+
+            const buttons = { light: btnThemeLight, sepia: btnThemeSepia, dark: btnThemeDark };
+            Object.keys(buttons).forEach(mode => {
+                const btn = buttons[mode];
+                if (mode === currentTheme) {
+                    btn.classList.add('ring-2', 'ring-indigo-500', 'sepia:ring-sepia-700', 'font-bold');
+                } else {
+                    btn.classList.remove('ring-2', 'ring-indigo-500', 'sepia:ring-sepia-700', 'font-bold');
+                }
+            });
+
             applyStyles();
         }
 
-        btnThemeLight.addEventListener('click', () => setTheme(false));
-        btnThemeDark.addEventListener('click', () => setTheme(true));
-        setTheme(false);
+        btnThemeLight.addEventListener('click', () => setTheme('light'));
+        btnThemeSepia.addEventListener('click', () => setTheme('sepia'));
+        btnThemeDark.addEventListener('click', () => setTheme('dark'));
 
+        // Popovers
         btnSettings.addEventListener('click', (e) => {
             e.stopPropagation();
             bookmarkOverlay.classList.add('hidden');
+            infoOverlay.classList.add('hidden');
             settingsOverlay.classList.toggle('hidden');
         });
 
         btnCloseSettings.addEventListener('click', () => {
             settingsOverlay.classList.add('hidden');
+        });
+
+        btnBookInfo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            bookmarkOverlay.classList.add('hidden');
+            settingsOverlay.classList.add('hidden');
+            infoOverlay.classList.toggle('hidden');
+        });
+
+        btnCloseInfo.addEventListener('click', () => {
+            infoOverlay.classList.add('hidden');
         });
 
         // -------------------------------------------------------------
@@ -611,14 +833,14 @@
             tocItemToElementMap.clear();
 
             if (!tocItems || tocItems.length === 0) {
-                tocList.innerHTML = '<li class="text-slate-400 italic">No Table of Contents found.</li>';
+                tocList.innerHTML = '<li class="text-slate-400 sepia:text-sepia-700/50 italic">No Table of Contents found.</li>';
                 return;
             }
 
             function appendTocNodes(nodes, container) {
                 nodes.forEach(node => {
                     const li = document.createElement('li');
-                    li.className = 'py-2 px-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-slate-700 dark:text-slate-300';
+                    li.className = 'py-2 px-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 cursor-pointer transition-colors text-slate-700 dark:text-slate-300 sepia:text-sepia-800';
                     li.textContent = node.label ? node.label.trim() : 'Chapter';
                     tocItemToElementMap.set(node, li);
 
@@ -632,7 +854,7 @@
 
                     if (node.subitems && node.subitems.length > 0) {
                         const nestedUl = document.createElement('ul');
-                        nestedUl.className = 'pl-3 mt-1 space-y-1 border-l border-slate-200 dark:border-slate-800';
+                        nestedUl.className = 'pl-3 mt-1 space-y-1 border-l border-slate-200 dark:border-slate-800 sepia:border-sepia-200';
                         appendTocNodes(node.subitems, nestedUl);
                         container.appendChild(nestedUl);
                     }
@@ -644,11 +866,11 @@
 
         function syncTOC(tocItem) {
             if (!tocItem) return;
-            tocList.querySelectorAll('li').forEach(el => el.classList.remove('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800'));
+            tocList.querySelectorAll('li').forEach(el => el.classList.remove('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800', 'sepia:bg-sepia-200', 'sepia:text-sepia-700'));
 
             const activeLi = tocItemToElementMap.get(tocItem);
             if (activeLi) {
-                activeLi.classList.add('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800');
+                activeLi.classList.add('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800', 'sepia:bg-sepia-200', 'sepia:text-sepia-700');
                 activeLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }
         }
@@ -684,7 +906,7 @@
             const pct = Math.round((fraction || 0) * 100);
 
             if (totalPages > 0) {
-                pageInfo.textContent = `Page ${current} / ${totalPages} (${pct}%)`;
+                pageInfo.textContent = `Page ${current} of ${totalPages} (${pct}%)`;
             } else {
                 pageInfo.textContent = `${pct}%`;
             }
@@ -723,19 +945,19 @@
             const bookmarks = getSavedBookmarks();
 
             if (bookmarks.length === 0) {
-                bookmarkList.innerHTML = '<li class="text-slate-400 italic text-center py-4">No bookmarks saved yet.</li>';
+                bookmarkList.innerHTML = '<li class="text-slate-400 sepia:text-sepia-700/50 italic text-center py-4">No bookmarks saved yet.</li>';
                 return;
             }
 
             bookmarks.forEach((bm, index) => {
                 const li = document.createElement('li');
-                li.className = 'flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors border-b border-slate-100 dark:border-slate-800';
+                li.className = 'flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700/50 sepia:hover:bg-sepia-200 cursor-pointer transition-colors border-b border-slate-100 dark:border-slate-800 sepia:border-sepia-200';
                 const metaText = `${bm.percentage !== null ? bm.percentage + '% · ' : ''}${new Date(bm.timestamp).toLocaleDateString()}`;
 
                 li.innerHTML = `
                     <div class="bookmark-info flex-1 min-w-0 mr-2">
-                        <p class="font-semibold text-slate-700 dark:text-slate-200 truncate">${bm.chapterTitle}</p>
-                        <p class="text-[10px] text-slate-400">${metaText}</p>
+                        <p class="font-semibold text-slate-700 dark:text-slate-200 sepia:text-sepia-900 truncate">${bm.chapterTitle}</p>
+                        <p class="text-[10px] text-slate-400 sepia:text-sepia-700/60">${metaText}</p>
                     </div>
                     <button class="btn-remove-bm text-red-500 hover:text-red-700 p-1 text-sm">&times;</button>
                 `;
@@ -764,6 +986,7 @@
                 return;
             }
             settingsOverlay.classList.add('hidden');
+            infoOverlay.classList.add('hidden');
             bookmarkOverlay.classList.toggle('hidden');
         });
 
@@ -789,6 +1012,9 @@
             }
             if (!settingsOverlay.contains(e.target) && !btnSettings.contains(e.target)) {
                 settingsOverlay.classList.add('hidden');
+            }
+            if (!infoOverlay.contains(e.target) && !btnBookInfo.contains(e.target)) {
+                infoOverlay.classList.add('hidden');
             }
         });
 
@@ -847,14 +1073,14 @@
 
         function appendSearchResult(snippet, target, label, query) {
             const li = document.createElement('li');
-            li.className = 'p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border-b border-slate-100 dark:border-slate-800 transition-colors';
+            li.className = 'p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 sepia:hover:bg-sepia-200 cursor-pointer border-b border-slate-100 dark:border-slate-800 sepia:border-sepia-200 transition-colors';
             
             const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const highlightedText = snippet.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark>$1</mark>');
 
             li.innerHTML = `
-                <div class="font-semibold text-xs mb-1 text-indigo-600 dark:text-indigo-400 truncate">${label}</div>
-                <div class="text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">...${highlightedText}...</div>
+                <div class="font-semibold text-xs mb-1 text-indigo-600 dark:text-indigo-400 sepia:text-sepia-700 truncate">${label}</div>
+                <div class="text-slate-600 dark:text-slate-300 sepia:text-sepia-800 leading-relaxed text-xs sm:text-sm">...${highlightedText}...</div>
             `;
 
             li.addEventListener('click', () => {
