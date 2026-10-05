@@ -1,0 +1,97 @@
+{
+  "categories": [
+    "FICTION",
+    "FANTASY",
+    "BUSINESS",
+    "DESIGN",
+    "ARCHITECTURE",
+    "DEVELOPMENT",
+    "HISTORICAL FICTION"
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "Moby Dick; Or, The Whale by Herman Melville",
+      "author": "Melville Herman",
+      "category": "FICTION",
+      "rating": 5,
+      "count": 64,
+      "cover": "https://www.gutenberg.org/cache/epub/2701/pg2701.cover.medium.jpg",
+      "description": "\"Moby Dick; Or, The Whale\" by Herman Melville is an epic novel published in 1851. Sailor Ishmael narrates the obsessive quest of Captain Ahab, who commands the whaling ship Pequod in pursuit of Moby Dick, a giant white sperm whale that destroyed his leg.",
+      "progress": 45,
+      "file": "A.epub"
+    },
+    {
+      "id": "2",
+      "title": "The Value of Money",
+      "author": "Benjamin M. Anderson",
+      "category": "BUSINESS",
+      "rating": 5,
+      "count": 112,
+      "cover": "https://www.gutenberg.org/cache/epub/34823/pg34823.cover.medium.jpg",
+      "description": "The book primarily delves into the concept of money and its value within the broader spectrum of economic life, emphasizing the importance of dynamic change and speculation in trade.",
+      "progress": 100,
+      "file": "B.epub"
+    },
+    {
+      "id": "3",
+      "title": "Alice's Adventures in Wonderland",
+      "author": "Lewis Carroll",
+      "category": "FANTASY",
+      "rating": 4,
+      "count": 420,
+      "cover": "https://www.gutenberg.org/cache/epub/11/pg11.cover.medium.jpg",
+      "description": "When a curious girl named Alice spots a White Rabbit with a pocket watch, she tumbles down a rabbit hole into an extraordinary fantasy world filled with peculiar anthropomorphic creatures.",
+      "progress": 0,
+      "file": "C.epub"
+    },
+    {
+      "id": "4",
+      "title": "Garden Cities of To-Morrow ",
+      "author": "Ebenezer Howard",
+      "category": "ARCHITECTURE",
+      "rating": 5,
+      "count": 310,
+      "cover": "https://www.gutenberg.org/cache/epub/46134/pg46134.cover.medium.jpg",
+      "description": "The book addresses the pressing issues of urban overcrowding and the need for a new model of living that combines the benefits of both city and rural life.",
+      "progress": 12,
+      "file": "D.epub"
+    },
+    {
+      "id": "5",
+      "title": "A Tale of Two Cities",
+      "author": "Charles Dickens",
+      "category": "HISTORICAL FICTION",
+      "rating": 4,
+      "count": 89,
+      "cover": "https://www.gutenberg.org/cache/epub/98/pg98.cover.medium.jpg",
+      "description": ". Set in London and Paris during the tumultuous French Revolution, it follows Dr. Alexandre Manette after his mysterious 18-year imprisonment in the Bastille and his reunion with his daughter Lucie.",
+      "progress": 0,
+      "file": "E.epub"
+    },
+    {
+      "id": "6",
+      "title": "Les Misérables",
+      "author": "Victor Hugo",
+      "category": "HISTORICAL FICTION",
+      "rating": 5,
+      "count": 156,
+      "cover": "https://www.gutenberg.org/cache/epub/135/pg135.cover.medium.jpg",
+      "description": "Beginning in 1815 and culminating in the 1832 June Rebellion in Paris, it follows ex-convict Jean Valjean's struggle for redemption. The novel explores the nature of law and grace, examining themes of justice, poverty, and love through the lives of interconnected characters in nineteenth-century France.",
+      "progress": 75,
+      "file": "F.epub"
+    },
+    {
+      "id": "7",
+      "title": "論語",
+      "author": "Confucius",
+      "category": "DEVELOPMENT",
+      "rating": 3,
+      "count": 70,
+      "cover": "https://www.gutenberg.org/cache/epub/23839/pg23839.cover.medium.jpg",
+      "description": "This collection of sayings and ideas explores Confucius's teachings on moral cultivation, virtue, and leadership.",
+      "progress": 20,
+      "file": "G.epub"
+    }
+  ]
+}
