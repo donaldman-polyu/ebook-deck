@@ -2,7 +2,7 @@
 <html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Book - Translated Library</title>
     
     <!-- Tailwind CSS CDN -->
@@ -53,18 +53,6 @@
             </div>
             <a href="index.html" class="font-bold text-slate-900 text-lg sm:text-xl tracking-tight hover:text-indigo-600 transition-colors">E-Book</a>
         </div>
-
-<!--         <div class="flex items-center space-x-3">
-            <a href="index.html" class="px-3.5 py-1.5 border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-medium rounded-lg transition-colors flex items-center space-x-2">
-                <i class="fa-solid fa-book-reader text-indigo-600"></i>
-                <span class="hidden sm:inline">Open Reader</span>
-            </a>
-            <label class="cursor-pointer flex items-center space-x-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg shadow-sm transition-colors">
-                <i class="fa-solid fa-plus text-xs"></i>
-                <span class="hidden sm:inline">Add EPUB</span>
-                <input type="file" id="library-file-input" accept=".epub,.mobi,.azw3" class="hidden" />
-            </label>
-        </div> -->
     </header>
 
     <!-- MAIN CONTAINER -->
@@ -233,82 +221,98 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const sampleBooks = [
-            {
-                id: '1',
-                title: 'The Art of Observation',
-                author: 'Sarah Williams',
-                category: 'DESIGN',
-                rating: 5,
-                count: 64,
-                cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
-                description: 'A comprehensive guide into visual thinking, design frameworks, and modern aesthetics.',
-                progress: 45,
-                file: '1.epub'
-            },
-            {
-                id: '2',
-                title: 'Modern Design & Architecture',
-                author: 'David Chen',
-                category: 'ARCHITECTURE',
-                rating: 5,
-                count: 112,
-                cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
-                description: 'Exploring structural aesthetics, urban planning, and sustainable building concepts.',
-                progress: 100,
-                file: '2.epub'
-            },
-            {
-                id: '3',
-                title: 'Journey to the Center of Thought',
-                author: 'Elena Rossi',
-                category: 'FICTION',
-                rating: 4,
-                count: 420,
-                cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80',
-                description: 'A captivating psychological fiction following the internal monologue of a brilliant researcher.',
-                progress: 0,
-                file: '3.epub'
-            },
-            {
-                id: '4',
-                title: 'Invisible Worlds',
-                author: 'A. K. Rowling',
-                category: 'FANTASY',
-                rating: 5,
-                count: 310,
-                cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80',
-                description: 'Uncover parallel dimensions hidden right in front of our eyes in this fiction masterpiece.',
-                progress: 12,
-                file: '4.epub'
-            },
-            {
-                id: '5',
-                title: 'The Rising Sun',
-                author: 'Kenji Sato',
-                category: 'HISTORICAL FICTION',
-                rating: 4,
-                count: 89,
-                cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&q=80',
-                description: 'An inspiring saga set during the rapid cultural transformation of early 20th century East Asia.',
-                progress: 0,
-                file: '5.epub'
-            },
-            {
-                id: '6',
-                title: 'Clean Code & Mindsets',
-                author: 'Martin L.',
-                category: 'DEVELOPMENT',
-                rating: 5,
-                count: 156,
-                cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&q=80',
-                description: 'Best practices, refactoring methods, and software engineering principles for modern developers.',
-                progress: 75,
-                file: '6.epub'
-            }
-        ];
+        // Set to true to force inline JSON; false to try fetching 'books.json' first, falling back to inline if fetch fails
+        const USE_INLINE_DATA = false;
 
-        let books = [...sampleBooks];
+        // Fallback / Inline Central Data
+        const INLINE_LIBRARY_DATA = {
+            categories: [
+                'FICTION',
+                'SELF-HELP',
+                'BUSINESS',
+                'DESIGN',
+                'ARCHITECTURE',
+                'DEVELOPMENT',
+                'HISTORICAL FICTION'
+            ],
+            books: [
+                {
+                    id: '1',
+                    title: 'The Art of Observation',
+                    author: 'Sarah Williams',
+                    category: 'DESIGN',
+                    rating: 5,
+                    count: 64,
+                    cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
+                    description: 'A comprehensive guide into visual thinking, design frameworks, and modern aesthetics.',
+                    progress: 45,
+                    file: '1.epub'
+                },
+                {
+                    id: '2',
+                    title: 'Modern Design & Architecture',
+                    author: 'David Chen',
+                    category: 'ARCHITECTURE',
+                    rating: 5,
+                    count: 112,
+                    cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
+                    description: 'Exploring structural aesthetics, urban planning, and sustainable building concepts.',
+                    progress: 100,
+                    file: '2.epub'
+                },
+                {
+                    id: '3',
+                    title: 'Journey to the Center of Thought',
+                    author: 'Elena Rossi',
+                    category: 'FICTION',
+                    rating: 4,
+                    count: 420,
+                    cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80',
+                    description: 'A captivating psychological fiction following the internal monologue of a brilliant researcher.',
+                    progress: 0,
+                    file: '3.epub'
+                },
+                {
+                    id: '4',
+                    title: 'Invisible Worlds',
+                    author: 'A. K. Rowling',
+                    category: 'FANTASY',
+                    rating: 5,
+                    count: 310,
+                    cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80',
+                    description: 'Uncover parallel dimensions hidden right in front of our eyes in this fiction masterpiece.',
+                    progress: 12,
+                    file: '4.epub'
+                },
+                {
+                    id: '5',
+                    title: 'The Rising Sun',
+                    author: 'Kenji Sato',
+                    category: 'HISTORICAL FICTION',
+                    rating: 4,
+                    count: 89,
+                    cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&q=80',
+                    description: 'An inspiring saga set during the rapid cultural transformation of early 20th century East Asia.',
+                    progress: 0,
+                    file: '5.epub'
+                },
+                {
+                    id: '6',
+                    title: 'Clean Code & Mindsets',
+                    author: 'Martin L.',
+                    category: 'DEVELOPMENT',
+                    rating: 5,
+                    count: 156,
+                    cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&q=80',
+                    description: 'Best practices, refactoring methods, and software engineering principles for modern developers.',
+                    progress: 75,
+                    file: '6.epub'
+                }
+            ]
+        };
+
+        let books = [];
+        let categories = [];
         let wishlist = new Set();
         let selectedCategories = new Set();
         let currentLayout = 'grid';
@@ -341,10 +345,32 @@
         const modalContent = document.getElementById('modal-content');
         const btnCloseModal = document.getElementById('btn-close-modal');
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialization Logic (Loads JSON via fetch or inline config)
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeLibraryData();
             renderCategories();
             applyFiltersAndRender();
         });
+
+        async function initializeLibraryData() {
+            if (USE_INLINE_DATA) {
+                books = [...INLINE_LIBRARY_DATA.books];
+                categories = [...INLINE_LIBRARY_DATA.categories];
+                return;
+            }
+
+            try {
+                const response = await fetch('books.json');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                const data = await response.json();
+                books = data.books || [];
+                categories = data.categories || [];
+            } catch (err) {
+                console.warn('Could not load books.json, falling back to inline data:', err);
+                books = [...INLINE_LIBRARY_DATA.books];
+                categories = [...INLINE_LIBRARY_DATA.categories];
+            }
+        }
 
         // Accordion Toggle Logic
         btnToggleCategories.addEventListener('click', () => {
@@ -363,12 +389,10 @@
             mobileFilterChevron.classList.toggle('rotate-180');
         });
 
-        // Populate Categories (Checkboxes)
+        // Populate Categories (Checkboxes) dynamically
         function renderCategories() {
-            const categories = ['FICTION', 'SELF-HELP', 'BUSINESS', 'DESIGN', 'ARCHITECTURE', 'DEVELOPMENT', 'HISTORICAL FICTION'];
-            
             categoryFilterList.innerHTML = categories.map(cat => {
-                const count = books.filter(b => b.category === cat).length || Math.floor(Math.random() * 200 + 50);
+                const count = books.filter(b => b.category === cat).length;
                 return `
                     <label class="flex items-center justify-between cursor-pointer hover:text-indigo-600 py-1">
                         <span class="flex items-center space-x-2">
@@ -447,12 +471,6 @@
                 <div>
                     <div class="relative aspect-[2/3] bg-slate-100 rounded-xl overflow-hidden mb-3">
                         <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 group-hover:blur-sm transition-all duration-300" />
-                        
-                        <!-- EPUB Badge Commented Out:
-                        <span class="absolute top-2.5 right-2.5 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase bg-slate-900/80 text-white backdrop-blur-sm">
-                            EPUB
-                        </span>
-                        -->
 
                         <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-3">
                             <button onclick="openQuickView('${book.id}')" class="w-10 h-10 rounded-full bg-white text-slate-700 hover:bg-indigo-600 hover:text-white flex items-center justify-center shadow-lg transition-colors" title="Quick View">
