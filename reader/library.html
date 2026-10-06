@@ -29,7 +29,20 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- CONSOLIDATED GLOBAL & PAGE STYLES -->
     <style>
+        :root {
+            /* Page-wide Font Sizing Tokens */
+            --font-base-size: 15px;
+            --card-title-size: 1rem;
+            --meta-text-size: 0.8125rem;
+        }
+
+        html {
+            font-size: var(--font-base-size);
+        }
+
+        /* Custom Scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -41,17 +54,54 @@
             background: rgba(156, 163, 175, 0.3);
             border-radius: 3px;
         }
+
+        /* Reusable Typography & UI Utility Classes */
+        .filter-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
+
+        .input-standard {
+            font-size: 0.875rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            color: #334155;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .input-standard:focus {
+            outline: 2px solid #6366f1;
+            background-color: #ffffff;
+        }
+
+        .book-title-text {
+            font-size: var(--card-title-size);
+            font-weight: 700;
+            line-height: 1.35;
+            color: #0f172a;
+        }
+
+        .book-meta-text {
+            font-size: var(--meta-text-size);
+            color: #64748b;
+        }
     </style>
 </head>
-<body class="min-h-full bg-slate-50 text-slate-800 flex flex-col font-sans antialiased">
+<body class="min-h-full bg-slate-50 text-slate-800 flex flex-col font-sans antialiased text-sm sm:text-base">
 
     <!-- TOP NAV HEADER -->
     <header class="h-16 border-b border-slate-200 bg-white/95 backdrop-blur flex items-center justify-between px-4 sm:px-8 shrink-0 sticky top-0 z-30">
         <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-                <i class="fa-solid fa-book-open text-base"></i>
+            <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                <i class="fa-solid fa-book-open text-lg"></i>
             </div>
-            <a href="index.html" class="font-bold text-slate-900 text-lg sm:text-xl tracking-tight hover:text-indigo-600 transition-colors">E-Book</a>
+            <a href="index.html" class="font-bold text-slate-900 text-xl sm:text-2xl tracking-tight hover:text-indigo-600 transition-colors">E-Book</a>
         </div>
     </header>
 
@@ -60,19 +110,19 @@
         
         <!-- PAGE TITLE HEADER -->
         <div class="mb-6">
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Translated Library</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">Discover over 100 titles in our library.</p>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Translated Library</h1>
+            <p class="text-sm sm:text-base text-slate-500 mt-1">Discover over 100 titles in our library.</p>
         </div>
 
         <!-- FULL WIDTH SEARCH BAR -->
         <div class="mb-6 relative z-10">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input type="text" id="search-input" placeholder="Search catalog..." class="w-full pl-11 pr-4 py-3 text-sm bg-white border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400" />
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+            <input type="text" id="search-input" placeholder="Search catalog by title or author..." class="w-full pl-12 pr-4 py-3.5 text-base bg-white border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400" />
         </div>
 
-        <!-- MOBILE FILTER TOGGLE BAR (Visible on < lg screens) -->
+        <!-- MOBILE FILTER TOGGLE BAR -->
         <div class="lg:hidden mb-4 z-10">
-            <button id="btn-toggle-mobile-filters" class="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between text-slate-700 font-semibold text-sm shadow-sm hover:bg-slate-50 transition-colors">
+            <button id="btn-toggle-mobile-filters" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 flex items-center justify-between text-slate-700 font-semibold text-base shadow-sm hover:bg-slate-50 transition-colors">
                 <span class="flex items-center space-x-2">
                     <i class="fa-solid fa-sliders text-indigo-600"></i>
                     <span>Filter & Sort Catalog</span>
@@ -81,23 +131,25 @@
             </button>
         </div>
 
-        <!-- CONTENT GRID (Sidebar + Book Grid) -->
+        <!-- CONTENT GRID -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start relative z-0">
 
             <!-- FILTER SIDEBAR -->
-            <aside id="filter-pane" class="hidden lg:block lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-5 space-y-5 shadow-sm lg:sticky lg:top-20 z-10">
+            <aside id="filter-pane" class="hidden lg:block lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm lg:sticky lg:top-20 z-10">
                 
                 <!-- Sort By -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Sort by</label>
+                    <label class="block filter-section-title mb-2.5">Sort by</label>
                     <div class="relative">
-                        <select id="select-sort" class="w-full appearance-none bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs sm:text-sm text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer pr-8">
+                        <select id="select-sort" class="w-full appearance-none input-standard pr-8 text-sm sm:text-base cursor-pointer">
                             <option value="popular">Most Popular</option>
+                            <option value="year-desc">Year (Newest First)</option>
+                            <option value="year-asc">Year (Oldest First)</option>
                             <option value="title-asc">Title (A-Z)</option>
                             <option value="rating-desc">Highest Rated</option>
                             <option value="author-asc">Author (A-Z)</option>
                         </select>
-                        <i class="fa-solid fa-arrows-up-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        <i class="fa-solid fa-arrows-up-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
                     </div>
                 </div>
 
@@ -106,12 +158,12 @@
                 <!-- Categories Accordion -->
                 <div>
                     <button id="btn-toggle-categories" class="w-full flex items-center justify-between py-1 text-left focus:outline-none group">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 group-hover:text-slate-800 transition-colors">Categories</span>
-                        <i id="chevron-categories" class="fa-solid fa-chevron-up text-xs text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
+                        <span class="filter-section-title group-hover:text-slate-800 transition-colors">Categories</span>
+                        <i id="chevron-categories" class="fa-solid fa-chevron-up text-sm text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
                     </button>
-                    <div id="wrapper-categories" class="space-y-2 text-xs sm:text-sm text-slate-600 max-h-52 overflow-y-auto pr-1 mt-3 transition-all">
-                        <div id="category-filter-list" class="space-y-2">
-                            <!-- Populated dynamically via JS -->
+                    <div id="wrapper-categories" class="space-y-2.5 text-sm sm:text-base text-slate-600 max-h-60 overflow-y-auto pr-1 mt-3 transition-all">
+                        <div id="category-filter-list" class="space-y-2.5">
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
                 </div>
@@ -121,36 +173,49 @@
                 <!-- Rating Accordion -->
                 <div>
                     <button id="btn-toggle-ratings" class="w-full flex items-center justify-between py-1 text-left focus:outline-none group">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 group-hover:text-slate-800 transition-colors">Rating</span>
-                        <i id="chevron-ratings" class="fa-solid fa-chevron-up text-xs text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
+                        <span class="filter-section-title group-hover:text-slate-800 transition-colors">Rating</span>
+                        <i id="chevron-ratings" class="fa-solid fa-chevron-up text-sm text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
                     </button>
-                    <div id="wrapper-ratings" class="space-y-2 text-xs sm:text-sm mt-3 transition-all">
-                        <label class="flex items-center space-x-2 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="0" checked class="text-indigo-600 focus:ring-indigo-500">
+                    <div id="wrapper-ratings" class="space-y-2.5 text-sm sm:text-base mt-3 transition-all">
+                        <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
+                            <input type="radio" name="rating-filter" value="0" checked class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
                             <span>All Ratings</span>
                         </label>
-                        <label class="flex items-center space-x-2 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="5" class="text-indigo-600 focus:ring-indigo-500">
+                        <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
+                            <input type="radio" name="rating-filter" value="5" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
                             <span class="text-amber-400">★★★★★</span>
-                            <span class="text-slate-500 text-xs">& up</span>
+                            <span class="text-slate-500 text-xs sm:text-sm">& up</span>
                         </label>
-                        <label class="flex items-center space-x-2 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="4" class="text-indigo-600 focus:ring-indigo-500">
+                        <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
+                            <input type="radio" name="rating-filter" value="4" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
                             <span class="text-amber-400">★★★★☆</span>
-                            <span class="text-slate-500 text-xs">& up</span>
+                            <span class="text-slate-500 text-xs sm:text-sm">& up</span>
                         </label>
-                        <label class="flex items-center space-x-2 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="3" class="text-indigo-600 focus:ring-indigo-500">
+                        <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
+                            <input type="radio" name="rating-filter" value="3" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
                             <span class="text-amber-400">★★★☆☆</span>
-                            <span class="text-slate-500 text-xs">& up</span>
+                            <span class="text-slate-500 text-xs sm:text-sm">& up</span>
                         </label>
                     </div>
                 </div>
 
                 <hr class="border-slate-100" />
 
+                <!-- Publication Era Dropdown -->
+                <div>
+                    <label class="block filter-section-title mb-2.5">Publication Era</label>
+                    <div class="relative">
+                        <select id="select-era" class="w-full appearance-none input-standard pr-8 text-sm sm:text-base cursor-pointer">
+                            <!-- Populated dynamically from JSON -->
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100" />
+
                 <!-- Reset Filters Button -->
-                <button id="btn-reset-filters" class="w-full py-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center space-x-2">
+                <button id="btn-reset-filters" class="w-full py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-rotate-left text-xs"></i>
                     <span>Reset Filters</span>
                 </button>
@@ -162,56 +227,52 @@
                 
                 <!-- Result Count & View Toggle Header -->
                 <div class="flex items-center justify-between mb-4">
-                    <p id="result-count" class="text-xs sm:text-sm font-medium text-slate-500">Showing 1-6 of 6 results</p>
+                    <p id="result-count" class="text-sm sm:text-base font-medium text-slate-600">Showing 0 results</p>
                     
-                    <!-- V1 Pill View Toggle -->
                     <div class="bg-slate-200/70 p-1 rounded-xl flex items-center space-x-1 shadow-inner border border-slate-200/60">
-                        <button id="btn-view-grid" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all">
+                        <button id="btn-view-grid" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all">
                             <i class="fa-solid fa-border-all text-xs"></i>
                             <span>Grid</span>
                         </button>
-                        <button id="btn-view-list" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all">
+                        <button id="btn-view-list" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all">
                             <i class="fa-solid fa-list text-xs"></i>
                             <span>List</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- BOOK CONTAINER (GRID / LIST) -->
+                <!-- ACTIVE FILTER PILLS CONTAINER -->
+                <div id="active-filters-bar" class="hidden flex-wrap items-center gap-2 mb-4">
+                    <span class="text-xs sm:text-sm text-slate-400 font-medium">Active:</span>
+                    <div id="active-pills-list" class="flex flex-wrap items-center gap-2"></div>
+                    <button id="btn-clear-all-pills" class="text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-800 underline ml-1">
+                        Clear All
+                    </button>
+                </div>
+
+                <!-- BOOK CONTAINER -->
                 <div id="book-container" class="grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-6">
                     <!-- Cards injected via JS -->
                 </div>
 
                 <!-- EMPTY STATE -->
                 <div id="empty-state" class="hidden flex-col items-center justify-center py-16 bg-white rounded-2xl border border-slate-200 text-center">
-                    <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 mb-3">
-                        <i class="fa-solid fa-book-open text-xl"></i>
+                    <div class="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 mb-3">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-800">No matching books found</h3>
-                    <p class="text-xs text-slate-500 mt-1 max-w-xs">Try relaxing your search terms or clearing selected category filters.</p>
-                </div>
-
-                <!-- PAGINATION -->
-                <div class="mt-10 flex justify-center items-center space-x-1.5 text-xs font-semibold">
-                    <button class="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-400 hover:bg-slate-50 flex items-center justify-center transition-colors">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    </button>
-                    <button class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-sm">1</button>
-                    <button class="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors">2</button>
-                    <button class="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors">
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </button>
+                    <h3 class="text-base font-bold text-slate-800">No matching books found</h3>
+                    <p class="text-sm text-slate-500 mt-1 max-w-xs">Try relaxing your search terms or clearing selected filters.</p>
                 </div>
 
             </section>
         </div>
     </main>
 
-    <!-- BOOK BRIEF INFO QUICK VIEW MODAL -->
+    <!-- QUICK VIEW MODAL -->
     <div id="quick-view-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-200">
-            <button id="btn-close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button id="btn-close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5">
+                <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <div id="modal-content" class="flex flex-col sm:flex-row gap-5">
                 <!-- Modal content dynamically injected -->
@@ -221,25 +282,31 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Set to true to force inline JSON; false to try fetching 'books.json' first, falling back to inline if fetch fails
         const USE_INLINE_DATA = false;
 
-        // Fallback / Inline Central Data
         const INLINE_LIBRARY_DATA = {
             categories: [
                 'FICTION',
                 'SELF-HELP',
-                'FANTASY',
+                'BUSINESS',
                 'DESIGN',
                 'ARCHITECTURE',
                 'DEVELOPMENT',
                 'HISTORICAL FICTION'
+            ],
+            eras: [
+                { id: "all", label: "All Years" },
+                { id: "modern", label: "Modern 1900 - Present", min: 1900, max: null },
+                { id: "1875-1899", label: "1875 - 1899", min: 1875, max: 1899 },
+                { id: "1850-1874", label: "1850 - 1874", min: 1850, max: 1874 },
+                { id: "classic", label: "Classic (Pre 1850)", min: null, max: 1849 }
             ],
             books: [
                 {
                     id: '1',
                     title: 'The Art of Observation',
                     author: 'Sarah Williams',
+                    publishedYear: 2021,
                     category: 'DESIGN',
                     rating: 5,
                     count: 64,
@@ -250,8 +317,9 @@
                 },
                 {
                     id: '2',
-                    title: 'Modern Design & Architecture',
+                    title: 'Modern Design & Architecture Across the Centuries: A Historical Retrospective',
                     author: 'David Chen',
+                    publishedYear: 1888,
                     category: 'ARCHITECTURE',
                     rating: 5,
                     count: 112,
@@ -264,6 +332,7 @@
                     id: '3',
                     title: 'Journey to the Center of Thought',
                     author: 'Elena Rossi',
+                    publishedYear: 1862,
                     category: 'FICTION',
                     rating: 4,
                     count: 420,
@@ -276,6 +345,7 @@
                     id: '4',
                     title: 'Invisible Worlds',
                     author: 'A. K. Rowling',
+                    publishedYear: 1818,
                     category: 'FANTASY',
                     rating: 5,
                     count: 310,
@@ -288,6 +358,7 @@
                     id: '5',
                     title: 'The Rising Sun',
                     author: 'Kenji Sato',
+                    publishedYear: 1912,
                     category: 'HISTORICAL FICTION',
                     rating: 4,
                     count: 89,
@@ -300,6 +371,7 @@
                     id: '6',
                     title: 'Clean Code & Mindsets',
                     author: 'Martin L.',
+                    publishedYear: 2019,
                     category: 'DEVELOPMENT',
                     rating: 5,
                     count: 156,
@@ -313,6 +385,7 @@
 
         let books = [];
         let categories = [];
+        let eras = [];
         let wishlist = new Set();
         let selectedCategories = new Set();
         let currentLayout = 'grid';
@@ -322,8 +395,13 @@
         const emptyState = document.getElementById('empty-state');
         const searchInput = document.getElementById('search-input');
         const selectSort = document.getElementById('select-sort');
+        const selectEra = document.getElementById('select-era');
         const categoryFilterList = document.getElementById('category-filter-list');
         const resultCount = document.getElementById('result-count');
+
+        const activeFiltersBar = document.getElementById('active-filters-bar');
+        const activePillsList = document.getElementById('active-pills-list');
+        const btnClearAllPills = document.getElementById('btn-clear-all-pills');
         
         const btnToggleMobileFilters = document.getElementById('btn-toggle-mobile-filters');
         const filterPane = document.getElementById('filter-pane');
@@ -345,10 +423,11 @@
         const modalContent = document.getElementById('modal-content');
         const btnCloseModal = document.getElementById('btn-close-modal');
 
-        // Initialization Logic (Loads JSON via fetch or inline config)
+        // Initialize Application
         document.addEventListener('DOMContentLoaded', async () => {
             await initializeLibraryData();
             renderCategories();
+            renderEraDropdown();
             applyFiltersAndRender();
         });
 
@@ -356,6 +435,7 @@
             if (USE_INLINE_DATA) {
                 books = [...INLINE_LIBRARY_DATA.books];
                 categories = [...INLINE_LIBRARY_DATA.categories];
+                eras = [...INLINE_LIBRARY_DATA.eras];
                 return;
             }
 
@@ -365,14 +445,22 @@
                 const data = await response.json();
                 books = data.books || [];
                 categories = data.categories || [];
+                eras = data.eras || [];
             } catch (err) {
                 console.warn('Could not load books.json, falling back to inline data:', err);
                 books = [...INLINE_LIBRARY_DATA.books];
                 categories = [...INLINE_LIBRARY_DATA.categories];
+                eras = [...INLINE_LIBRARY_DATA.eras];
             }
         }
 
-        // Accordion Toggle Logic
+        function renderEraDropdown() {
+            selectEra.innerHTML = eras.map(era => 
+                `<option value="${era.id}">${era.label}</option>`
+            ).join('');
+        }
+
+        // Accordion Toggle
         btnToggleCategories.addEventListener('click', () => {
             wrapperCategories.classList.toggle('hidden');
             chevronCategories.classList.toggle('rotate-180');
@@ -383,20 +471,18 @@
             chevronRatings.classList.toggle('rotate-180');
         });
 
-        // Mobile Filter Collapsible Toggle
         btnToggleMobileFilters.addEventListener('click', () => {
             filterPane.classList.toggle('hidden');
             mobileFilterChevron.classList.toggle('rotate-180');
         });
 
-        // Populate Categories (Checkboxes) dynamically
         function renderCategories() {
             categoryFilterList.innerHTML = categories.map(cat => {
                 const count = books.filter(b => b.category === cat).length;
                 return `
-                    <label class="flex items-center justify-between cursor-pointer hover:text-indigo-600 py-1">
-                        <span class="flex items-center space-x-2">
-                            <input type="checkbox" name="category-filter" value="${cat}" class="rounded text-indigo-600 focus:ring-indigo-500">
+                    <label class="flex items-center justify-between cursor-pointer hover:text-indigo-600 py-0.5">
+                        <span class="flex items-center space-x-2.5">
+                            <input type="checkbox" name="category-filter" value="${cat}" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500">
                             <span>${cat.charAt(0) + cat.slice(1).toLowerCase()}</span>
                         </span>
                         <span class="text-xs text-slate-400 font-normal">(${count})</span>
@@ -416,30 +502,110 @@
             });
         }
 
-        // Apply Search, Filter, Sort
+        function matchesEraFilter(publishedYear, selectedEraId) {
+            if (!selectedEraId || selectedEraId === 'all') return true;
+
+            const eraConfig = eras.find(e => e.id === selectedEraId);
+            if (!eraConfig || !publishedYear) return true;
+
+            const { min, max } = eraConfig;
+
+            if (min !== null && min !== undefined && publishedYear < min) return false;
+            if (max !== null && max !== undefined && publishedYear > max) return false;
+
+            return true;
+        }
+
+        // Render Active Filter Badges
+        function renderActivePills() {
+            const pills = [];
+            const query = searchInput.value.trim();
+            const eraVal = selectEra.value;
+            const minRating = parseInt(document.querySelector('input[name="rating-filter"]:checked')?.value || '0', 10);
+
+            if (query) {
+                pills.push({ type: 'search', label: `"${query}"` });
+            }
+
+            selectedCategories.forEach(cat => {
+                pills.push({ type: 'category', value: cat, label: cat.charAt(0) + cat.slice(1).toLowerCase() });
+            });
+
+            if (minRating > 0) {
+                pills.push({ type: 'rating', label: `${minRating}★ & up` });
+            }
+
+            if (eraVal && eraVal !== 'all') {
+                const eraObj = eras.find(e => e.id === eraVal);
+                if (eraObj) pills.push({ type: 'era', label: eraObj.label });
+            }
+
+            if (pills.length === 0) {
+                activeFiltersBar.classList.add('hidden');
+                activeFiltersBar.classList.remove('flex');
+            } else {
+                activeFiltersBar.classList.remove('hidden');
+                activeFiltersBar.classList.add('flex');
+                
+                activePillsList.innerHTML = pills.map(p => `
+                    <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-indigo-50 text-indigo-700 border border-indigo-200/60 shadow-sm">
+                        <span>${p.label}</span>
+                        <button onclick="removePill('${p.type}', '${p.value || ''}')" class="hover:bg-indigo-200/60 rounded-full w-4 h-4 inline-flex items-center justify-center text-indigo-500 transition-colors">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </span>
+                `).join('');
+            }
+        }
+
+        window.removePill = function(type, val) {
+            if (type === 'search') {
+                searchInput.value = '';
+            } else if (type === 'category') {
+                selectedCategories.delete(val);
+                const cb = document.querySelector(`input[name="category-filter"][value="${val}"]`);
+                if (cb) cb.checked = false;
+            } else if (type === 'rating') {
+                document.querySelector('input[name="rating-filter"][value="0"]').checked = true;
+            } else if (type === 'era') {
+                selectEra.value = 'all';
+            }
+            applyFiltersAndRender();
+        };
+
         function applyFiltersAndRender() {
             const query = searchInput.value.toLowerCase().trim();
             const sortVal = selectSort.value;
+            const eraVal = selectEra.value;
             const minRating = parseInt(document.querySelector('input[name="rating-filter"]:checked')?.value || '0', 10);
 
             let filtered = books.filter(b => {
                 const matchesSearch = b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query);
                 const matchesCategory = selectedCategories.size === 0 || selectedCategories.has(b.category);
                 const matchesRating = b.rating >= minRating;
+                const matchesEra = matchesEraFilter(b.publishedYear, eraVal);
 
-                return matchesSearch && matchesCategory && matchesRating;
+                return matchesSearch && matchesCategory && matchesRating && matchesEra;
             });
 
-            // Sorting
-            if (sortVal === 'title-asc') filtered.sort((a, b) => a.title.localeCompare(b.title));
-            if (sortVal === 'rating-desc') filtered.sort((a, b) => b.rating - a.rating);
-            if (sortVal === 'author-asc') filtered.sort((a, b) => a.author.localeCompare(b.author));
+            // Sorting logic
+            if (sortVal === 'year-desc') {
+                filtered.sort((a, b) => (b.publishedYear || 0) - (a.publishedYear || 0));
+            } else if (sortVal === 'year-asc') {
+                filtered.sort((a, b) => (a.publishedYear || 0) - (b.publishedYear || 0));
+            } else if (sortVal === 'title-asc') {
+                filtered.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortVal === 'rating-desc') {
+                filtered.sort((a, b) => b.rating - a.rating);
+            } else if (sortVal === 'author-asc') {
+                filtered.sort((a, b) => a.author.localeCompare(b.author));
+            }
 
+            renderActivePills();
             renderBookCards(filtered);
             resultCount.textContent = `Showing 1-${filtered.length} of ${filtered.length} results`;
         }
 
-        // Grid & List View Renderer
         function renderBookCards(list) {
             bookContainer.innerHTML = '';
 
@@ -464,8 +630,9 @@
         function createGridCard(book) {
             const isWishlisted = wishlist.has(book.id);
             const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
+            const yearDisplay = book.publishedYear ? ` • ${book.publishedYear}` : '';
             const card = document.createElement('div');
-            card.className = "group bg-white rounded-2xl border border-slate-200 p-3 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+            card.className = "group bg-white rounded-2xl border border-slate-200 p-3.5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
 
             card.innerHTML = `
                 <div>
@@ -481,18 +648,18 @@
                             </button>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between text-[10px] font-bold tracking-wider text-indigo-600 uppercase mb-1">
+                    <div class="flex items-center justify-between text-xs font-bold tracking-wider text-indigo-600 uppercase mb-1">
                         <span>${book.category}</span>
                         <span class="text-amber-400 text-xs tracking-normal">${stars}</span>
                     </div>
-                    <h3 class="font-bold text-slate-900 text-xs sm:text-sm line-clamp-1 hover:text-indigo-600 transition-colors cursor-pointer" onclick="openReader('${book.file}')" title="${book.title}">${book.title}</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5">${book.author}</p>
+                    <h3 class="book-title-text line-clamp-2 hover:text-indigo-600 transition-colors cursor-pointer" onclick="openReader('${book.file}')" title="${book.title}">${book.title}</h3>
+                    <p class="book-meta-text mt-1">${book.author}${yearDisplay}</p>
                 </div>
-                <div class="mt-3 pt-2 border-t border-slate-100">
-                    <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden mb-1">
+                <div class="mt-4 pt-2.5 border-t border-slate-100">
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-1.5">
                         <div class="bg-indigo-600 h-full rounded-full" style="width: ${book.progress}%"></div>
                     </div>
-                    <div class="flex justify-between items-center text-[10px] text-slate-400">
+                    <div class="flex justify-between items-center text-xs text-slate-400">
                         <span>${book.progress > 0 ? 'Reading' : 'Unread'}</span>
                         <span>${book.progress}%</span>
                     </div>
@@ -504,37 +671,38 @@
         function createListCard(book) {
             const isWishlisted = wishlist.has(book.id);
             const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
+            const yearDisplay = book.publishedYear ? ` • ${book.publishedYear}` : '';
             const card = document.createElement('div');
-            card.className = "group bg-white rounded-2xl border border-slate-200 p-3 shadow-sm hover:border-indigo-300 transition-colors flex items-center justify-between gap-4";
+            card.className = "group bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:border-indigo-300 transition-colors flex items-center justify-between gap-4";
 
             card.innerHTML = `
                 <div class="flex items-center space-x-4 min-w-0 flex-1">
-                    <div class="relative w-14 h-20 bg-slate-100 rounded-lg overflow-hidden shrink-0">
+                    <div class="relative w-16 h-24 bg-slate-100 rounded-lg overflow-hidden shrink-0">
                         <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover" />
                     </div>
                     <div class="min-w-0 flex-1">
                         <div class="flex items-center space-x-2">
-                            <span class="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">${book.category}</span>
-                            <span class="text-amber-400 text-xs">${stars}</span>
+                            <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">${book.category}</span>
+                            <span class="text-amber-400 text-xs sm:text-sm">${stars}</span>
                         </div>
-                        <h3 class="font-bold text-slate-900 text-sm truncate hover:text-indigo-600 cursor-pointer" onclick="openReader('${book.file}')">${book.title}</h3>
-                        <p class="text-xs text-slate-500">${book.author}</p>
-                        <div class="flex items-center space-x-3 mt-2 max-w-xs">
-                            <div class="flex-1 bg-slate-100 h-1 rounded-full overflow-hidden">
+                        <h3 class="book-title-text line-clamp-2 leading-snug hover:text-indigo-600 cursor-pointer mt-0.5" onclick="openReader('${book.file}')" title="${book.title}">${book.title}</h3>
+                        <p class="book-meta-text mt-0.5">${book.author}${yearDisplay}</p>
+                        <div class="flex items-center space-x-3 mt-2.5 max-w-xs">
+                            <div class="flex-1 bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                 <div class="bg-indigo-600 h-full rounded-full" style="width: ${book.progress}%"></div>
                             </div>
-                            <span class="text-[10px] font-medium text-slate-400">${book.progress}%</span>
+                            <span class="text-xs font-medium text-slate-400">${book.progress}%</span>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 shrink-0">
-                    <button onclick="openQuickView('${book.id}')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" title="Quick View">
-                        <i class="fa-solid fa-eye text-xs"></i>
+                    <button onclick="openQuickView('${book.id}')" class="p-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" title="Quick View">
+                        <i class="fa-solid fa-eye text-sm"></i>
                     </button>
-                    <button onclick="toggleWishlist('${book.id}', this)" class="p-2 rounded-lg bg-slate-100 ${isWishlisted ? 'text-red-500' : 'text-slate-600'} hover:bg-red-50 hover:text-red-500 transition-colors" title="Wishlist">
-                        <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
+                    <button onclick="toggleWishlist('${book.id}', this)" class="p-2.5 rounded-lg bg-slate-100 ${isWishlisted ? 'text-red-500' : 'text-slate-600'} hover:bg-red-50 hover:text-red-500 transition-colors" title="Wishlist">
+                        <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
                     </button>
-                    <button onclick="openReader('${book.file}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors">
+                    <button onclick="openReader('${book.file}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-sm transition-colors">
                         Read
                     </button>
                 </div>
@@ -542,18 +710,18 @@
             return card;
         }
 
-        // Layout Toggle Listener
+        // Layout Toggle
         btnViewGrid.addEventListener('click', () => {
             currentLayout = 'grid';
-            btnViewGrid.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all";
-            btnViewList.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all";
+            btnViewGrid.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all";
+            btnViewList.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all";
             applyFiltersAndRender();
         });
 
         btnViewList.addEventListener('click', () => {
             currentLayout = 'list';
-            btnViewList.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all";
-            btnViewGrid.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all";
+            btnViewList.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all";
+            btnViewGrid.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all";
             applyFiltersAndRender();
         });
 
@@ -563,19 +731,20 @@
             if (!book) return;
 
             const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
+            const yearDisplay = book.publishedYear ? ` • ${book.publishedYear}` : '';
 
             modalContent.innerHTML = `
-                <img src="${book.cover}" class="w-32 h-44 object-cover rounded-xl shadow shrink-0 mx-auto sm:mx-0" />
+                <img src="${book.cover}" class="w-36 h-52 object-cover rounded-xl shadow shrink-0 mx-auto sm:mx-0" />
                 <div class="flex-1 flex flex-col justify-between">
                     <div>
-                        <span class="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">${book.category}</span>
-                        <h2 class="text-lg font-bold text-slate-900 mt-0.5">${book.title}</h2>
-                        <p class="text-xs text-slate-500 font-medium">By ${book.author}</p>
-                        <div class="text-amber-400 text-xs mt-1.5">${stars} <span class="text-slate-400 text-[10px]">(${book.rating}.0)</span></div>
-                        <p class="text-xs text-slate-600 mt-3 line-clamp-3">${book.description}</p>
+                        <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">${book.category}</span>
+                        <h2 class="text-xl font-bold text-slate-900 mt-1">${book.title}</h2>
+                        <p class="text-sm text-slate-500 font-medium">By ${book.author}${yearDisplay}</p>
+                        <div class="text-amber-400 text-sm mt-1.5">${stars} <span class="text-slate-400 text-xs">(${book.rating}.0)</span></div>
+                        <p class="text-sm text-slate-600 mt-3 line-clamp-3">${book.description}</p>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <button onclick="openReader('${book.file}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors flex items-center space-x-2">
+                        <button onclick="openReader('${book.file}')" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-colors flex items-center space-x-2">
                             <i class="fa-solid fa-book-open"></i>
                             <span>Read Book</span>
                         </button>
@@ -585,7 +754,6 @@
             modal.classList.remove('hidden');
         };
 
-        // Wishlist Toggle
         window.toggleWishlist = function(bookId, btn) {
             const icon = btn.querySelector('i');
             if (wishlist.has(bookId)) {
@@ -607,25 +775,30 @@
             window.location.href = `index.html?book=${encodeURIComponent(file)}`;
         };
 
-        // Close Modal Listener
+        // Modal Listeners
         btnCloseModal.addEventListener('click', () => modal.classList.add('hidden'));
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.classList.add('hidden');
         });
 
-        // Filters Event Listeners
+        // Event Listeners
         searchInput.addEventListener('input', applyFiltersAndRender);
         selectSort.addEventListener('change', applyFiltersAndRender);
+        selectEra.addEventListener('change', applyFiltersAndRender);
         document.querySelectorAll('input[name="rating-filter"]').forEach(r => r.addEventListener('change', applyFiltersAndRender));
 
-        btnResetFilters.addEventListener('click', () => {
+        function resetAllFilters() {
             searchInput.value = '';
             selectSort.value = 'popular';
+            selectEra.value = 'all';
             selectedCategories.clear();
             document.querySelectorAll('input[name="category-filter"]').forEach(cb => cb.checked = false);
             document.querySelector('input[name="rating-filter"][value="0"]').checked = true;
             applyFiltersAndRender();
-        });
+        }
+
+        btnResetFilters.addEventListener('click', resetAllFilters);
+        btnClearAllPills.addEventListener('click', resetAllFilters);
     </script>
 </body>
 </html>
