@@ -115,7 +115,7 @@
       "category": "FICTION",
       "rating": 3,
       "count": 70,
-      "cover": "/img/9.jpg", 
+      "cover": "./img/9.jpg", 
       "description": "《雙身》開創雙性寫作、雌雄同體、性別越界的寫作巔峰、最震撼的主題，華文文學必讀經典之作，影響未來的重要長篇小說.",
       "progress": 20,
       "file": "9.epub"
