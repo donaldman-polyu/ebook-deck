@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridging Cultures: Translating Hong Kong Sinophone Literature - Home</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        polyu: {
+                            red: '#9E1B32',      /* PolyU / LST Signature Crimson Red */
+                            redhover: '#821326',
+                            dark: '#1A202C',
+                            gray: '#718096',
+                            lightbg: '#F8F9FA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        :root {
+            --font-base-size: 15px;
+            --card-title-size: 1rem;
+            --meta-text-size: 0.8125rem;
+        }
+
+        html {
+            font-size: var(--font-base-size);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* Hide scrollbars */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .book-title-text {
+            font-size: var(--card-title-size);
+            font-weight: 700;
+            line-height: 1.35;
+            color: #0f172a;
+        }
+
+        .book-meta-text {
+            font-size: var(--meta-text-size);
+            color: #64748b;
+        }
+    </style>
+</head>
+<body class="min-h-full bg-white text-slate-800 flex flex-col font-sans antialiased text-sm sm:text-base selection:bg-polyu-red selection:text-white">
+
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Left: PolyU & LST Official Branding Header -->
+            <a href="home.html" class="flex items-center space-x-3 sm:space-x-4 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <img src="https://www.polyu.edu.hk/style%20guide/files/v2.1/graphic_standards/polyu_logo/polyu_logo_color.svg" alt="The Hong Kong Polytechnic University" class="h-10 sm:h-12 w-auto object-contain" id="polyu-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/180x45?text=PolyU+Logo';" />
+                    <div class="h-8 w-[1px] bg-slate-300 hidden sm:block"></div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-xs sm:text-sm font-bold tracking-tight text-polyu-red leading-tight">Department of Language Science and Technology</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 font-medium">香港理工大學 語言科學及技術學系</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Right: Navigation Links (Desktop - Strictly One Line) -->
+            <nav class="hidden xl:flex items-center space-x-5 lg:space-x-6 text-sm font-bold text-slate-700 flex-nowrap whitespace-nowrap">
+                <a href="home.html" class="text-polyu-red border-b-2 border-polyu-red pb-1">Home</a>
+                <a href="library.html" class="hover:text-polyu-red transition-colors">Translation Library</a>
+                <a href="author.html" class="hover:text-polyu-red transition-colors">Authors</a>
+                <a href="#categories" class="hover:text-polyu-red transition-colors">Categories</a>
+                
+                <!-- About Us Dropdown Menu -->
+                <div class="relative group py-2">
+                    <a href="#about" class="hover:text-polyu-red transition-colors block">
+                        <span>About Us</span>
+                    </a>
+                    <div class="absolute left-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        <a href="#about" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-polyu-red font-semibold border-b border-slate-100">About the Project</a>
+                        <a href="team.html" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-polyu-red font-semibold">About the Team</a>
+                    </div>
+                </div>
+
+                <div class="h-4 w-[1px] bg-slate-300"></div>
+
+                <!-- Sign Up / Login Links -->
+                <div class="flex items-center space-x-2">
+                    <a href="reg.html" class="hover:text-polyu-red transition-colors">Sign Up</a>
+                    <span class="text-slate-300">|</span>
+                    <a href="login.html" class="hover:text-polyu-red transition-colors">Log In</a>
+                </div>
+
+                <!-- Language Switcher -->
+                <a href="?lang=zh" class="text-xs font-semibold px-2 py-1 rounded border border-slate-300 hover:bg-slate-50 transition-colors text-slate-600">繁中</a>
+            </nav>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="btn-mobile-menu" class="xl:hidden p-2 text-slate-700 hover:text-polyu-red focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown (Accordion Sub-menu) -->
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 bg-white px-8 py-6 shadow-xl">
+            <div class="max-w-xs space-y-4 font-normal text-slate-800 text-base">
+                <a href="home.html" class="block text-polyu-red font-bold text-lg">Home</a>
+                <a href="library.html" class="block hover:text-polyu-red font-medium">Translation Library</a>
+                <a href="author.html" class="block hover:text-polyu-red font-medium">Authors</a>
+                <a href="#categories" class="block hover:text-polyu-red font-medium" onclick="closeMobileMenu()">Categories</a>
+                
+                <!-- About Us Accordion Toggle -->
+                <div class="pt-1">
+                    <button id="btn-mobile-about" class="w-full text-left flex items-center justify-between font-medium text-slate-800 text-base hover:text-polyu-red focus:outline-none">
+                        <span>About Us</span>
+                        <i id="icon-mobile-about-arrow" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform"></i>
+                    </button>
+                    <!-- Collapsible Sub-menu -->
+                    <div id="mobile-about-submenu" class="hidden border-l-2 border-polyu-red/60 pl-4 mt-2 space-y-2.5">
+                        <a href="#about" class="block text-slate-700 hover:text-polyu-red text-sm font-normal" onclick="closeMobileMenu()">About the Project</a>
+                        <a href="team.html" class="block text-slate-700 hover:text-polyu-red text-sm font-normal">About the Team</a>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100 my-4" />
+
+                <!-- Sign Up / Log In Line -->
+                <div class="flex items-center space-x-3 text-sm font-medium text-slate-800">
+                    <a href="reg.html" class="hover:text-polyu-red">Sign Up</a>
+                    <span class="text-slate-300 font-normal">|</span>
+                    <a href="login.html" class="hover:text-polyu-red">Log In</a>
+                </div>
+
+                <!-- Language Button Box -->
+                <div class="pt-2">
+                    <a href="?lang=zh" class="inline-block px-3 py-1.5 border border-slate-300 rounded text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors">
+                        繁體中文
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1">
+
+        <!-- 1. AUTO SCROLLING 3-BANNER HERO CAROUSEL SECTION -->
+        <section class="relative w-full overflow-hidden bg-slate-900 group">
+            <div id="hero-carousel-container" class="relative min-h-[380px] sm:min-h-[480px] lg:min-h-[540px] flex transition-transform duration-700 ease-in-out">
+                
+                <!-- Slide 1 -->
+                <div class="min-w-full relative flex items-center justify-end">
+                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1600&q=80" class="absolute inset-0 w-full h-full object-cover object-center opacity-85" alt="Banner 1" />
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20"></div>
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-end">
+                        <div class="bg-polyu-red/90 text-white p-6 sm:p-8 md:p-10 max-w-xl lg:max-w-2xl rounded-sm shadow-2xl backdrop-blur-sm">
+                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight mb-2">
+                                Bridging Cultures:
+                            </h1>
+                            <p class="text-lg sm:text-xl lg:text-2xl font-medium leading-snug opacity-95">
+                                Translating Hong Kong Sinophone Literature (1900–1997) with Generative AI
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="min-w-full relative flex items-center justify-end">
+                    <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1600&q=80" class="absolute inset-0 w-full h-full object-cover object-center opacity-85" alt="Banner 2" />
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20"></div>
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-end">
+                        <div class="bg-polyu-red/90 text-white p-6 sm:p-8 md:p-10 max-w-xl lg:max-w-2xl rounded-sm shadow-2xl backdrop-blur-sm">
+                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight mb-2">
+                                Digital Humanities & Literature
+                            </h1>
+                            <p class="text-lg sm:text-xl lg:text-2xl font-medium leading-snug opacity-95">
+                                Preserving and expanding local Hong Kong literary works for a global audience.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="min-w-full relative flex items-center justify-end">
+                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1600&q=80" class="absolute inset-0 w-full h-full object-cover object-center opacity-85" alt="Banner 3" />
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20"></div>
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-end">
+                        <div class="bg-polyu-red/90 text-white p-6 sm:p-8 md:p-10 max-w-xl lg:max-w-2xl rounded-sm shadow-2xl backdrop-blur-sm">
+                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight mb-2">
+                                Interactive E-Reading Experience
+                            </h1>
+                            <p class="text-lg sm:text-xl lg:text-2xl font-medium leading-snug opacity-95">
+                                Read seamlessly across formats with custom typography and side-by-side translation toolkits.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Carousel Slide Indicator Lines -->
+            <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center space-x-3 z-20">
+                <button class="carousel-dot w-8 h-1 bg-white transition-opacity" data-index="0"></button>
+                <button class="carousel-dot w-8 h-1 bg-white/40 hover:bg-white/80 transition-opacity" data-index="1"></button>
+                <button class="carousel-dot w-8 h-1 bg-white/40 hover:bg-white/80 transition-opacity" data-index="2"></button>
+            </div>
+        </section>
+
+        <!-- 2. ABOUT THIS PROJECT SECTION -->
+        <section id="about" class="py-16 sm:py-20 bg-white scroll-mt-20">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                
+                <div class="mb-6">
+                    <span class="block text-polyu-red text-xs font-mono font-bold tracking-widest mb-1">▪ ▪</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-polyu-red tracking-tight">About This Project</h2>
+                </div>
+
+                <p class="text-slate-600 leading-relaxed text-sm sm:text-base text-justify sm:text-center space-y-4 font-normal">
+                    This platform serves as an interactive digital archive and translation repository dedicated to Hong Kong Sinophone Literature produced between 1900 and 1997. Powered by modern Generative AI translation frameworks and overseen by academic researchers at the Department of Language Science and Technology, PolyU, this initiative bridges cultural divides, preserving historical literary treasures while providing international scholars and modern readers with flexible digital e-reading tools.
+                </p>
+
+                <div class="mt-8">
+                    <a href="team.html" class="inline-block px-8 py-2.5 bg-slate-400 hover:bg-slate-500 text-white font-medium text-sm rounded shadow-sm transition-colors">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. MOST POPULAR SECTION -->
+        <section class="py-16 bg-slate-50 border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="block text-polyu-red text-xs font-mono font-bold tracking-widest mb-1">▪ ▪</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-polyu-red tracking-tight">Most Popular</h2>
+                    </div>
+                    <a href="library.html" class="text-sm font-bold text-polyu-red hover:text-polyu-redhover inline-flex items-center space-x-1.5 transition-colors">
+                        <span>View All Translation Library</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Grid Container populated from JSON -->
+                <div id="popular-books-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6">
+                    <!-- Cards injected dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CATEGORIES SECTION -->
+        <section id="categories" class="py-16 bg-polyu-red text-white relative scroll-mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="block text-white/80 text-xs font-mono font-bold tracking-widest mb-1">▪ ▪</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Categories</h2>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <button id="btn-cat-left" class="w-9 h-9 bg-slate-800/80 hover:bg-slate-900 text-white flex items-center justify-center rounded transition-colors shadow-lg" title="Previous">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <button id="btn-cat-right" class="w-9 h-9 bg-slate-800/80 hover:bg-slate-900 text-white flex items-center justify-center rounded transition-colors shadow-lg" title="Next">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                        <a href="library.html" class="text-sm font-bold text-white/90 hover:text-white inline-flex items-center space-x-1.5 transition-colors ml-2">
+                            <span>All Categories</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category Cards Carousel -->
+                <div id="category-carousel" class="flex space-x-6 overflow-x-auto no-scrollbar scroll-smooth w-full px-1 py-1">
+                    
+                    <!-- 1. Fiction -->
+                    <a href="library.html?category=FICTION" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80" alt="Fiction" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Fiction</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 2. Self-Help -->
+                    <a href="library.html?category=SELF-HELP" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80" alt="Self-Help" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Self-Help</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 3. Business -->
+                    <a href="library.html?category=BUSINESS" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80" alt="Business" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Business</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 4. Design -->
+                    <a href="library.html?category=DESIGN" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=600&q=80" alt="Design" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Design</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 5. Architecture -->
+                    <a href="library.html?category=ARCHITECTURE" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80" alt="Architecture" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Architecture</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 6. Development -->
+                    <a href="library.html?category=DEVELOPMENT" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80" alt="Development" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Development</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 7. Historical Fiction -->
+                    <a href="library.html?category=HISTORICAL%20FICTION" class="flex-none w-64 sm:w-72 group relative aspect-[16/9] rounded overflow-hidden shadow-md">
+                        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80" alt="Historical Fiction" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-bold text-sm">
+                            <span>Historical Fiction</span>
+                            <div class="w-7 h-7 bg-polyu-red/90 flex items-center justify-center text-xs rounded-sm">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. QUICK LINKS SECTION -->
+        <section class="py-16 bg-slate-100/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center mb-10">
+                    <span class="block text-polyu-red text-xs font-mono font-bold tracking-widest mb-1">▪ ▪</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-polyu-red tracking-tight">Quick Links</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Link 1 -->
+                    <a href="library.html" class="group bg-white p-3 rounded-sm shadow-sm hover:shadow-md transition-shadow border border-slate-200 flex flex-col justify-between">
+                        <div class="aspect-[16/10] bg-slate-200 rounded-sm overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Translation Library" />
+                        </div>
+                        <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 px-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-[2px] h-3.5 bg-polyu-red"></span>
+                                <span class="font-bold text-slate-800 text-sm group-hover:text-polyu-red transition-colors">Translation Library</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:text-polyu-red transition-colors"></i>
+                        </div>
+                    </a>
+
+                    <!-- Link 2 -->
+                    <a href="author.html" class="group bg-white p-3 rounded-sm shadow-sm hover:shadow-md transition-shadow border border-slate-200 flex flex-col justify-between">
+                        <div class="aspect-[16/10] bg-slate-200 rounded-sm overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Authors" />
+                        </div>
+                        <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 px-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-[2px] h-3.5 bg-polyu-red"></span>
+                                <span class="font-bold text-slate-800 text-sm group-hover:text-polyu-red transition-colors">Authors</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:text-polyu-red transition-colors"></i>
+                        </div>
+                    </a>
+
+                    <!-- Link 3 -->
+                    <a href="#about" class="group bg-white p-3 rounded-sm shadow-sm hover:shadow-md transition-shadow border border-slate-200 flex flex-col justify-between">
+                        <div class="aspect-[16/10] bg-slate-200 rounded-sm overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="About Us" />
+                        </div>
+                        <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 px-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-[2px] h-3.5 bg-polyu-red"></span>
+                                <span class="font-bold text-slate-800 text-sm group-hover:text-polyu-red transition-colors">About the Project</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:text-polyu-red transition-colors"></i>
+                        </div>
+                    </a>
+
+                    <!-- Link 4 -->
+                    <a href="https://www.polyu.edu.hk" target="_blank" class="group bg-white p-3 rounded-sm shadow-sm hover:shadow-md transition-shadow border border-slate-200 flex flex-col justify-between">
+                        <div class="aspect-[16/10] bg-slate-200 rounded-sm overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Centre for Translation Studies" />
+                        </div>
+                        <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 px-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-[2px] h-3.5 bg-polyu-red"></span>
+                                <span class="font-bold text-slate-800 text-sm group-hover:text-polyu-red transition-colors">Centre for Translation Studies</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:text-polyu-red transition-colors"></i>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. CONTACT US SECTION -->
+        <section id="contact" class="py-10 bg-white border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs sm:text-sm text-slate-600 space-y-2">
+                <h3 class="font-bold text-polyu-red text-sm mb-2">Contact Us</h3>
+                <div class="flex items-start space-x-2">
+                    <i class="fa-solid fa-location-dot text-slate-400 mt-0.5 shrink-0"></i>
+                    <span>HH6202, 6/F, PolyU Hung Hom Bay Campus, 8 Hung Lok Road, Hung Hom, Kowloon, Hong Kong</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-envelope text-slate-400 shrink-0"></i>
+                    <a href="mailto:lst.enquiry@polyu.edu.hk" class="hover:text-polyu-red underline">lst.enquiry@polyu.edu.hk</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 7. FOOTER SECTION -->
+    <footer class="bg-[#3A3A3C] text-slate-300 py-4 text-xs border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>Copyright © 2026 Department of Language Science and Technology, The Hong Kong Polytechnic University. All Rights Reserved.</p>
+            <div class="flex items-center space-x-4 shrink-0">
+                <a href="#privacy" class="hover:underline hover:text-white">Privacy Policy</a>
+                <span>|</span>
+                <a href="#terms" class="hover:underline hover:text-white">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCROLL TO TOP BUTTON -->
+    <button id="btn-scroll-top" class="fixed bottom-6 right-6 w-9 h-9 bg-slate-500/80 hover:bg-polyu-red text-white rounded flex items-center justify-center transition-colors shadow-lg z-40">
+        <i class="fa-solid fa-arrow-up text-xs"></i>
+    </button>
+
+    <!-- JAVASCRIPT LOGIC & JSON DATA INTERFACE -->
+    <script>
+        const INLINE_LIBRARY_DATA = {
+            books: [
+                {
+                    id: '2',
+                    title: 'Shuangshen (Double Body) 雙身',
+                    author: 'David Chen',
+                    publishedYear: 1888,
+                    category: 'FICTION',
+                    rating: 5,
+                    cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
+                    file: '2.epub',
+                    progress: 100
+                },
+                {
+                    id: '1',
+                    title: 'The Art of Observation',
+                    author: 'Sarah Williams',
+                    publishedYear: 2021,
+                    category: 'DESIGN',
+                    rating: 5,
+                    cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
+                    file: '1.epub',
+                    progress: 45
+                },
+                {
+                    id: '3',
+                    title: 'Journey to the Center of Thought',
+                    author: 'Elena Rossi',
+                    publishedYear: 1862,
+                    category: 'FICTION',
+                    rating: 4,
+                    cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80',
+                    file: '3.epub',
+                    progress: 0
+                },
+                {
+                    id: '4',
+                    title: 'Invisible Worlds',
+                    author: 'A. K. Rowling',
+                    publishedYear: 1818,
+                    category: 'FANTASY',
+                    rating: 5,
+                    cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80',
+                    file: '4.epub',
+                    progress: 12
+                },
+                {
+                    id: '5',
+                    title: 'The Rising Sun',
+                    author: 'Kenji Sato',
+                    publishedYear: 1912,
+                    category: 'HISTORICAL FICTION',
+                    rating: 4,
+                    cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&q=80',
+                    file: '5.epub',
+                    progress: 0
+                },
+                {
+                    id: '6',
+                    title: 'Clean Code & Mindsets',
+                    author: 'Martin L.',
+                    publishedYear: 2019,
+                    category: 'DEVELOPMENT',
+                    rating: 5,
+                    cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&q=80',
+                    file: '6.epub',
+                    progress: 75
+                }
+            ]
+        };
+
+        let books = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadBooksData();
+            renderPopularBooks();
+
+            // Hero Carousel Auto-scroll
+            initHeroCarousel();
+
+            // Mobile menu listeners
+            document.getElementById('btn-mobile-menu')?.addEventListener('click', () => {
+                document.getElementById('mobile-menu')?.classList.toggle('hidden');
+            });
+
+            // Mobile About Us Accordion Toggle
+            const btnMobileAbout = document.getElementById('btn-mobile-about');
+            const mobileAboutSubmenu = document.getElementById('mobile-about-submenu');
+            const iconMobileAboutArrow = document.getElementById('icon-mobile-about-arrow');
+
+            btnMobileAbout?.addEventListener('click', (e) => {
+                e.preventDefault();
+                mobileAboutSubmenu?.classList.toggle('hidden');
+                iconMobileAboutArrow?.classList.toggle('rotate-180');
+            });
+
+            // Scroll to Top
+            document.getElementById('btn-scroll-top')?.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Category Carousel Scroll
+            const catCarousel = document.getElementById('category-carousel');
+            document.getElementById('btn-cat-left')?.addEventListener('click', () => {
+                catCarousel?.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            document.getElementById('btn-cat-right')?.addEventListener('click', () => {
+                catCarousel?.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        });
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        async function loadBooksData() {
+            try {
+                const response = await fetch('books.json');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                const data = await response.json();
+                books = data.books || [];
+            } catch (err) {
+                console.warn('Could not load books.json, using inline data:', err);
+                books = [...INLINE_LIBRARY_DATA.books];
+            }
+        }
+
+        function renderPopularBooks() {
+            const grid = document.getElementById('popular-books-grid');
+            if (!grid || books.length === 0) return;
+            grid.innerHTML = '';
+
+            // 1. Guaranteed identification for "Shuangshen (Double Body)"
+            let mustHaveIndex = books.findIndex(b => 
+                String(b.id) === '2' || 
+                String(b.file).toLowerCase() === '2.epub' || 
+                (b.title && (b.title.toLowerCase().includes('double body') || b.title.includes('雙身')))
+            );
+
+            // Fallback: If not found, create or select first item
+            let mustHaveBook = mustHaveIndex !== -1 ? books[mustHaveIndex] : books[0];
+            
+            // Get all other books except the guaranteed item
+            const remainingBooks = books.filter((_, idx) => idx !== (mustHaveIndex !== -1 ? mustHaveIndex : 0));
+
+            // Shuffle remaining books
+            const shuffledRemaining = [...remainingBooks];
+            for (let i = shuffledRemaining.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledRemaining[i], shuffledRemaining[j]] = [shuffledRemaining[j], shuffledRemaining[i]];
+            }
+
+            // Pick 5 random companions + Double Body
+            const chosenFive = shuffledRemaining.slice(0, 5);
+            const popularSelection = [mustHaveBook, ...chosenFive];
+
+            // Shuffle entire final 6-book array so Double Body appears in a random slot position
+            for (let i = popularSelection.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [popularSelection[i], popularSelection[j]] = [popularSelection[j], popularSelection[i]];
+            }
+
+            // 2. Render cards to DOM
+            popularSelection.forEach(book => {
+                const stars = '★'.repeat(book.rating || 5) + '☆'.repeat(5 - (book.rating || 5));
+                const card = document.createElement('div');
+                card.className = "group bg-white rounded-2xl border border-slate-200 p-3.5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative aspect-[2/3] bg-slate-100 rounded-xl overflow-hidden mb-3 cursor-pointer" onclick="openReader('${book.file}')">
+                            <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <div class="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="px-3.5 py-2 bg-white/95 text-slate-900 text-xs sm:text-sm font-bold rounded-lg shadow">Read Now</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold tracking-wider text-polyu-red uppercase block">${book.category}</span>
+                        <h3 class="book-title-text text-sm sm:text-base line-clamp-2 hover:text-polyu-red transition-colors cursor-pointer mt-0.5" onclick="openReader('${book.file}')">${book.title}</h3>
+                        <p class="book-meta-text text-xs sm:text-sm mt-0.5">${book.author}</p>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-sm">
+                        <span class="text-amber-400 font-bold">${stars}</span>
+                        <button onclick="openReader('${book.file}')" class="text-polyu-red hover:text-polyu-redhover font-bold">Read →</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function initHeroCarousel() {
+            const heroContainer = document.getElementById('hero-carousel-container');
+            const dots = document.querySelectorAll('.carousel-dot');
+            if (!heroContainer) return;
+
+            let currentSlide = 0;
+            const totalSlides = 3;
+
+            function goToSlide(index) {
+                currentSlide = index;
+                heroContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+                dots.forEach((dot, idx) => {
+                    if (idx === currentSlide) {
+                        dot.classList.remove('bg-white/40');
+                        dot.classList.add('bg-white');
+                    } else {
+                        dot.classList.remove('bg-white');
+                        dot.classList.add('bg-white/40');
+                    }
+                });
+            }
+
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                goToSlide(currentSlide);
+            }, 5000);
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-index'), 10);
+                    goToSlide(idx);
+                });
+            });
+        }
+
+        function openReader(file) {
+            window.location.href = `index.html?book=${encodeURIComponent(file)}`;
+        }
+    </script>
+</body>
+</html>

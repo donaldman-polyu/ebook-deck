@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EPUB Reader</title>
+    <title>E-Book Reader - Translated Library</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,8 +11,22 @@
         tailwind.config = {
             darkMode: 'class',
             theme: {
+                screens: {
+                    'xs': '400px',
+                    'sm': '640px',
+                    'md': '768px',
+                    'lg': '1024px',
+                    'xl': '1280px',
+                },
                 extend: {
                     colors: {
+                        polyu: {
+                            red: '#9E1B32',      /* PolyU Crimson Red */
+                            redhover: '#821326',
+                            dark: '#1A202C',
+                            gray: '#718096',
+                            lightbg: '#F8F9FA'
+                        },
                         cream: {
                             50: '#fcf9f2',
                             100: '#f5efe6',
@@ -38,275 +52,156 @@
     <!-- Font Awesome Icon Font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- External Shared Common Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
     <!-- Import Local Foliate JS Web Component -->
     <script type="module" src="./foliate-js/view.js"></script>
-
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --heading-color: #111827;
-            --ui-bg: #f8fafc;
-            --ui-border: #e2e8f0;
-            --active-item: #2563eb;
-            --highlight-bg: #fef08a;
-        }
-
-        .dark {
-            --bg-color: #0f172a;
-            --text-color: #f1f5f9;
-            --heading-color: #ffffff;
-            --ui-bg: #1e293b;
-            --ui-border: #334155;
-            --active-item: #60a5fa;
-            --highlight-bg: #854d0e;
-        }
-
-        .cream {
-            --bg-color: #fcf9f2;
-            --text-color: #433831;
-            --heading-color: #2c221e;
-            --ui-bg: #f5efe6;
-            --ui-border: #e6dcce;
-            --active-item: #8c4a32;
-            --highlight-bg: #fde68a;
-        }
-
-        .mint {
-            --bg-color: #eaf4f0;
-            --text-color: #1e3a31;
-            --heading-color: #102620;
-            --ui-bg: #dbece5;
-            --ui-border: #bfded2;
-            --active-item: #1b6b4a;
-            --highlight-bg: #a7f3d0;
-        }
-
-        /* Warm Cream Theme UI overrides */
-        .cream body, .cream header, .cream footer, .cream aside, 
-        .cream #info-overlay, .cream #settings-overlay, .cream #bookmark-overlay, .cream #loading-overlay {
-            background-color: #fcf9f2 !important;
-            border-color: #e6dcce !important;
-            color: #433831 !important;
-        }
-        .cream .bg-slate-50, .cream .bg-slate-100 {
-            background-color: #f5efe6 !important;
-        }
-        .cream .hover\:bg-slate-100:hover, .cream .hover\:bg-slate-200:hover {
-            background-color: #eae1d3 !important;
-        }
-        .cream .text-slate-600, .cream .text-slate-700, .cream .text-slate-800, .cream .text-slate-500, .cream .text-slate-400 {
-            color: #433831 !important;
-        }
-
-        /* Mint Theme UI overrides */
-        .mint body, .mint header, .mint footer, .mint aside, 
-        .mint #info-overlay, .mint #settings-overlay, .mint #bookmark-overlay, .mint #loading-overlay {
-            background-color: #eaf4f0 !important;
-            border-color: #bfded2 !important;
-            color: #1e3a31 !important;
-        }
-        .mint .bg-slate-50, .mint .bg-slate-100 {
-            background-color: #dbece5 !important;
-        }
-        .mint .hover\:bg-slate-100:hover, .mint .hover\:bg-slate-200:hover {
-            background-color: #cde3d9 !important;
-        }
-        .mint .text-slate-600, .mint .text-slate-700, .mint .text-slate-800, .mint .text-slate-500, .mint .text-slate-400 {
-            color: #1e3a31 !important;
-        }
-
-        /* Touch & Layout handling */
-        button, input, select, label, header, footer {
-            touch-action: manipulation;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        foliate-view {
-            width: 100%;
-            height: 100%;
-            display: block;
-            outline: none;
-        }
-
-        .sidebar-transition {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .spinner {
-            width: 36px;
-            height: 36px;
-            border: 4px solid var(--ui-border);
-            border-top: 4px solid var(--active-item);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        mark {
-            background-color: var(--highlight-bg);
-            color: inherit;
-            padding: 0 2px;
-            border-radius: 2px;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.4);
-            border-radius: 3px;
-        }
-
-        header {
-            padding-top: env(safe-area-inset-top, 0px);
-        }
-        footer {
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-        }
-    </style>
 </head>
-<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans antialiased overflow-hidden transition-colors duration-200 select-none">
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans antialiased overflow-hidden transition-colors duration-200 select-none text-base selection:bg-polyu-red selection:text-white">
 
     <!-- TOP TOOLBAR -->
-    <header id="toolbar" class="min-h-[3.5rem] border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur flex items-center justify-between px-3 sm:px-4 z-20 shrink-0 gap-2">
+    <header id="toolbar" class="min-h-[3.5rem] sm:min-h-[4rem] border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur flex items-center justify-between px-2 sm:px-4 z-30 shrink-0 gap-1 sm:gap-3 w-full relative">
         
-        <!-- Left Group: Open File, TOC & Search -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-            <label class="cursor-pointer flex items-center space-x-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg shadow-sm transition-colors shrink-0">
-                <i class="fa-solid fa-folder-open text-base"></i>
-                <span class="hidden sm:inline">Open EPUB</span>
-                <input type="file" id="file-input" accept=".epub,.mobi,.azw3,.fb2,.cbz" class="hidden" />
-            </label>
+        <!-- Left Group: Back Button, TOC & Search -->
+        <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+            <!-- Back Button going to previous page or library.html -->
+            <button id="btn-back" onclick="goBackToLibrary()" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3.5 sm:py-2 bg-polyu-red hover:bg-polyu-redhover text-white text-xs sm:text-sm font-bold rounded shadow-sm transition-colors shrink-0">
+                <i class="fa-solid fa-arrow-left text-xs sm:text-sm"></i>
+                <span>Back</span>
+            </button>
 
-            <button id="btn-toggle-toc" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-1 text-xs sm:text-sm font-medium" title="Table of Contents">
-                <i class="fa-solid fa-book-open text-base"></i>
+            <!-- TOC Button -->
+            <button id="btn-toggle-toc" class="p-1.5 sm:p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors inline-flex items-center gap-1 text-xs sm:text-base font-bold" title="Table of Contents">
+                <i class="fa-solid fa-book-open text-base sm:text-lg text-polyu-red dark:text-red-400"></i>
                 <span class="hidden md:inline">TOC</span>
             </button>
 
-            <button id="btn-open-search" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-1 text-xs sm:text-sm font-medium" title="Search Book">
-                <i class="fa-solid fa-magnifying-glass text-base"></i>
+            <!-- Search Button -->
+            <button id="btn-open-search" class="p-1.5 sm:p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors inline-flex items-center gap-1 text-xs sm:text-base font-bold" title="Search Book">
+                <i class="fa-solid fa-magnifying-glass text-base sm:text-lg text-polyu-red dark:text-red-400"></i>
                 <span class="hidden md:inline">Search</span>
             </button>
         </div>
 
-        <!-- Middle Group: Title / Info Trigger -->
-        <div class="relative flex items-center justify-center min-w-0 flex-1 max-w-md mx-2">
-            <button id="btn-book-info" class="p-2 sm:py-2 sm:px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center space-x-2 max-w-full" title="Book Details & Metadata">
-                <i class="fa-solid fa-circle-info text-lg sm:text-xl shrink-0"></i>
-                <span id="toolbar-book-title" class="hidden sm:inline-block text-xs sm:text-sm font-medium truncate max-w-[180px] md:max-w-[280px] lg:max-w-[360px]">No book loaded</span>
+        <!-- Middle Group: Book Title & Info Popover Trigger -->
+        <div class="relative flex items-center justify-center shrink-0">
+            <button id="btn-book-info" class="p-1.5 sm:py-2 sm:px-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors inline-flex items-center gap-1.5 max-w-full" title="Book Details & Metadata">
+                <i class="fa-solid fa-circle-info text-base sm:text-xl text-polyu-red dark:text-red-400 shrink-0"></i>
+                <span id="toolbar-book-title" class="hidden sm:inline-block text-xs sm:text-base font-bold truncate sm:max-w-[180px] md:max-w-[280px] lg:max-w-[360px]">Loading book...</span>
             </button>
 
             <!-- Book Info Popover Menu -->
-            <div id="info-overlay" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs sm:text-sm space-y-3 max-h-[80vh] overflow-y-auto">
-                <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center justify-between">
-                    <span class="flex items-center space-x-2">
-                        <i class="fa-solid fa-book-bookmark text-base"></i>
+            <div id="info-overlay" class="hidden fixed sm:absolute top-16 sm:top-full left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-2rem)] sm:w-[28rem] max-w-sm sm:max-w-lg bg-white dark:bg-slate-800 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-5 z-50 text-sm sm:text-base space-y-4 max-h-[80vh] overflow-y-auto">
+                <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center justify-between text-base sm:text-lg">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-lg sm:text-xl text-polyu-red dark:text-red-400"></i>
                         <span>Book Details</span>
                     </span>
                     <button id="btn-close-info" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
-                        <i class="fa-solid fa-xmark text-base"></i>
+                        <i class="fa-solid fa-xmark text-lg sm:text-xl"></i>
                     </button>
                 </div>
 
-                <div class="space-y-2.5 text-slate-600 dark:text-slate-300">
+                <div class="space-y-3 text-slate-700 dark:text-slate-300">
                     <div>
-                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Title</span>
-                        <p id="meta-title" class="font-semibold text-slate-800 dark:text-slate-100">No book loaded</p>
+                        <span class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-0.5">Title</span>
+                        <p id="meta-title" class="font-bold text-slate-800 dark:text-slate-100 text-base sm:text-lg">--</p>
                     </div>
                     <div>
-                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Author(s)</span>
-                        <p id="meta-author" class="font-medium">--</p>
+                        <span class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-0.5">Author(s)</span>
+                        <p id="meta-author" class="font-medium text-sm sm:text-base">--</p>
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Publisher</span>
-                            <p id="meta-publisher" class="font-medium">--</p>
+                            <span class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-0.5">Publisher</span>
+                            <p id="meta-publisher" class="font-medium text-sm sm:text-base">--</p>
                         </div>
                         <div>
-                            <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Language</span>
-                            <p id="meta-language" class="font-medium">--</p>
+                            <span class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-0.5">Language</span>
+                            <p id="meta-language" class="font-medium text-sm sm:text-base">--</p>
                         </div>
                     </div>
                     <div>
-                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Subject / Category</span>
-                        <p id="meta-subject" class="font-medium">--</p>
+                        <span class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-0.5">Subject / Category</span>
+                        <p id="meta-subject" class="font-medium text-sm sm:text-base">--</p>
                     </div>
                     <div>
-                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Description</span>
-                        <p id="meta-description" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-h-32 overflow-y-auto pt-1">--</p>
+                        <span class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-0.5">Description</span>
+                        <p id="meta-description" class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-h-36 overflow-y-auto pt-1">--</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Group: Font Controls & Settings -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-            <div class="flex items-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 mr-0.5 sm:mr-1">
-                <button id="btn-font-dec" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-colors shadow-sm" title="Decrease Font Size">A-</button>
-                <span id="font-size-label" class="px-1.5 sm:px-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 min-w-[3rem] sm:min-w-[3.5rem] text-center">100%</span>
-                <button id="btn-font-inc" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-colors shadow-sm" title="Increase Font Size">A+</button>
+        <!-- Right Group: A- A A+ Font Controls with Gradient Intensity -->
+        <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+            
+            <!-- Font Scale Controls: A- (70%), A (100%), A+ (140%) with Progressive Crimson Shades -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded p-0.5 space-x-1">
+                <!-- A- (Small 70%): Light Crimson Tint -->
+                <button id="btn-font-small" onclick="setFontScale(70)" class="px-2 py-1 rounded font-bold text-xs transition-all shadow-sm flex items-center justify-center min-w-[2rem]" title="Small Font (70%)">
+                    A-
+                </button>
+                <!-- A (Medium 100%): Medium Crimson Tint -->
+                <button id="btn-font-medium" onclick="setFontScale(100)" class="px-2 py-1 rounded font-bold text-sm transition-all shadow-sm flex items-center justify-center min-w-[2rem]" title="Normal Font (100%)">
+                    A
+                </button>
+                <!-- A+ (Large 140%): Solid PolyU Crimson -->
+                <button id="btn-font-large" onclick="setFontScale(140)" class="px-2.5 py-1 rounded font-bold text-base transition-all shadow-sm flex items-center justify-center min-w-[2.25rem]" title="Large Font (140%)">
+                    A+
+                </button>
             </div>
 
-            <!-- Bookmarks Trigger -->
+            <!-- Bookmark Button & Popover -->
             <div class="relative">
-                <button id="btn-bookmark" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors" title="Bookmarks">
-                    <i class="fa-solid fa-bookmark text-base"></i>
+                <button id="btn-bookmark" class="p-1.5 sm:p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors inline-flex items-center" title="Bookmarks">
+                    <i class="fa-solid fa-bookmark text-base sm:text-lg text-polyu-red dark:text-red-400"></i>
                 </button>
 
-                <div id="bookmark-overlay" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-3.5 z-50 text-xs sm:text-sm">
-                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-slate-200 dark:border-slate-700">
-                        <strong class="font-bold text-slate-700 dark:text-slate-200">Bookmarks</strong>
-                        <button id="btn-add-bookmark" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-medium transition-colors">+ Add Current</button>
+                <div id="bookmark-overlay" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-slate-800 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 p-3.5 z-50 text-xs sm:text-sm">
+                    <div class="flex justify-between items-center pb-3 mb-3 border-b border-slate-200 dark:border-slate-700">
+                        <strong class="font-bold text-slate-800 dark:text-slate-100 text-base sm:text-lg">Bookmarks</strong>
+                        <button id="btn-add-bookmark" class="px-3 py-1.5 bg-polyu-red hover:bg-polyu-redhover text-white rounded text-xs sm:text-sm font-bold transition-colors">+ Add Current</button>
                     </div>
-                    <ul id="bookmark-list" class="space-y-1 max-h-64 overflow-y-auto">
+                    <ul id="bookmark-list" class="space-y-1.5 max-h-72 overflow-y-auto">
                         <li class="text-slate-400 italic text-center py-4">No bookmarks saved yet.</li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Settings Popover -->
+            <!-- Display Settings Button & Popover -->
             <div class="relative">
-                <button id="btn-settings" class="p-2 sm:p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors" title="Display & Typography Settings">
-                    <i class="fa-solid fa-gear text-base"></i>
+                <button id="btn-settings" class="p-1.5 sm:p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors inline-flex items-center" title="Display & Typography Settings">
+                    <i class="fa-solid fa-gear text-base sm:text-lg text-polyu-red dark:text-red-400"></i>
                 </button>
 
-                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs sm:text-sm space-y-4 max-h-[85vh] overflow-y-auto">
-                    <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center justify-between">
+                <div id="settings-overlay" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 text-xs sm:text-sm space-y-4 max-h-[85vh] overflow-y-auto">
+                    <div class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center justify-between text-base sm:text-lg">
                         <span>Display & Typography Settings</span>
                         <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
-                            <i class="fa-solid fa-xmark text-base"></i>
+                            <i class="fa-solid fa-xmark text-lg sm:text-xl"></i>
                         </button>
                     </div>
 
                     <!-- Theme Selector -->
                     <div>
-                        <label class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Theme</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                            <button id="btn-theme-light" class="flex items-center justify-center space-x-1 py-2 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 transition-colors font-medium text-xs">
-                                <i class="fa-solid fa-sun text-xs text-amber-500"></i>
+                        <label class="block font-bold text-slate-700 dark:text-slate-200 mb-2">Theme</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <button id="btn-theme-light" class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-slate-100 transition-colors font-medium text-xs sm:text-sm">
+                                <i class="fa-solid fa-sun text-sm text-amber-500"></i>
                                 <span>Day</span>
                             </button>
-                            <button id="btn-theme-cream" class="flex items-center justify-center space-x-1 py-2 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-amber-50/60 text-amber-900 dark:text-slate-200 hover:bg-amber-100/60 transition-colors font-medium text-xs">
-                                <i class="fa-solid fa-feather text-xs text-amber-700"></i>
+                            <button id="btn-theme-cream" class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded border border-slate-200 dark:border-slate-700 bg-amber-50/60 text-amber-900 dark:text-slate-200 hover:bg-amber-100/60 transition-colors font-medium text-xs sm:text-sm">
+                                <i class="fa-solid fa-feather text-sm text-amber-700"></i>
                                 <span>Cream</span>
                             </button>
-                            <button id="btn-theme-mint" class="flex items-center justify-center space-x-1 py-2 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-emerald-50/60 text-emerald-900 dark:text-slate-200 hover:bg-emerald-100/60 transition-colors font-medium text-xs">
-                                <i class="fa-solid fa-leaf text-xs text-emerald-600"></i>
+                            <button id="btn-theme-mint" class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded border border-slate-200 dark:border-slate-700 bg-emerald-50/60 text-emerald-900 dark:text-slate-200 hover:bg-emerald-100/60 transition-colors font-medium text-xs sm:text-sm">
+                                <i class="fa-solid fa-leaf text-sm text-emerald-600"></i>
                                 <span>Mint</span>
                             </button>
-                            <button id="btn-theme-dark" class="flex items-center justify-center space-x-1 py-2 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 transition-colors font-medium text-xs">
-                                <i class="fa-solid fa-moon text-xs text-indigo-400"></i>
+                            <button id="btn-theme-dark" class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 transition-colors font-medium text-xs sm:text-sm">
+                                <i class="fa-solid fa-moon text-sm text-indigo-400"></i>
                                 <span>Night</span>
                             </button>
                         </div>
@@ -314,8 +209,8 @@
 
                     <!-- Typography Options -->
                     <div>
-                        <label for="select-font-family" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Font Typography</label>
-                        <select id="select-font-family" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-font-family" class="block font-bold text-slate-700 dark:text-slate-200 mb-2">Font Typography</label>
+                        <select id="select-font-family" class="w-full text-xs sm:text-base bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-polyu-red">
                             <option value="publisher" selected>Publisher Default</option>
                             <option value="sans-serif">Sans-Serif (System UI)</option>
                             <option value="serif">Serif (Georgia / Times)</option>
@@ -324,8 +219,8 @@
                     </div>
 
                     <div>
-                        <label for="select-font-weight" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Font Weight</label>
-                        <select id="select-font-weight" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-font-weight" class="block font-bold text-slate-700 dark:text-slate-200 mb-2">Font Weight</label>
+                        <select id="select-font-weight" class="w-full text-sm sm:text-base bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-3.5 py-2 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-polyu-red">
                             <option value="normal" selected>Normal (400)</option>
                             <option value="300">Light (300)</option>
                             <option value="500">Medium (500)</option>
@@ -336,42 +231,34 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label for="slider-line-height" class="font-medium text-slate-600 dark:text-slate-300">Line Height</label>
-                                <span id="val-line-height" class="text-xs text-slate-400 font-mono">1.5</span>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label for="slider-line-height" class="font-bold text-slate-700 dark:text-slate-200 text-xs sm:text-sm">Line Height</label>
+                                <span id="val-line-height" class="text-xs sm:text-sm text-slate-400 font-mono">1.5</span>
                             </div>
-                            <input type="range" id="slider-line-height" min="1.0" max="2.5" step="0.1" value="1.5" class="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+                            <input type="range" id="slider-line-height" min="1.0" max="2.5" step="0.1" value="1.5" class="w-full accent-polyu-red cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded appearance-none" />
                         </div>
                         <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label for="slider-letter-spacing" class="font-medium text-slate-600 dark:text-slate-300">Spacing</label>
-                                <span id="val-letter-spacing" class="text-xs text-slate-400 font-mono">0px</span>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label for="slider-letter-spacing" class="font-bold text-slate-700 dark:text-slate-200 text-xs sm:text-sm">Spacing</label>
+                                <span id="val-letter-spacing" class="text-xs sm:text-sm text-slate-400 font-mono">0px</span>
                             </div>
-                            <input type="range" id="slider-letter-spacing" min="-1" max="5" step="0.5" value="0" class="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
+                            <input type="range" id="slider-letter-spacing" min="-1" max="5" step="0.5" value="0" class="w-full accent-polyu-red cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded appearance-none" />
                         </div>
                     </div>
 
-                    <div class="pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                    <div class="pt-3 border-t border-slate-100 dark:border-slate-700/50">
                         <label class="flex items-center justify-between cursor-pointer">
-                            <span class="font-medium text-slate-600 dark:text-slate-300">Fluid Typography <span class="text-xs text-slate-400 font-normal">(clamp())</span></span>
+                            <span class="font-bold text-slate-700 dark:text-slate-200">Fluid Typography <span class="text-xs text-slate-400 font-normal">(clamp())</span></span>
                             <input type="checkbox" id="toggle-fluid-type" class="sr-only peer" checked />
-                            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-indigo-600 relative"></div>
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-polyu-red relative"></div>
                         </label>
                     </div>
 
                     <div>
-                        <label for="select-flow" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Layout Mode</label>
-                        <select id="select-flow" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label for="select-flow" class="block font-bold text-slate-700 dark:text-slate-200 mb-2">Layout Mode</label>
+                        <select id="select-flow" class="w-full text-sm sm:text-base bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-3.5 py-2 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-polyu-red">
                             <option value="paginated">Paginated</option>
                             <option value="scrolled">Scrolled Continuous</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="select-dir" class="block font-medium text-slate-600 dark:text-slate-300 mb-1.5">Reading Direction</label>
-                        <select id="select-dir" class="w-full text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="ltr">Horizontal (LTR)</option>
-                            <option value="vertical">Vertical</option>
                         </select>
                     </div>
 
@@ -385,49 +272,49 @@
     <div id="main-container" class="relative flex-1 flex overflow-hidden">
 
         <!-- LOADING OVERLAY -->
-        <div id="loading-overlay" class="absolute inset-0 bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center z-40 gap-3 text-sm text-slate-600 dark:text-slate-300 p-4 text-center">
-            <div id="loading-spinner" class="spinner hidden"></div>
-            <span id="loading-text" class="font-medium">Please select an EPUB file to begin reading.</span>
+        <div id="loading-overlay" class="absolute inset-0 bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center z-40 gap-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 p-6 text-center">
+            <div id="loading-spinner" class="spinner border-t-polyu-red border-polyu-red/20"></div>
+            <span id="loading-text" class="font-bold">Opening reader...</span>
         </div>
 
         <!-- TOC SIDEBAR -->
-        <aside id="toc-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
-            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                <strong class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Table of Contents</strong>
-                <button id="btn-close-toc" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+        <aside id="toc-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 sm:w-96 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <strong class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Table of Contents</strong>
+                <button id="btn-close-toc" class="p-2 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
+                    <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <div class="flex-1 overflow-y-auto p-3">
-                <ul id="toc-list" class="space-y-1 text-xs sm:text-sm"></ul>
+            <div class="flex-1 overflow-y-auto p-4">
+                <ul id="toc-list" class="space-y-1.5 text-sm sm:text-base font-medium"></ul>
             </div>
         </aside>
 
         <!-- SEARCH SIDEBAR -->
-        <aside id="search-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
-            <div class="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                <strong id="search-count-header" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Search Results</strong>
-                <button id="btn-close-search" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+        <aside id="search-sidebar" class="sidebar-transition absolute left-0 top-0 bottom-0 w-80 sm:w-96 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-30 transform -translate-x-full flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <strong id="search-count-header" class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Search Results</strong>
+                <button id="btn-close-search" class="p-2 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500">
+                    <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <div class="p-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800">
                 <div class="flex gap-2">
-                    <input type="text" id="search-input" placeholder="Search book text..." class="flex-1 px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
-                    <button id="btn-search" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors">Search</button>
+                    <input type="text" id="search-input" placeholder="Search book text..." class="flex-1 px-3.5 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded text-sm sm:text-base focus:ring-2 focus:ring-polyu-red outline-none" />
+                    <button id="btn-search" class="px-4 py-2 bg-polyu-red hover:bg-polyu-redhover text-white text-sm sm:text-base font-bold rounded transition-colors">Search</button>
                 </div>
             </div>
-            <div class="flex-1 overflow-y-auto p-3">
-                <ul id="search-results" class="space-y-2 text-xs sm:text-sm"></ul>
+            <div class="flex-1 overflow-y-auto p-4">
+                <ul id="search-results" class="space-y-3 text-sm sm:text-base"></ul>
             </div>
         </aside>
 
-        <!-- NAV ARROWS -->
+        <!-- SIDE NAVIGATION BUTTONS -->
         <button id="btn-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-slate-900/10 dark:bg-slate-100/10 opacity-10 hover:opacity-50 active:opacity-60 text-slate-900 dark:text-slate-100 rounded-full shadow-md backdrop-blur-sm transition-opacity border border-slate-500/20 flex items-center justify-center w-10 h-10" title="Previous Page">
-            <i class="fa-solid fa-chevron-left text-lg"></i>
+            <i class="fa-solid fa-chevron-left text-base sm:text-xl"></i>
         </button>
         <button id="btn-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-slate-900/10 dark:bg-slate-100/10 opacity-10 hover:opacity-50 active:opacity-60 text-slate-900 dark:text-slate-100 rounded-full shadow-md backdrop-blur-sm transition-opacity border border-slate-500/20 flex items-center justify-center w-10 h-10" title="Next Page">
-            <i class="fa-solid fa-chevron-right text-lg"></i>
+            <i class="fa-solid fa-chevron-right text-base sm:text-xl"></i>
         </button>
 
         <!-- READER CANVAS VIEWPORT -->
@@ -436,16 +323,15 @@
         </main>
     </div>
 
-    <!-- FOOTER -->
-    <footer id="footer" class="min-h-[2.75rem] bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm z-10 shrink-0">
-        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" class="flex-1 accent-indigo-600 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none" />
-        <span id="page-info" class="text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap shrink-0 text-right">0%</span>
+    <!-- FOOTER PROGRESS BAR -->
+    <footer id="footer" class="min-h-[2.5rem] sm:min-h-[3rem] bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-base z-10 shrink-0">
+        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" class="flex-1 accent-polyu-red cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded appearance-none" />
+        <span id="page-info" class="text-slate-600 dark:text-slate-300 font-mono font-bold whitespace-nowrap shrink-0 text-right">0%</span>
     </footer>
 
     <!-- LOGIC MODULE -->
     <script type="module">
         const view = document.getElementById('view');
-        const fileInput = document.getElementById('file-input');
         const loadingOverlay = document.getElementById('loading-overlay');
         const loadingSpinner = document.getElementById('loading-spinner');
         const loadingText = document.getElementById('loading-text');
@@ -457,7 +343,6 @@
         const searchCountHeader = document.getElementById('search-count-header');
 
         const selectFlow = document.getElementById('select-flow');
-        const selectDir = document.getElementById('select-dir');
         const selectFontFamily = document.getElementById('select-font-family');
         const selectFontWeight = document.getElementById('select-font-weight');
         const sliderLineHeight = document.getElementById('slider-line-height');
@@ -495,10 +380,21 @@
         const metaDescription = document.getElementById('meta-description');
 
         let currentFontSize = 100;
-        let currentTheme = 'light'; // Default to Day theme
+        let currentTheme = 'light';
         let currentBookKey = null;
         let currentLocation = null;
         const tocItemToElementMap = new Map();
+
+        // -------------------------------------------------------------
+        // BACK BUTTON ACTION
+        // -------------------------------------------------------------
+        window.goBackToLibrary = function() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'library.html';
+            }
+        };
 
         // -------------------------------------------------------------
         // 1. INITIALIZATION & EPUB LOADING
@@ -513,14 +409,7 @@
                 await openBookSource(`./books/${bookParam}`);
             } else {
                 loadingSpinner.classList.add('hidden');
-                loadingText.textContent = "Please select an EPUB file using 'Open EPUB' to start reading.";
-            }
-        });
-
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                await openBookSource(file);
+                loadingText.textContent = "No book specified. Please select a title from the library.";
             }
         });
 
@@ -553,10 +442,10 @@
                     return String(val);
                 };
 
-                const bookTitle = parseMetaField(bookObj?.metadata?.title) || (source.name || 'loaded_book');
+                const bookTitle = parseMetaField(bookObj?.metadata?.title) || (typeof source === 'string' ? source.split('/').pop() : 'loaded_book');
 
                 currentBookKey = `foliate_saved_${bookTitle}`;
-                document.title = `${bookTitle} - EPUB Reader`;
+                document.title = `${bookTitle} - E-Book Reader`;
 
                 toolbarBookTitle.textContent = bookTitle;
 
@@ -592,7 +481,7 @@
             } catch (err) {
                 console.error("Error opening book source:", err);
                 loadingSpinner.classList.add('hidden');
-                loadingText.textContent = "Could not open EPUB file. Please ensure local server is running and the file is valid.";
+                loadingText.textContent = "Could not open EPUB file. Please ensure the file exists in the books directory.";
             }
         }
 
@@ -642,8 +531,34 @@
         }
 
         // -------------------------------------------------------------
-        // 2. LAYOUT & TYPOGRAPHY STYLING
+        // 2. PRESET 3-SIZE FONT SCALING (A- 70%, A 100%, A+ 140%) WITH GRADIENT INTENSITY
         // -------------------------------------------------------------
+        window.setFontScale = function(scalePercentage) {
+            currentFontSize = scalePercentage;
+
+            const btnSmall = document.getElementById('btn-font-small');
+            const btnMed = document.getElementById('btn-font-medium');
+            const btnLarge = document.getElementById('btn-font-large');
+
+            // Default unselected state
+            [btnSmall, btnMed, btnLarge].forEach(btn => {
+                if (btn) {
+                    btn.className = "px-2 py-1 rounded font-bold transition-all shadow-sm flex items-center justify-center bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600";
+                }
+            });
+
+            // Active State Styling: Progressive Crimson Color Degrees
+            if (scalePercentage === 70 && btnSmall) {
+                btnSmall.className = "px-2 py-1 rounded font-bold text-xs transition-all shadow-sm flex items-center justify-center min-w-[2rem] bg-polyu-red/20 text-polyu-red border border-polyu-red/30 dark:bg-red-950/40 dark:text-red-300";
+            } else if (scalePercentage === 100 && btnMed) {
+                btnMed.className = "px-2 py-1 rounded font-bold text-sm transition-all shadow-sm flex items-center justify-center min-w-[2rem] bg-polyu-red/60 text-white dark:bg-polyu-red/70";
+            } else if (scalePercentage === 140 && btnLarge) {
+                btnLarge.className = "px-2.5 py-1 rounded font-bold text-base transition-all shadow-sm flex items-center justify-center min-w-[2.25rem] bg-polyu-red text-white";
+            }
+
+            applyStyles();
+        };
+
         function loadSavedSettings() {
             if (!currentBookKey) return;
             const savedSettings = JSON.parse(localStorage.getItem(`${currentBookKey}_settings`) || 'null');
@@ -656,7 +571,6 @@
                 sliderLetterSpacing.value = savedSettings.letterSpacing ?? 0;
                 toggleFluidType.checked = savedSettings.fluidType ?? true;
                 selectFlow.value = savedSettings.flow ?? 'paginated';
-                selectDir.value = savedSettings.dir ?? 'ltr';
                 
                 let themeToLoad = savedSettings.theme ?? 'light';
                 if (themeToLoad === 'sepia') themeToLoad = 'cream';
@@ -669,10 +583,10 @@
                 sliderLetterSpacing.value = 0;
                 toggleFluidType.checked = true;
                 selectFlow.value = 'paginated';
-                selectDir.value = 'ltr';
                 setTheme('light');
             }
-            document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
+            
+            setFontScale(currentFontSize);
         }
 
         function saveCurrentSettings() {
@@ -685,7 +599,6 @@
                 letterSpacing: sliderLetterSpacing.value,
                 fluidType: toggleFluidType.checked,
                 flow: selectFlow.value,
-                dir: selectDir.value,
                 theme: currentTheme
             };
             localStorage.setItem(`${currentBookKey}_settings`, JSON.stringify(settings));
@@ -694,20 +607,18 @@
         function updateLayoutConfig() {
             if (!view) return;
             const flow = selectFlow.value;
-            const dir = selectDir.value;
 
             view.setAttribute('flow', flow);
-            view.setAttribute('dir', dir);
+            view.setAttribute('dir', 'ltr');
 
             if (view.renderer) {
                 view.renderer.setAttribute('flow', flow === 'scrolled' ? 'scrolled' : 'paginated');
-                view.renderer.setAttribute('writing-mode', dir === 'vertical' ? 'vertical-rl' : 'horizontal-tb');
+                view.renderer.setAttribute('writing-mode', 'horizontal-tb');
             }
             saveCurrentSettings();
         }
 
         selectFlow.addEventListener('change', updateLayoutConfig);
-        selectDir.addEventListener('change', updateLayoutConfig);
 
         function applyStyles() {
             if (!view) return;
@@ -733,20 +644,20 @@
 
             let bgHex = '#ffffff';
             let textHex = '#333333';
-            let headingHex = '#111827';
-            let linkHex = '#2563eb';
-            let selectionHex = '#bfdbfe';
+            let headingHex = '#9E1B32';
+            let linkHex = '#9E1B32';
+            let selectionHex = '#fecdd3';
 
             if (currentTheme === 'dark') {
                 bgHex = '#0f172a';
                 textHex = '#f1f5f9';
                 headingHex = '#ffffff';
-                linkHex = '#60a5fa';
-                selectionHex = '#3b82f6';
+                linkHex = '#f43f5e';
+                selectionHex = '#9e1b32';
             } else if (currentTheme === 'cream') {
                 bgHex = '#fcf9f2';
                 textHex = '#433831';
-                headingHex = '#2c221e';
+                headingHex = '#8c4a32';
                 linkHex = '#8c4a32';
                 selectionHex = '#fde68a';
             } else if (currentTheme === 'mint') {
@@ -793,20 +704,6 @@
         sliderLetterSpacing.addEventListener('input', applyStyles);
         toggleFluidType.addEventListener('change', applyStyles);
 
-        document.getElementById('btn-font-inc').addEventListener('click', () => {
-            currentFontSize += 10;
-            document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
-            applyStyles();
-        });
-
-        document.getElementById('btn-font-dec').addEventListener('click', () => {
-            if (currentFontSize > 50) {
-                currentFontSize -= 10;
-                document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
-                applyStyles();
-            }
-        });
-
         function setTheme(themeMode) {
             currentTheme = themeMode;
 
@@ -824,9 +721,9 @@
                 const btn = buttons[mode];
                 if (btn) {
                     if (mode === currentTheme) {
-                        btn.classList.add('ring-2', 'ring-indigo-500', 'font-bold');
+                        btn.classList.add('ring-2', 'ring-polyu-red', 'font-bold');
                     } else {
-                        btn.classList.remove('ring-2', 'ring-indigo-500', 'font-bold');
+                        btn.classList.remove('ring-2', 'ring-polyu-red', 'font-bold');
                     }
                 }
             });
@@ -839,7 +736,9 @@
         btnThemeMint.addEventListener('click', () => setTheme('mint'));
         btnThemeDark.addEventListener('click', () => setTheme('dark'));
 
-        // Popovers
+        // -------------------------------------------------------------
+        // POPOVER TOGGLE LISTENERS
+        // -------------------------------------------------------------
         btnSettings.addEventListener('click', (e) => {
             e.stopPropagation();
             bookmarkOverlay.classList.add('hidden');
@@ -860,6 +759,14 @@
 
         btnCloseInfo.addEventListener('click', () => {
             infoOverlay.classList.add('hidden');
+        });
+
+        btnBookmark.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!currentBookKey) return;
+            settingsOverlay.classList.add('hidden');
+            infoOverlay.classList.add('hidden');
+            bookmarkOverlay.classList.toggle('hidden');
         });
 
         // -------------------------------------------------------------
@@ -908,7 +815,7 @@
             function appendTocNodes(nodes, container) {
                 nodes.forEach(node => {
                     const li = document.createElement('li');
-                    li.className = 'py-2 px-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-slate-700 dark:text-slate-300';
+                    li.className = 'py-2 px-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-slate-700 dark:text-slate-200';
                     li.textContent = node.label ? node.label.trim() : 'Chapter';
                     tocItemToElementMap.set(node, li);
 
@@ -922,7 +829,7 @@
 
                     if (node.subitems && node.subitems.length > 0) {
                         const nestedUl = document.createElement('ul');
-                        nestedUl.className = 'pl-3 mt-1 space-y-1 border-l border-slate-200 dark:border-slate-800';
+                        nestedUl.className = 'pl-3.5 mt-1 space-y-1 border-l-2 border-slate-200 dark:border-slate-800';
                         appendTocNodes(node.subitems, nestedUl);
                         container.appendChild(nestedUl);
                     }
@@ -934,11 +841,11 @@
 
         function syncTOC(tocItem) {
             if (!tocItem) return;
-            tocList.querySelectorAll('li').forEach(el => el.classList.remove('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800'));
+            tocList.querySelectorAll('li').forEach(el => el.classList.remove('font-bold', 'text-polyu-red', 'bg-polyu-red/10', 'dark:bg-slate-800'));
 
             const activeLi = tocItemToElementMap.get(tocItem);
             if (activeLi) {
-                activeLi.classList.add('font-bold', 'text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800');
+                activeLi.classList.add('font-bold', 'text-polyu-red', 'bg-polyu-red/10', 'dark:bg-slate-800');
                 activeLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }
         }
@@ -1015,7 +922,7 @@
             const bookmarks = getSavedBookmarks();
 
             if (bookmarks.length === 0) {
-                bookmarkList.innerHTML = '<li class="text-slate-400 italic text-center py-4">No bookmarks saved yet.</li>';
+                bookmarkList.innerHTML = '<li class="text-slate-400 italic text-center py-4 text-sm sm:text-base">No bookmarks saved yet.</li>';
                 return;
             }
 
@@ -1026,10 +933,10 @@
 
                 li.innerHTML = `
                     <div class="bookmark-info flex-1 min-w-0 mr-2">
-                        <p class="font-semibold text-slate-700 dark:text-slate-200 truncate">${bm.chapterTitle}</p>
-                        <p class="text-[10px] text-slate-400">${metaText}</p>
+                        <p class="font-bold text-slate-800 dark:text-slate-100 truncate text-sm sm:text-base">${bm.chapterTitle}</p>
+                        <p class="text-xs text-slate-400">${metaText}</p>
                     </div>
-                    <button class="btn-remove-bm text-red-500 hover:text-red-700 p-1 text-sm">&times;</button>
+                    <button class="btn-remove-bm text-polyu-red hover:text-red-700 p-1 text-base sm:text-lg">&times;</button>
                 `;
 
                 li.querySelector('.bookmark-info').addEventListener('click', () => {
@@ -1048,17 +955,6 @@
                 bookmarkList.appendChild(li);
             });
         }
-
-        btnBookmark.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (!currentBookKey) {
-                alert('Please load an EPUB file first.');
-                return;
-            }
-            settingsOverlay.classList.add('hidden');
-            infoOverlay.classList.add('hidden');
-            bookmarkOverlay.classList.toggle('hidden');
-        });
 
         btnAddBookmark.addEventListener('click', () => {
             if (!currentLocation || !currentLocation.cfi) return;
@@ -1098,10 +994,7 @@
             const query = searchInput.value.trim();
             if (!query) return;
 
-            if (!view.book) {
-                alert('Please load an EPUB file before searching.');
-                return;
-            }
+            if (!view.book) return;
 
             tocSidebar.classList.add('-translate-x-full');
             searchSidebar.classList.remove('-translate-x-full');
@@ -1143,14 +1036,14 @@
 
         function appendSearchResult(snippet, target, label, query) {
             const li = document.createElement('li');
-            li.className = 'p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border-b border-slate-100 dark:border-slate-800 transition-colors';
+            li.className = 'p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border-b border-slate-100 dark:border-slate-800 transition-colors';
             
             const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const highlightedText = snippet.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark>$1</mark>');
+            const highlightedText = snippet.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark class="bg-polyu-red/20 text-polyu-red font-bold px-0.5">$1</mark>');
 
             li.innerHTML = `
-                <div class="font-semibold text-xs mb-1 text-indigo-600 dark:text-indigo-400 truncate">${label}</div>
-                <div class="text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">...${highlightedText}...</div>
+                <div class="font-bold text-xs sm:text-sm mb-1 text-polyu-red dark:text-red-400 truncate">${label}</div>
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">...${highlightedText}...</div>
             `;
 
             li.addEventListener('click', () => {

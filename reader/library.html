@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Book - Translated Library</title>
+    <title>Translation Library - Bridging Cultures: Translating Hong Kong Sinophone Literature</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,12 +13,12 @@
             theme: {
                 extend: {
                     colors: {
-                        indigo: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
+                        polyu: {
+                            red: '#9E1B32',      /* PolyU / LST Signature Crimson Red */
+                            redhover: '#821326',
+                            dark: '#1A202C',
+                            gray: '#718096',
+                            lightbg: '#F8F9FA'
                         }
                     }
                 }
@@ -29,17 +29,19 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- CONSOLIDATED GLOBAL & PAGE STYLES -->
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
     <style>
         :root {
-            /* Page-wide Font Sizing Tokens */
             --font-base-size: 15px;
-            --card-title-size: 1rem;
+            --card-title-size: 0.9375rem;
             --meta-text-size: 0.8125rem;
         }
 
         html {
             font-size: var(--font-base-size);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         /* Custom Scrollbars */
@@ -55,7 +57,14 @@
             border-radius: 3px;
         }
 
-        /* Reusable Typography & UI Utility Classes */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         .filter-section-title {
             font-size: 0.75rem;
             font-weight: 700;
@@ -66,9 +75,9 @@
 
         .input-standard {
             font-size: 0.875rem;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.25rem;
             padding: 0.5rem 0.75rem;
             color: #334155;
             font-weight: 500;
@@ -76,8 +85,8 @@
             transition: all 0.2s;
         }
         .input-standard:focus {
-            outline: 2px solid #6366f1;
-            background-color: #ffffff;
+            border-color: #9E1B32;
+            box-shadow: 0 0 0 2px rgba(158, 27, 50, 0.15);
         }
 
         .book-title-text {
@@ -93,39 +102,156 @@
         }
     </style>
 </head>
-<body class="min-h-full bg-slate-50 text-slate-800 flex flex-col font-sans antialiased text-sm sm:text-base">
+<body class="min-h-full bg-slate-50 text-slate-800 flex flex-col font-sans antialiased text-sm sm:text-base selection:bg-polyu-red selection:text-white">
 
-    <!-- TOP NAV HEADER -->
-    <header class="h-16 border-b border-slate-200 bg-white/95 backdrop-blur flex items-center justify-between px-4 sm:px-8 shrink-0 sticky top-0 z-30">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-                <i class="fa-solid fa-book-open text-lg"></i>
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Left: PolyU & LST Official Branding Header -->
+            <a href="home.html" class="flex items-center space-x-3 sm:space-x-4 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <img src="https://www.polyu.edu.hk/style%20guide/files/v2.1/graphic_standards/polyu_logo/polyu_logo_color.svg" alt="The Hong Kong Polytechnic University" class="h-10 sm:h-12 w-auto object-contain" id="polyu-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/180x45?text=PolyU+Logo';" />
+                    <div class="h-8 w-[1px] bg-slate-300 hidden sm:block"></div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-xs sm:text-sm font-bold tracking-tight text-polyu-red leading-tight">Department of Language Science and Technology</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 font-medium">香港理工大學 語言科學及技術學系</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Right: Navigation Links (Desktop) -->
+            <nav class="hidden xl:flex items-center space-x-5 lg:space-x-6 text-sm font-bold text-slate-700 flex-nowrap whitespace-nowrap">
+                <a href="home.html" class="hover:text-polyu-red transition-colors">Home</a>
+                <a href="library.html" class="text-polyu-red border-b-2 border-polyu-red pb-1">Translation Library</a>
+                <a href="author.html" class="hover:text-polyu-red transition-colors">Authors</a>
+                <a href="home.html#categories" class="hover:text-polyu-red transition-colors">Categories</a>
+                
+                <!-- About Us Dropdown Menu -->
+                <div class="relative group py-2">
+                    <a href="home.html#about" class="hover:text-polyu-red transition-colors block">
+                        <span>About Us</span>
+                    </a>
+                    <div class="absolute left-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        <a href="home.html#about" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-polyu-red font-semibold border-b border-slate-100">About the Project</a>
+                        <a href="team.html" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-polyu-red font-semibold">About the Team</a>
+                    </div>
+                </div>
+
+                <div class="h-4 w-[1px] bg-slate-300"></div>
+
+                <!-- Sign Up / Login Links -->
+                <div class="flex items-center space-x-2">
+                    <a href="reg.html" class="hover:text-polyu-red transition-colors">Sign Up</a>
+                    <span class="text-slate-300">|</span>
+                    <a href="login.html" class="hover:text-polyu-red transition-colors">Log In</a>
+                </div>
+
+                <!-- Language Switcher -->
+                <a href="?lang=zh" class="text-xs font-semibold px-2 py-1 rounded border border-slate-300 hover:bg-slate-50 transition-colors text-slate-600">繁中</a>
+            </nav>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="btn-mobile-menu" class="xl:hidden p-2 text-slate-700 hover:text-polyu-red focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 bg-white px-8 py-6 shadow-xl">
+            <div class="max-w-xs space-y-4 font-normal text-slate-800 text-base">
+                <a href="home.html" class="block hover:text-polyu-red font-medium">Home</a>
+                <a href="library.html" class="block text-polyu-red font-bold text-lg">Translation Library</a>
+                <a href="author.html" class="block hover:text-polyu-red font-medium">Authors</a>
+                <a href="home.html#categories" class="block hover:text-polyu-red font-medium">Categories</a>
+                
+                <!-- About Us Accordion Toggle -->
+                <div class="pt-1">
+                    <button id="btn-mobile-about" class="w-full text-left flex items-center justify-between font-medium text-slate-800 text-base hover:text-polyu-red focus:outline-none">
+                        <span>About Us</span>
+                        <i id="icon-mobile-about-arrow" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform"></i>
+                    </button>
+                    <!-- Collapsible Sub-menu -->
+                    <div id="mobile-about-submenu" class="hidden border-l-2 border-polyu-red/60 pl-4 mt-2 space-y-2.5">
+                        <a href="home.html#about" class="block text-slate-700 hover:text-polyu-red text-sm font-normal">About the Project</a>
+                        <a href="team.html" class="block text-slate-700 hover:text-polyu-red text-sm font-normal">About the Team</a>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100 my-4" />
+
+                <!-- Sign Up / Log In Line -->
+                <div class="flex items-center space-x-3 text-sm font-medium text-slate-800">
+                    <a href="reg.html" class="hover:text-polyu-red">Sign Up</a>
+                    <span class="text-slate-300 font-normal">|</span>
+                    <a href="login.html" class="hover:text-polyu-red">Log In</a>
+                </div>
+
+                <!-- Language Button Box -->
+                <div class="pt-2">
+                    <a href="?lang=zh" class="inline-block px-3 py-1.5 border border-slate-300 rounded text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors">
+                        繁體中文
+                    </a>
+                </div>
             </div>
-            <a href="index.html" class="font-bold text-slate-900 text-xl sm:text-2xl tracking-tight hover:text-indigo-600 transition-colors">E-Book</a>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 flex flex-col">
-        
-        <!-- PAGE TITLE HEADER -->
-        <div class="mb-6">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Translated Library</h1>
-            <p class="text-sm sm:text-base text-slate-500 mt-1">Discover over 100 titles in our library.</p>
+    <!-- PROJECT STRIP BANNER -->
+    <div class="bg-polyu-red text-white py-2.5 px-4 text-xs sm:text-sm font-semibold tracking-wide shadow-inner">
+        <div class="max-w-7xl mx-auto flex items-center space-x-2">
+            <span>Bridging Cultures: Translating Hong Kong Sinophone Literature (1900–1997) with Generative AI</span>
         </div>
+    </div>
 
-        <!-- FULL WIDTH SEARCH BAR -->
-        <div class="mb-6 relative z-10">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
-            <input type="text" id="search-input" placeholder="Search catalog by title or author..." class="w-full pl-12 pr-4 py-3.5 text-base bg-white border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400" />
+    <!-- PAGE HERO / BREADCRUMB BANNER -->
+    <section class="relative bg-gradient-to-r from-slate-100 via-slate-50 to-slate-200 border-b border-slate-200 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            
+            <!-- Left: Page Title & Breadcrumbs -->
+            <div>
+                <div class="flex items-center space-x-1 text-polyu-red mb-2">
+                    <span class="inline-block w-2.5 h-2.5 bg-polyu-red rounded-none"></span>
+                    <span class="inline-block w-2.5 h-2.5 bg-polyu-red/60 rounded-none"></span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-polyu-red tracking-tight mb-2">Translation Library</h1>
+                <nav class="flex items-center space-x-2 text-xs sm:text-sm text-slate-500 font-medium">
+                    <a href="home.html" class="hover:text-polyu-red transition-colors">Home</a>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <span class="text-slate-800 font-semibold">Translation Library</span>
+                </nav>
+            </div>
+
+            <!-- Right: Back Button -->
+            <div class="flex items-center space-x-4">
+                <a href="home.html" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-polyu-red hover:bg-polyu-redhover text-white text-xs sm:text-sm font-bold rounded-full shadow-md transition-all transform hover:-translate-x-0.5">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span>Back</span>
+                </a>
+            </div>
+
+            <!-- Background Overlay -->
+            <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 pointer-events-none hidden md:block">
+                <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1000&q=80" class="w-full h-full object-cover mix-blend-multiply" alt="Library Books" />
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col space-y-6">
+        
+        <!-- TOP SEARCH BAR ONLY -->
+        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input type="text" id="search-input" placeholder="Search catalog by book title, author, or keywords..." class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-polyu-red focus:border-transparent transition-all placeholder:text-slate-400" />
         </div>
 
         <!-- MOBILE FILTER TOGGLE BAR -->
-        <div class="lg:hidden mb-4 z-10">
-            <button id="btn-toggle-mobile-filters" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 flex items-center justify-between text-slate-700 font-semibold text-base shadow-sm hover:bg-slate-50 transition-colors">
+        <div class="lg:hidden z-10">
+            <button id="btn-toggle-mobile-filters" class="w-full bg-white border border-slate-200 rounded-lg p-3 flex items-center justify-between text-slate-700 font-bold text-sm shadow-sm hover:bg-slate-50 transition-colors">
                 <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-sliders text-indigo-600"></i>
-                    <span>Filter & Sort Catalog</span>
+                    <i class="fa-solid fa-sliders text-polyu-red"></i>
+                    <span>Filters & Sorting Options</span>
                 </span>
                 <i id="mobile-filter-chevron" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
             </button>
@@ -135,13 +261,13 @@
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start relative z-0">
 
             <!-- FILTER SIDEBAR -->
-            <aside id="filter-pane" class="hidden lg:block lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm lg:sticky lg:top-20 z-10">
+            <aside id="filter-pane" class="hidden lg:block lg:col-span-1 bg-white rounded-lg border border-slate-200 p-5 space-y-6 shadow-sm lg:sticky lg:top-24 z-10">
                 
                 <!-- Sort By -->
                 <div>
-                    <label class="block filter-section-title mb-2.5">Sort by</label>
+                    <label class="block filter-section-title mb-2">Sort by</label>
                     <div class="relative">
-                        <select id="select-sort" class="w-full appearance-none input-standard pr-8 text-sm sm:text-base cursor-pointer">
+                        <select id="select-sort" class="w-full appearance-none input-standard pr-8 text-xs sm:text-sm cursor-pointer">
                             <option value="popular">Most Popular</option>
                             <option value="year-desc">Year (Newest First)</option>
                             <option value="year-asc">Year (Oldest First)</option>
@@ -149,7 +275,7 @@
                             <option value="rating-desc">Highest Rated</option>
                             <option value="author-asc">Author (A-Z)</option>
                         </select>
-                        <i class="fa-solid fa-arrows-up-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                        <i class="fa-solid fa-arrows-up-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
                     </div>
                 </div>
 
@@ -159,10 +285,10 @@
                 <div>
                     <button id="btn-toggle-categories" class="w-full flex items-center justify-between py-1 text-left focus:outline-none group">
                         <span class="filter-section-title group-hover:text-slate-800 transition-colors">Categories</span>
-                        <i id="chevron-categories" class="fa-solid fa-chevron-up text-sm text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
+                        <i id="chevron-categories" class="fa-solid fa-chevron-up text-xs text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
                     </button>
-                    <div id="wrapper-categories" class="space-y-2.5 text-sm sm:text-base text-slate-600 max-h-60 overflow-y-auto pr-1 mt-3 transition-all">
-                        <div id="category-filter-list" class="space-y-2.5">
+                    <div id="wrapper-categories" class="space-y-2 text-xs sm:text-sm text-slate-600 max-h-60 overflow-y-auto pr-1 mt-3 transition-all">
+                        <div id="category-filter-list" class="space-y-2">
                             <!-- Populated dynamically -->
                         </div>
                     </div>
@@ -174,27 +300,27 @@
                 <div>
                     <button id="btn-toggle-ratings" class="w-full flex items-center justify-between py-1 text-left focus:outline-none group">
                         <span class="filter-section-title group-hover:text-slate-800 transition-colors">Rating</span>
-                        <i id="chevron-ratings" class="fa-solid fa-chevron-up text-sm text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
+                        <i id="chevron-ratings" class="fa-solid fa-chevron-up text-xs text-slate-400 group-hover:text-slate-600 transition-transform duration-200"></i>
                     </button>
-                    <div id="wrapper-ratings" class="space-y-2.5 text-sm sm:text-base mt-3 transition-all">
+                    <div id="wrapper-ratings" class="space-y-2 text-xs sm:text-sm mt-3 transition-all">
                         <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="0" checked class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <input type="radio" name="rating-filter" value="0" checked class="w-4 h-4 text-polyu-red focus:ring-polyu-red">
                             <span>All Ratings</span>
                         </label>
                         <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="5" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <input type="radio" name="rating-filter" value="5" class="w-4 h-4 text-polyu-red focus:ring-polyu-red">
                             <span class="text-amber-400">★★★★★</span>
-                            <span class="text-slate-500 text-xs sm:text-sm">& up</span>
+                            <span class="text-slate-500 text-xs">& up</span>
                         </label>
                         <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="4" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <input type="radio" name="rating-filter" value="4" class="w-4 h-4 text-polyu-red focus:ring-polyu-red">
                             <span class="text-amber-400">★★★★☆</span>
-                            <span class="text-slate-500 text-xs sm:text-sm">& up</span>
+                            <span class="text-slate-500 text-xs">& up</span>
                         </label>
                         <label class="flex items-center space-x-2.5 cursor-pointer text-slate-600 hover:text-slate-900">
-                            <input type="radio" name="rating-filter" value="3" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <input type="radio" name="rating-filter" value="3" class="w-4 h-4 text-polyu-red focus:ring-polyu-red">
                             <span class="text-amber-400">★★★☆☆</span>
-                            <span class="text-slate-500 text-xs sm:text-sm">& up</span>
+                            <span class="text-slate-500 text-xs">& up</span>
                         </label>
                     </div>
                 </div>
@@ -203,38 +329,38 @@
 
                 <!-- Publication Era Dropdown -->
                 <div>
-                    <label class="block filter-section-title mb-2.5">Publication Era</label>
+                    <label class="block filter-section-title mb-2">Publication Era</label>
                     <div class="relative">
-                        <select id="select-era" class="w-full appearance-none input-standard pr-8 text-sm sm:text-base cursor-pointer">
-                            <!-- Populated dynamically from JSON -->
+                        <select id="select-era" class="w-full appearance-none input-standard pr-8 text-xs sm:text-sm cursor-pointer">
+                            <!-- Populated dynamically -->
                         </select>
-                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
                     </div>
                 </div>
 
                 <hr class="border-slate-100" />
 
                 <!-- Reset Filters Button -->
-                <button id="btn-reset-filters" class="w-full py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                <button id="btn-reset-filters" onclick="resetAllFilters()" class="w-full py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded text-xs sm:text-sm font-bold transition-colors flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-rotate-left text-xs"></i>
-                    <span>Reset Filters</span>
+                    <span>Reset All Filters</span>
                 </button>
 
             </aside>
 
             <!-- BOOK CATALOG MAIN SECTION -->
-            <section class="lg:col-span-3 min-w-0">
+            <section class="lg:col-span-3 min-w-0 space-y-4">
                 
                 <!-- Result Count & View Toggle Header -->
-                <div class="flex items-center justify-between mb-4">
-                    <p id="result-count" class="text-sm sm:text-base font-medium text-slate-600">Showing 0 results</p>
+                <div class="flex items-center justify-between">
+                    <p id="result-count" class="text-xs sm:text-sm font-bold text-slate-600">Showing 1-20 of 1600</p>
                     
-                    <div class="bg-slate-200/70 p-1 rounded-xl flex items-center space-x-1 shadow-inner border border-slate-200/60">
-                        <button id="btn-view-grid" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all">
+                    <div class="bg-slate-200/70 p-1 rounded-lg flex items-center space-x-1 shadow-inner border border-slate-200">
+                        <button id="btn-view-grid" class="px-3 py-1 rounded text-xs font-bold flex items-center space-x-1.5 bg-white text-slate-900 shadow-sm transition-all">
                             <i class="fa-solid fa-border-all text-xs"></i>
                             <span>Grid</span>
                         </button>
-                        <button id="btn-view-list" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all">
+                        <button id="btn-view-list" class="px-3 py-1 rounded text-xs font-bold flex items-center space-x-1.5 text-slate-500 hover:text-slate-800 transition-all">
                             <i class="fa-solid fa-list text-xs"></i>
                             <span>List</span>
                         </button>
@@ -242,43 +368,165 @@
                 </div>
 
                 <!-- ACTIVE FILTER PILLS CONTAINER -->
-                <div id="active-filters-bar" class="hidden flex-wrap items-center gap-2 mb-4">
-                    <span class="text-xs sm:text-sm text-slate-400 font-medium">Active:</span>
+                <div id="active-filters-bar" class="hidden flex-wrap items-center gap-2">
+                    <span class="text-xs text-slate-400 font-medium">Active:</span>
                     <div id="active-pills-list" class="flex flex-wrap items-center gap-2"></div>
-                    <button id="btn-clear-all-pills" class="text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-800 underline ml-1">
+                    <button id="btn-clear-all-pills" onclick="resetAllFilters()" class="text-xs font-bold text-polyu-red hover:underline ml-1">
                         Clear All
                     </button>
                 </div>
 
                 <!-- BOOK CONTAINER -->
-                <div id="book-container" class="grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-6">
+                <div id="book-container" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4">
                     <!-- Cards injected via JS -->
                 </div>
 
                 <!-- EMPTY STATE -->
-                <div id="empty-state" class="hidden flex-col items-center justify-center py-16 bg-white rounded-2xl border border-slate-200 text-center">
-                    <div class="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 mb-3">
-                        <i class="fa-solid fa-book-open text-2xl"></i>
+                <div id="empty-state" class="hidden flex-col items-center justify-center py-16 bg-white rounded-lg border border-slate-200 text-center">
+                    <div class="w-12 h-12 rounded-full bg-polyu-red/10 flex items-center justify-center text-polyu-red mb-3">
+                        <i class="fa-solid fa-book-open text-xl"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800">No matching books found</h3>
-                    <p class="text-sm text-slate-500 mt-1 max-w-xs">Try relaxing your search terms or clearing selected filters.</p>
+                    <h3 class="text-base font-bold text-slate-800">No matching titles found</h3>
+                    <p class="text-xs text-slate-500 mt-1 max-w-xs">Try adjusting your search keywords or clearing selected filter criteria.</p>
+                </div>
+
+                <!-- PAGINATION BAR -->
+                <div class="pt-8 flex items-center justify-center space-x-2 text-xs sm:text-sm font-bold text-slate-600">
+                    <button class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center text-slate-400">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center shadow">1</button>
+                    <button class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center">2</button>
+                    <button class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center">3</button>
+                    <button class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center">4</button>
+                    <button class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center">5</button>
+                    <span class="px-1 text-slate-400">..80</span>
+                    <button class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
                 </div>
 
             </section>
         </div>
     </main>
 
-    <!-- QUICK VIEW MODAL -->
-    <div id="quick-view-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-200">
-            <button id="btn-close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <div id="modal-content" class="flex flex-col sm:flex-row gap-5">
-                <!-- Modal content dynamically injected -->
+    <!-- BOOK OVERVIEW MODAL -->
+    <div id="book-overview-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-xl max-w-4xl w-full shadow-2xl relative border border-slate-200 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+            
+            <!-- Modal Header Banner -->
+            <div class="relative bg-gradient-to-r from-slate-100 via-slate-50 to-slate-200 px-6 py-6 border-b border-slate-200 flex items-center justify-between">
+                <div>
+                    <div class="flex items-center space-x-1 text-polyu-red mb-1">
+                        <span class="inline-block w-2.5 h-2.5 bg-polyu-red rounded-none"></span>
+                        <span class="inline-block w-2.5 h-2.5 bg-polyu-red/60 rounded-none"></span>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-polyu-red tracking-tight">Book Overview</h2>
+                    <p id="modal-breadcrumb" class="text-xs text-slate-500 font-medium mt-0.5">Home > Translation Library > Book Overview</p>
+                </div>
+
+                <button onclick="closeBookOverviewModal()" class="inline-flex items-center space-x-1 px-4 py-2 bg-polyu-red/90 hover:bg-polyu-red text-white text-xs font-bold rounded shadow transition-all">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span>Back</span>
+                </button>
             </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 sm:p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+                
+                <!-- Main Grid: Cover vs Overview Info -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- Left: Book Cover Image -->
+                    <div class="md:col-span-4 aspect-[2/3] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 shadow-sm relative">
+                        <img id="modal-book-cover" src="" alt="Book Cover" class="w-full h-full object-cover" />
+                    </div>
+
+                    <!-- Right: Info Panel -->
+                    <div class="md:col-span-8 space-y-5">
+                        
+                        <!-- Red Banner Gradient Title Box -->
+                        <div class="bg-gradient-to-r from-polyu-red via-polyu-red/80 to-transparent p-4 sm:p-5 rounded-md text-white shadow-sm">
+                            <h3 id="modal-book-title" class="text-xl sm:text-2xl font-extrabold leading-tight">Book Title</h3>
+                            <p id="modal-book-cn-title" class="text-sm sm:text-base font-bold opacity-90 mt-0.5">中文書名</p>
+                        </div>
+
+                        <!-- Metadata Table -->
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-2 text-slate-900 font-bold text-sm">
+                                <i class="fa-solid fa-circle-info text-polyu-red"></i>
+                                <span>About this book</span>
+                            </div>
+
+                            <div class="divide-y divide-slate-100 text-xs sm:text-sm text-slate-700">
+                                <div class="py-2 grid grid-cols-12">
+                                    <span class="col-span-4 font-bold text-slate-500">Author</span>
+                                    <span id="modal-book-author" class="col-span-8 font-semibold text-slate-900">-</span>
+                                </div>
+                                <div class="py-2 grid grid-cols-12">
+                                    <span class="col-span-4 font-bold text-slate-500">Publisher</span>
+                                    <span id="modal-book-publisher" class="col-span-8 font-semibold text-slate-900">-</span>
+                                </div>
+                                <div class="py-2 grid grid-cols-12">
+                                    <span class="col-span-4 font-bold text-slate-500">Publish Year</span>
+                                    <span id="modal-book-year" class="col-span-8 font-semibold text-slate-900">-</span>
+                                </div>
+                                <div class="py-2 grid grid-cols-12">
+                                    <span class="col-span-4 font-bold text-slate-500">Copyright Status</span>
+                                    <span id="modal-book-copyright" class="col-span-8 font-semibold text-slate-900">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons (Using Heart Icon & "Add to Wishlist" Text) -->
+                        <div class="pt-2 flex items-center space-x-3">
+                            <button id="modal-btn-read" onclick="" class="px-6 py-2.5 bg-polyu-red hover:bg-polyu-redhover text-white font-bold text-xs sm:text-sm rounded shadow transition-colors inline-flex items-center space-x-2">
+                                <i class="fa-solid fa-book-open text-xs"></i>
+                                <span>Read Now</span>
+                            </button>
+                            <button id="modal-btn-save" onclick="" class="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs sm:text-sm rounded shadow transition-colors inline-flex items-center space-x-2">
+                                <i id="modal-btn-save-icon" class="fa-regular fa-heart text-xs"></i>
+                                <span id="modal-btn-save-text">Add to Wishlist</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Tabs & Description Section -->
+                <div class="pt-4 border-t border-slate-200 space-y-4">
+                    <div class="border-b border-slate-200 flex items-center">
+                        <span class="pb-2 px-4 border-b-2 border-polyu-red text-polyu-red font-bold text-sm sm:text-base">
+                            Description
+                        </span>
+                    </div>
+
+                    <p id="modal-book-description" class="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify">
+                        Book description text goes here.
+                    </p>
+                </div>
+
+            </div>
+
         </div>
     </div>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-[#3A3A3C] text-slate-300 py-4 text-xs border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>Copyright © 2026 Department of Language Science and Technology, The Hong Kong Polytechnic University. All Rights Reserved.</p>
+            <div class="flex items-center space-x-4 shrink-0">
+                <a href="#privacy" class="hover:underline hover:text-white">Privacy Policy</a>
+                <span>|</span>
+                <a href="#terms" class="hover:underline hover:text-white">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCROLL TO TOP BUTTON -->
+    <button id="btn-scroll-top" class="fixed bottom-6 right-6 w-9 h-9 bg-slate-500/80 hover:bg-polyu-red text-white rounded flex items-center justify-center transition-colors shadow-lg z-40">
+        <i class="fa-solid fa-arrow-up text-xs"></i>
+    </button>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
@@ -303,41 +551,53 @@
             ],
             books: [
                 {
+                    id: '2',
+                    title: 'Shuangshen (Double Body) 雙身',
+                    author: 'David Chen',
+                    chineseTitle: '雙身',
+                    chineseAuthor: '陳大衛',
+                    publisher: 'PolyU Press / LST Literary Archive',
+                    copyrightStatus: 'Public Domain',
+                    publishedYear: 1888,
+                    category: 'FICTION',
+                    rating: 5,
+                    count: 112,
+                    cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
+                    description: 'A landmark Hong Kong Sinophone literary work exploring duality, identity, post-war trauma, and social shifts across early urban Hong Kong.',
+                    progress: 100,
+                    file: '2.epub'
+                },
+                {
                     id: '1',
                     title: 'The Art of Observation',
                     author: 'Sarah Williams',
+                    chineseTitle: '觀察的藝術',
+                    chineseAuthor: '威廉斯 莎拉',
+                    publisher: 'Design Studies Publishing',
+                    copyrightStatus: 'Academic License',
                     publishedYear: 2021,
                     category: 'DESIGN',
                     rating: 5,
                     count: 64,
                     cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
-                    description: 'A comprehensive guide into visual thinking, design frameworks, and modern aesthetics.',
+                    description: 'A comprehensive guide into visual thinking, design frameworks, modern typography, and aesthetic observation.',
                     progress: 45,
                     file: '1.epub'
-                },
-                {
-                    id: '2',
-                    title: 'Modern Design & Architecture Across the Centuries: A Historical Retrospective',
-                    author: 'David Chen',
-                    publishedYear: 1888,
-                    category: 'ARCHITECTURE',
-                    rating: 5,
-                    count: 112,
-                    cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
-                    description: 'Exploring structural aesthetics, urban planning, and sustainable building concepts.',
-                    progress: 100,
-                    file: '2.epub'
                 },
                 {
                     id: '3',
                     title: 'Journey to the Center of Thought',
                     author: 'Elena Rossi',
+                    chineseTitle: '思想中心之旅',
+                    chineseAuthor: '羅西 埃琳娜',
+                    publisher: 'Classical Thought Books',
+                    copyrightStatus: 'Public Domain',
                     publishedYear: 1862,
                     category: 'FICTION',
                     rating: 4,
                     count: 420,
                     cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80',
-                    description: 'A captivating psychological fiction following the internal monologue of a brilliant researcher.',
+                    description: 'A captivating psychological fiction following the internal monologue of a brilliant researcher across nineteenth-century European and Asian port cities.',
                     progress: 0,
                     file: '3.epub'
                 },
@@ -345,12 +605,16 @@
                     id: '4',
                     title: 'Invisible Worlds',
                     author: 'A. K. Rowling',
+                    chineseTitle: '隱形世界',
+                    chineseAuthor: '羅琳',
+                    publisher: 'Folklore Publications',
+                    copyrightStatus: 'Public Domain',
                     publishedYear: 1818,
                     category: 'FANTASY',
                     rating: 5,
                     count: 310,
                     cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80',
-                    description: 'Uncover parallel dimensions hidden right in front of our eyes in this fiction masterpiece.',
+                    description: 'Uncover parallel dimensions, maritime myths, and supernatural harbor legends hidden right in front of our eyes in this fiction masterpiece.',
                     progress: 12,
                     file: '4.epub'
                 },
@@ -358,12 +622,16 @@
                     id: '5',
                     title: 'The Rising Sun',
                     author: 'Kenji Sato',
+                    chineseTitle: '旭日',
+                    chineseAuthor: '佐藤健二',
+                    publisher: 'East Asian Historical Press',
+                    copyrightStatus: 'Public Domain',
                     publishedYear: 1912,
                     category: 'HISTORICAL FICTION',
                     rating: 4,
                     count: 89,
                     cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&q=80',
-                    description: 'An inspiring saga set during the rapid cultural transformation of early 20th century East Asia.',
+                    description: 'An inspiring historical saga set during the rapid cultural transformation, maritime trade, and urban reconstruction of early 20th century East Asia.',
                     progress: 0,
                     file: '5.epub'
                 },
@@ -371,12 +639,16 @@
                     id: '6',
                     title: 'Clean Code & Mindsets',
                     author: 'Martin L.',
+                    chineseTitle: '整潔代碼與思維',
+                    chineseAuthor: '林馬丁',
+                    publisher: 'TechPress Digital',
+                    copyrightStatus: 'Academic License',
                     publishedYear: 2019,
                     category: 'DEVELOPMENT',
                     rating: 5,
                     count: 156,
                     cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&q=80',
-                    description: 'Best practices, refactoring methods, and software engineering principles for modern developers.',
+                    description: 'Best practices, refactoring methods, and software engineering principles for modern developers and digital library platforms.',
                     progress: 75,
                     file: '6.epub'
                 }
@@ -401,12 +673,10 @@
 
         const activeFiltersBar = document.getElementById('active-filters-bar');
         const activePillsList = document.getElementById('active-pills-list');
-        const btnClearAllPills = document.getElementById('btn-clear-all-pills');
         
         const btnToggleMobileFilters = document.getElementById('btn-toggle-mobile-filters');
         const filterPane = document.getElementById('filter-pane');
         const mobileFilterChevron = document.getElementById('mobile-filter-chevron');
-        const btnResetFilters = document.getElementById('btn-reset-filters');
 
         const btnViewGrid = document.getElementById('btn-view-grid');
         const btnViewList = document.getElementById('btn-view-list');
@@ -419,15 +689,33 @@
         const wrapperRatings = document.getElementById('wrapper-ratings');
         const chevronRatings = document.getElementById('chevron-ratings');
 
-        const modal = document.getElementById('quick-view-modal');
-        const modalContent = document.getElementById('modal-content');
-        const btnCloseModal = document.getElementById('btn-close-modal');
+        const modalOverview = document.getElementById('book-overview-modal');
 
         // Initialize Application
         document.addEventListener('DOMContentLoaded', async () => {
+            // Mobile Menu
+            document.getElementById('btn-mobile-menu')?.addEventListener('click', () => {
+                document.getElementById('mobile-menu')?.classList.toggle('hidden');
+            });
+
+            const btnMobileAbout = document.getElementById('btn-mobile-about');
+            btnMobileAbout?.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('mobile-about-submenu')?.classList.toggle('hidden');
+                document.getElementById('icon-mobile-about-arrow')?.classList.toggle('rotate-180');
+            });
+
+            document.getElementById('btn-scroll-top')?.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
             await initializeLibraryData();
             renderCategories();
             renderEraDropdown();
+            
+            // Handle URL Params
+            handleUrlParameters();
+
             applyFiltersAndRender();
         });
 
@@ -454,35 +742,58 @@
             }
         }
 
-        function renderEraDropdown() {
-            selectEra.innerHTML = eras.map(era => 
-                `<option value="${era.id}">${era.label}</option>`
-            ).join('');
+        function handleUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+
+            if (categoryParam) {
+                const normalizedCategory = categoryParam.trim().toUpperCase();
+                selectedCategories.add(normalizedCategory);
+
+                const checkbox = document.querySelector(`input[name="category-filter"][value="${normalizedCategory}"]`);
+                if (checkbox) checkbox.checked = true;
+
+                if (window.innerWidth < 1024 && filterPane && mobileFilterChevron) {
+                    filterPane.classList.remove('hidden');
+                    mobileFilterChevron.classList.add('rotate-180');
+                }
+            }
         }
 
-        // Accordion Toggle
-        btnToggleCategories.addEventListener('click', () => {
-            wrapperCategories.classList.toggle('hidden');
-            chevronCategories.classList.toggle('rotate-180');
+        function renderEraDropdown() {
+            if (selectEra) {
+                selectEra.innerHTML = eras.map(era => 
+                    `<option value="${era.id}">${era.label}</option>`
+                ).join('');
+            }
+        }
+
+        // Accordion Toggles
+        btnToggleCategories?.addEventListener('click', () => {
+            wrapperCategories?.classList.toggle('hidden');
+            chevronCategories?.classList.toggle('rotate-180');
         });
 
-        btnToggleRatings.addEventListener('click', () => {
-            wrapperRatings.classList.toggle('hidden');
-            chevronRatings.classList.toggle('rotate-180');
+        btnToggleRatings?.addEventListener('click', () => {
+            wrapperRatings?.classList.toggle('hidden');
+            chevronRatings?.classList.toggle('rotate-180');
         });
 
-        btnToggleMobileFilters.addEventListener('click', () => {
-            filterPane.classList.toggle('hidden');
-            mobileFilterChevron.classList.toggle('rotate-180');
+        btnToggleMobileFilters?.addEventListener('click', () => {
+            filterPane?.classList.toggle('hidden');
+            mobileFilterChevron?.classList.toggle('rotate-180');
         });
 
         function renderCategories() {
+            if (!categoryFilterList) return;
+
             categoryFilterList.innerHTML = categories.map(cat => {
                 const count = books.filter(b => b.category === cat).length;
+                const isChecked = selectedCategories.has(cat) ? 'checked' : '';
                 return `
-                    <label class="flex items-center justify-between cursor-pointer hover:text-indigo-600 py-0.5">
+                    <label class="flex items-center justify-between cursor-pointer hover:text-polyu-red py-0.5">
                         <span class="flex items-center space-x-2.5">
-                            <input type="checkbox" name="category-filter" value="${cat}" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" name="category-filter" value="${cat}" ${isChecked} class="w-4 h-4 rounded text-polyu-red focus:ring-polyu-red">
                             <span>${cat.charAt(0) + cat.slice(1).toLowerCase()}</span>
                         </span>
                         <span class="text-xs text-slate-400 font-normal">(${count})</span>
@@ -516,11 +827,12 @@
             return true;
         }
 
-        // Render Active Filter Badges
         function renderActivePills() {
+            if (!activeFiltersBar || !activePillsList) return;
+
             const pills = [];
-            const query = searchInput.value.trim();
-            const eraVal = selectEra.value;
+            const query = searchInput?.value.trim() || '';
+            const eraVal = selectEra?.value || 'all';
             const minRating = parseInt(document.querySelector('input[name="rating-filter"]:checked')?.value || '0', 10);
 
             if (query) {
@@ -548,10 +860,10 @@
                 activeFiltersBar.classList.add('flex');
                 
                 activePillsList.innerHTML = pills.map(p => `
-                    <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-indigo-50 text-indigo-700 border border-indigo-200/60 shadow-sm">
+                    <span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-bold bg-polyu-red/10 text-polyu-red border border-polyu-red/20 shadow-sm">
                         <span>${p.label}</span>
-                        <button onclick="removePill('${p.type}', '${p.value || ''}')" class="hover:bg-indigo-200/60 rounded-full w-4 h-4 inline-flex items-center justify-center text-indigo-500 transition-colors">
-                            <i class="fa-solid fa-xmark text-xs"></i>
+                        <button onclick="removePill('${p.type}', '${p.value || ''}')" class="hover:bg-polyu-red/20 rounded-full w-3.5 h-3.5 inline-flex items-center justify-center text-polyu-red transition-colors">
+                            <i class="fa-solid fa-xmark text-[10px]"></i>
                         </button>
                     </span>
                 `).join('');
@@ -559,28 +871,32 @@
         }
 
         window.removePill = function(type, val) {
-            if (type === 'search') {
+            if (type === 'search' && searchInput) {
                 searchInput.value = '';
             } else if (type === 'category') {
                 selectedCategories.delete(val);
                 const cb = document.querySelector(`input[name="category-filter"][value="${val}"]`);
                 if (cb) cb.checked = false;
             } else if (type === 'rating') {
-                document.querySelector('input[name="rating-filter"][value="0"]').checked = true;
-            } else if (type === 'era') {
+                const rZero = document.querySelector('input[name="rating-filter"][value="0"]');
+                if (rZero) rZero.checked = true;
+            } else if (type === 'era' && selectEra) {
                 selectEra.value = 'all';
             }
             applyFiltersAndRender();
         };
 
         function applyFiltersAndRender() {
-            const query = searchInput.value.toLowerCase().trim();
-            const sortVal = selectSort.value;
-            const eraVal = selectEra.value;
+            const query = searchInput?.value.toLowerCase().trim() || '';
+            const sortVal = selectSort?.value || 'popular';
+            const eraVal = selectEra?.value || 'all';
             const minRating = parseInt(document.querySelector('input[name="rating-filter"]:checked')?.value || '0', 10);
 
             let filtered = books.filter(b => {
-                const matchesSearch = b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query);
+                const matchesSearch = b.title.toLowerCase().includes(query) || 
+                                     b.author.toLowerCase().includes(query) ||
+                                     (b.chineseTitle && b.chineseTitle.includes(query)) ||
+                                     (b.chineseAuthor && b.chineseAuthor.includes(query));
                 const matchesCategory = selectedCategories.size === 0 || selectedCategories.has(b.category);
                 const matchesRating = b.rating >= minRating;
                 const matchesEra = matchesEraFilter(b.publishedYear, eraVal);
@@ -603,23 +919,24 @@
 
             renderActivePills();
             renderBookCards(filtered);
-            resultCount.textContent = `Showing 1-${filtered.length} of ${filtered.length} results`;
+            if (resultCount) resultCount.textContent = `Showing 1-${filtered.length} of ${filtered.length} results`;
         }
 
         function renderBookCards(list) {
+            if (!bookContainer) return;
             bookContainer.innerHTML = '';
 
             if (list.length === 0) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
+                emptyState?.classList.remove('hidden');
+                emptyState?.classList.add('flex');
                 return;
             } else {
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
+                emptyState?.classList.add('hidden');
+                emptyState?.classList.remove('flex');
             }
 
             if (currentLayout === 'grid') {
-                bookContainer.className = "grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-6";
+                bookContainer.className = "grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4";
                 list.forEach(book => bookContainer.appendChild(createGridCard(book)));
             } else {
                 bookContainer.className = "flex flex-col space-y-3";
@@ -627,82 +944,90 @@
             }
         }
 
+        /* GRID CARD WITH HEART ICON WISHLIST */
         function createGridCard(book) {
             const isWishlisted = wishlist.has(book.id);
             const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
             const yearDisplay = book.publishedYear ? ` • ${book.publishedYear}` : '';
             const card = document.createElement('div');
-            card.className = "group bg-white rounded-2xl border border-slate-200 p-3.5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+            card.className = "group bg-white rounded-lg border border-slate-200 p-3 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
 
             card.innerHTML = `
                 <div>
-                    <div class="relative aspect-[2/3] bg-slate-100 rounded-xl overflow-hidden mb-3">
-                        <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 group-hover:blur-sm transition-all duration-300" />
-
-                        <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-3">
-                            <button onclick="openQuickView('${book.id}')" class="w-10 h-10 rounded-full bg-white text-slate-700 hover:bg-indigo-600 hover:text-white flex items-center justify-center shadow-lg transition-colors" title="Quick View">
-                                <i class="fa-solid fa-eye text-sm"></i>
+                    <div class="relative aspect-[2/3] bg-slate-100 rounded overflow-hidden mb-2.5 cursor-pointer" onclick="openReader('${book.file}')">
+                        <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
+                            <button onclick="event.stopPropagation(); openBookOverviewModal('${book.id}')" class="w-8 h-8 rounded-full bg-white text-slate-800 hover:bg-polyu-red hover:text-white flex items-center justify-center shadow transition-colors" title="Overview">
+                                <i class="fa-solid fa-eye text-xs"></i>
                             </button>
-                            <button onclick="toggleWishlist('${book.id}', this)" class="w-10 h-10 rounded-full bg-white ${isWishlisted ? 'text-red-500' : 'text-slate-700'} hover:bg-red-500 hover:text-white flex items-center justify-center shadow-lg transition-colors" title="Add to Wishlist">
-                                <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+                            <!-- Heart Icon Wishlist Button -->
+                            <button onclick="event.stopPropagation(); toggleWishlist('${book.id}', this)" class="w-8 h-8 rounded-full bg-white ${isWishlisted ? 'text-red-500' : 'text-slate-800'} hover:bg-red-500 hover:text-white flex items-center justify-center shadow transition-colors" title="Add to Wishlist">
+                                <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between text-xs font-bold tracking-wider text-indigo-600 uppercase mb-1">
-                        <span>${book.category}</span>
-                        <span class="text-amber-400 text-xs tracking-normal">${stars}</span>
-                    </div>
-                    <h3 class="book-title-text line-clamp-2 hover:text-indigo-600 transition-colors cursor-pointer" onclick="openReader('${book.file}')" title="${book.title}">${book.title}</h3>
-                    <p class="book-meta-text mt-1">${book.author}${yearDisplay}</p>
+                    <span class="text-[11px] font-bold tracking-wider text-polyu-red uppercase block">${book.category}</span>
+                    <h3 class="book-title-text text-xs sm:text-sm line-clamp-2 hover:text-polyu-red transition-colors cursor-pointer mt-0.5" onclick="openBookOverviewModal('${book.id}')" title="${book.title}">${book.title}</h3>
+                    <p class="book-meta-text text-xs mt-0.5">${book.author}${yearDisplay}</p>
                 </div>
-                <div class="mt-4 pt-2.5 border-t border-slate-100">
-                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-1.5">
-                        <div class="bg-indigo-600 h-full rounded-full" style="width: ${book.progress}%"></div>
+
+                <div class="mt-3 pt-2 border-t border-slate-100">
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="text-amber-400 font-bold">${stars}</span>
+                        <span class="text-[11px] font-medium text-slate-400">${book.progress || 0}%</span>
                     </div>
-                    <div class="flex justify-between items-center text-xs text-slate-400">
-                        <span>${book.progress > 0 ? 'Reading' : 'Unread'}</span>
-                        <span>${book.progress}%</span>
+
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-2.5">
+                        <div class="bg-polyu-red h-full rounded-full" style="width: ${book.progress || 0}%"></div>
                     </div>
+
+                    <button onclick="openReader('${book.file}')" class="w-full py-1.5 bg-polyu-red hover:bg-polyu-redhover text-white text-xs font-bold rounded shadow transition-colors flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-book-open text-[10px]"></i>
+                        <span>Read Now</span>
+                    </button>
                 </div>
             `;
             return card;
         }
 
+        /* LIST CARD WITH HEART ICON WISHLIST */
         function createListCard(book) {
             const isWishlisted = wishlist.has(book.id);
             const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
             const yearDisplay = book.publishedYear ? ` • ${book.publishedYear}` : '';
             const card = document.createElement('div');
-            card.className = "group bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:border-indigo-300 transition-colors flex items-center justify-between gap-4";
+            card.className = "group bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:border-polyu-red/40 transition-colors flex items-center justify-between gap-4";
 
             card.innerHTML = `
                 <div class="flex items-center space-x-4 min-w-0 flex-1">
-                    <div class="relative w-16 h-24 bg-slate-100 rounded-lg overflow-hidden shrink-0">
+                    <div class="relative w-16 h-24 bg-slate-100 rounded overflow-hidden shrink-0 cursor-pointer" onclick="openReader('${book.file}')">
                         <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover" />
                     </div>
                     <div class="min-w-0 flex-1">
                         <div class="flex items-center space-x-2">
-                            <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">${book.category}</span>
-                            <span class="text-amber-400 text-xs sm:text-sm">${stars}</span>
+                            <span class="text-xs font-bold text-polyu-red tracking-wider uppercase">${book.category}</span>
+                            <span class="text-amber-400 text-xs">${stars}</span>
                         </div>
-                        <h3 class="book-title-text line-clamp-2 leading-snug hover:text-indigo-600 cursor-pointer mt-0.5" onclick="openReader('${book.file}')" title="${book.title}">${book.title}</h3>
-                        <p class="book-meta-text mt-0.5">${book.author}${yearDisplay}</p>
-                        <div class="flex items-center space-x-3 mt-2.5 max-w-xs">
+                        <h3 class="book-title-text text-sm sm:text-base line-clamp-2 leading-snug hover:text-polyu-red cursor-pointer mt-0.5" onclick="openBookOverviewModal('${book.id}')" title="${book.title}">${book.title}</h3>
+                        <p class="book-meta-text text-xs sm:text-sm mt-0.5">${book.author}${yearDisplay}</p>
+                        
+                        <div class="flex items-center space-x-3 mt-2 max-w-xs">
                             <div class="flex-1 bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                <div class="bg-indigo-600 h-full rounded-full" style="width: ${book.progress}%"></div>
+                                <div class="bg-polyu-red h-full rounded-full" style="width: ${book.progress || 0}%"></div>
                             </div>
-                            <span class="text-xs font-medium text-slate-400">${book.progress}%</span>
+                            <span class="text-[11px] font-medium text-slate-400">${book.progress || 0}%</span>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 shrink-0">
-                    <button onclick="openQuickView('${book.id}')" class="p-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" title="Quick View">
-                        <i class="fa-solid fa-eye text-sm"></i>
+                    <button onclick="openBookOverviewModal('${book.id}')" class="p-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" title="Quick Overview">
+                        <i class="fa-solid fa-eye text-xs"></i>
                     </button>
-                    <button onclick="toggleWishlist('${book.id}', this)" class="p-2.5 rounded-lg bg-slate-100 ${isWishlisted ? 'text-red-500' : 'text-slate-600'} hover:bg-red-50 hover:text-red-500 transition-colors" title="Wishlist">
-                        <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+                    <!-- Heart Icon Wishlist Button -->
+                    <button onclick="toggleWishlist('${book.id}', this)" class="p-2 rounded bg-slate-100 ${isWishlisted ? 'text-red-500' : 'text-slate-600'} hover:bg-red-50 hover:text-red-500 transition-colors" title="Add to Wishlist">
+                        <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
                     </button>
-                    <button onclick="openReader('${book.file}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-sm transition-colors">
+                    <button onclick="openReader('${book.file}')" class="px-4 py-2 bg-polyu-red hover:bg-polyu-redhover text-white rounded text-xs sm:text-sm font-bold shadow transition-colors">
                         Read
                     </button>
                 </div>
@@ -710,48 +1035,77 @@
             return card;
         }
 
-        // Layout Toggle
-        btnViewGrid.addEventListener('click', () => {
+        // View Mode Toggles
+        btnViewGrid?.addEventListener('click', () => {
             currentLayout = 'grid';
-            btnViewGrid.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all";
-            btnViewList.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all";
+            btnViewGrid.className = "px-3 py-1 rounded text-xs font-bold flex items-center space-x-1.5 bg-white text-slate-900 shadow-sm transition-all";
+            btnViewList.className = "px-3 py-1 rounded text-xs font-bold flex items-center space-x-1.5 text-slate-500 hover:text-slate-800 transition-all";
             applyFiltersAndRender();
         });
 
-        btnViewList.addEventListener('click', () => {
+        btnViewList?.addEventListener('click', () => {
             currentLayout = 'list';
-            btnViewList.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 bg-white text-slate-900 shadow-sm transition-all";
-            btnViewGrid.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 text-slate-500 hover:text-slate-800 transition-all";
+            btnViewList.className = "px-3 py-1 rounded text-xs font-bold flex items-center space-x-1.5 bg-white text-slate-900 shadow-sm transition-all";
+            btnViewGrid.className = "px-3 py-1 rounded text-xs font-bold flex items-center space-x-1.5 text-slate-500 hover:text-slate-800 transition-all";
             applyFiltersAndRender();
         });
 
-        // Quick View Modal
-        window.openQuickView = function(bookId) {
+        /* OPEN BOOK OVERVIEW MODAL WITH HEART ICON & "ADD TO WISHLIST" TEXT */
+        window.openBookOverviewModal = function(bookId) {
             const book = books.find(b => b.id === bookId);
-            if (!book) return;
+            if (!book || !modalOverview) return;
 
-            const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
-            const yearDisplay = book.publishedYear ? ` • ${book.publishedYear}` : '';
+            const coverImg = document.getElementById('modal-book-cover');
+            if (coverImg) coverImg.src = book.cover || '';
 
-            modalContent.innerHTML = `
-                <img src="${book.cover}" class="w-36 h-52 object-cover rounded-xl shadow shrink-0 mx-auto sm:mx-0" />
-                <div class="flex-1 flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">${book.category}</span>
-                        <h2 class="text-xl font-bold text-slate-900 mt-1">${book.title}</h2>
-                        <p class="text-sm text-slate-500 font-medium">By ${book.author}${yearDisplay}</p>
-                        <div class="text-amber-400 text-sm mt-1.5">${stars} <span class="text-slate-400 text-xs">(${book.rating}.0)</span></div>
-                        <p class="text-sm text-slate-600 mt-3 line-clamp-3">${book.description}</p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <button onclick="openReader('${book.file}')" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-colors flex items-center space-x-2">
-                            <i class="fa-solid fa-book-open"></i>
-                            <span>Read Book</span>
-                        </button>
-                    </div>
-                </div>
-            `;
-            modal.classList.remove('hidden');
+            document.getElementById('modal-book-title').innerText = book.title || '';
+            document.getElementById('modal-book-cn-title').innerText = book.chineseTitle || '';
+
+            let authorFormatted = book.author || '';
+            if (book.chineseAuthor) authorFormatted += ` (${book.chineseAuthor})`;
+            document.getElementById('modal-book-author').innerText = authorFormatted || '-';
+
+            document.getElementById('modal-book-publisher').innerText = book.publisher || '';
+            document.getElementById('modal-book-year').innerText = book.publishedYear || '';
+            document.getElementById('modal-book-copyright').innerText = book.copyrightStatus || 'Public Domain';
+
+            document.getElementById('modal-book-description').innerText = book.description || 'No description available for this volume.';
+
+            const readBtn = document.getElementById('modal-btn-read');
+            if (readBtn) readBtn.onclick = () => openReader(book.file);
+
+            const saveBtn = document.getElementById('modal-btn-save');
+            const saveIcon = document.getElementById('modal-btn-save-icon');
+            const saveText = document.getElementById('modal-btn-save-text');
+            
+            if (saveBtn && saveIcon && saveText) {
+                if (wishlist.has(book.id)) {
+                    saveIcon.className = "fa-solid fa-heart text-xs text-red-500";
+                    saveText.innerText = "Remove from Wishlist";
+                } else {
+                    saveIcon.className = "fa-regular fa-heart text-xs";
+                    saveText.innerText = "Add to Wishlist";
+                }
+
+                saveBtn.onclick = () => {
+                    if (wishlist.has(book.id)) {
+                        wishlist.delete(book.id);
+                        saveIcon.className = "fa-regular fa-heart text-xs";
+                        saveText.innerText = "Add to Wishlist";
+                    } else {
+                        wishlist.add(book.id);
+                        saveIcon.className = "fa-solid fa-heart text-xs text-red-500";
+                        saveText.innerText = "Remove from Wishlist";
+                    }
+                    applyFiltersAndRender();
+                };
+            }
+
+            modalOverview.classList.remove('hidden');
+        };
+
+        window.closeBookOverviewModal = function() {
+            modalOverview?.classList.add('hidden');
         };
 
         window.toggleWishlist = function(bookId, btn) {
@@ -759,13 +1113,13 @@
             if (wishlist.has(bookId)) {
                 wishlist.delete(bookId);
                 btn.classList.remove('text-red-500');
-                btn.classList.add('text-slate-700');
+                btn.classList.add('text-slate-800');
                 icon.classList.remove('fa-solid');
                 icon.classList.add('fa-regular');
             } else {
                 wishlist.add(bookId);
                 btn.classList.add('text-red-500');
-                btn.classList.remove('text-slate-700');
+                btn.classList.remove('text-slate-800');
                 icon.classList.add('fa-solid');
                 icon.classList.remove('fa-regular');
             }
@@ -775,30 +1129,28 @@
             window.location.href = `index.html?book=${encodeURIComponent(file)}`;
         };
 
-        // Modal Listeners
-        btnCloseModal.addEventListener('click', () => modal.classList.add('hidden'));
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.add('hidden');
+        modalOverview?.addEventListener('click', (e) => {
+            if (e.target === modalOverview) closeBookOverviewModal();
         });
 
-        // Event Listeners
-        searchInput.addEventListener('input', applyFiltersAndRender);
-        selectSort.addEventListener('change', applyFiltersAndRender);
-        selectEra.addEventListener('change', applyFiltersAndRender);
+        searchInput?.addEventListener('input', applyFiltersAndRender);
+        selectSort?.addEventListener('change', applyFiltersAndRender);
+        selectEra?.addEventListener('change', applyFiltersAndRender);
         document.querySelectorAll('input[name="rating-filter"]').forEach(r => r.addEventListener('change', applyFiltersAndRender));
 
         function resetAllFilters() {
-            searchInput.value = '';
-            selectSort.value = 'popular';
-            selectEra.value = 'all';
+            if (searchInput) searchInput.value = '';
+            if (selectSort) selectSort.value = 'popular';
+            if (selectEra) selectEra.value = 'all';
+
             selectedCategories.clear();
             document.querySelectorAll('input[name="category-filter"]').forEach(cb => cb.checked = false);
-            document.querySelector('input[name="rating-filter"][value="0"]').checked = true;
+            
+            const rZero = document.querySelector('input[name="rating-filter"][value="0"]');
+            if (rZero) rZero.checked = true;
+
             applyFiltersAndRender();
         }
-
-        btnResetFilters.addEventListener('click', resetAllFilters);
-        btnClearAllPills.addEventListener('click', resetAllFilters);
     </script>
 </body>
 </html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Our Team - Bridging Cultures: Translating Hong Kong Sinophone Literature</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        polyu: {
+                            red: '#9E1B32',      /* PolyU / LST Signature Crimson Red */
+                            redhover: '#821326',
+                            dark: '#1A202C',
+                            gray: '#718096',
+                            lightbg: '#F8F9FA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        :root {
+            --font-base-size: 15px;
+        }
+
+        html {
+            font-size: var(--font-base-size);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* Hide scrollbars */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-full bg-white text-slate-800 flex flex-col font-sans antialiased text-sm sm:text-base selection:bg-polyu-red selection:text-white">
+
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Left: PolyU & LST Official Branding Header -->
+            <a href="home.html" class="flex items-center space-x-3 sm:space-x-4 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <img src="https://www.polyu.edu.hk/style%20guide/files/v2.1/graphic_standards/polyu_logo/polyu_logo_color.svg" alt="The Hong Kong Polytechnic University" class="h-10 sm:h-12 w-auto object-contain" id="polyu-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/180x45?text=PolyU+Logo';" />
+                    <div class="h-8 w-[1px] bg-slate-300 hidden sm:block"></div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-xs sm:text-sm font-bold tracking-tight text-polyu-red leading-tight">Department of Language Science and Technology</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 font-medium">香港理工大學 語言科學及技術學系</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Right: Navigation Links (Desktop - Strictly One Line) -->
+            <nav class="hidden xl:flex items-center space-x-5 lg:space-x-6 text-sm font-bold text-slate-700 flex-nowrap whitespace-nowrap">
+                <a href="home.html" class="hover:text-polyu-red transition-colors">Home</a>
+                <a href="library.html" class="hover:text-polyu-red transition-colors">Translation Library</a>
+                <a href="author.html" class="hover:text-polyu-red transition-colors">Authors</a>
+                <a href="home.html#categories" class="hover:text-polyu-red transition-colors">Categories</a>
+                
+                <!-- About Us Dropdown Menu (Active Page) -->
+                <div class="relative group py-2">
+                    <a href="home.html#about" class="text-polyu-red border-b-2 border-polyu-red pb-1 block">
+                        <span>About Us</span>
+                    </a>
+                    <div class="absolute left-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        <a href="home.html#about" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-polyu-red font-semibold border-b border-slate-100">About the Project</a>
+                        <a href="team.html" class="block px-4 py-2 text-xs text-polyu-red bg-slate-50 font-bold">About the Team</a>
+                    </div>
+                </div>
+
+                <div class="h-4 w-[1px] bg-slate-300"></div>
+
+                <!-- Sign Up / Login Links -->
+                <div class="flex items-center space-x-2">
+                    <a href="reg.html" class="hover:text-polyu-red transition-colors">Sign Up</a>
+                    <span class="text-slate-300">|</span>
+                    <a href="login.html" class="hover:text-polyu-red transition-colors">Log In</a>
+                </div>
+
+                <!-- Language Switcher -->
+                <a href="?lang=zh" class="text-xs font-semibold px-2 py-1 rounded border border-slate-300 hover:bg-slate-50 transition-colors text-slate-600">繁中</a>
+            </nav>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="btn-mobile-menu" class="xl:hidden p-2 text-slate-700 hover:text-polyu-red focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown (Accordion Sub-menu) -->
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 bg-white px-8 py-6 shadow-xl">
+            <div class="max-w-xs space-y-4 font-normal text-slate-800 text-base">
+                <a href="home.html" class="block hover:text-polyu-red font-medium">Home</a>
+                <a href="library.html" class="block hover:text-polyu-red font-medium">Translation Library</a>
+                <a href="author.html" class="block hover:text-polyu-red font-medium">Authors</a>
+                <a href="home.html#categories" class="block hover:text-polyu-red font-medium">Categories</a>
+                
+                <!-- About Us Accordion Toggle -->
+                <div class="pt-1">
+                    <button id="btn-mobile-about" class="w-full text-left flex items-center justify-between font-bold text-polyu-red text-base focus:outline-none">
+                        <span>About Us</span>
+                        <i id="icon-mobile-about-arrow" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform rotate-180"></i>
+                    </button>
+                    <!-- Collapsible Sub-menu -->
+                    <div id="mobile-about-submenu" class="border-l-2 border-polyu-red/60 pl-4 mt-2 space-y-2.5">
+                        <a href="home.html#about" class="block text-slate-700 hover:text-polyu-red text-sm font-normal">About the Project</a>
+                        <a href="team.html" class="block text-polyu-red text-sm font-bold">About the Team</a>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100 my-4" />
+
+                <!-- Sign Up / Log In Line -->
+                <div class="flex items-center space-x-3 text-sm font-medium text-slate-800">
+                    <a href="reg.html" class="hover:text-polyu-red">Sign Up</a>
+                    <span class="text-slate-300 font-normal">|</span>
+                    <a href="login.html" class="hover:text-polyu-red">Log In</a>
+                </div>
+
+                <!-- Language Button Box -->
+                <div class="pt-2">
+                    <a href="?lang=zh" class="inline-block px-3 py-1.5 border border-slate-300 rounded text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors">
+                        繁體中文
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- PROJECT STRIP BANNER -->
+    <div class="bg-polyu-red text-white py-2.5 px-4 text-xs sm:text-sm font-semibold tracking-wide shadow-inner">
+        <div class="max-w-7xl mx-auto flex items-center space-x-2">
+            <span>Bridging Cultures: Translating Hong Kong Sinophone Literature (1900–1997) with Generative AI</span>
+        </div>
+    </div>
+
+    <!-- PAGE HERO / BREADCRUMB BANNER -->
+    <section class="relative bg-gradient-to-r from-slate-100 via-slate-50 to-slate-200 border-b border-slate-200 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            
+            <!-- Left: Page Title & Breadcrumbs -->
+            <div>
+                <div class="flex items-center space-x-1 text-polyu-red mb-2">
+                    <span class="inline-block w-2 h-2 bg-polyu-red rounded-none"></span>
+                    <span class="inline-block w-2 h-2 bg-polyu-red/60 rounded-none"></span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-polyu-red tracking-tight mb-2">About Us</h1>
+                <nav class="flex items-center space-x-2 text-xs sm:text-sm text-slate-500 font-medium">
+                    <a href="home.html" class="hover:text-polyu-red transition-colors">Home</a>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <span class="text-slate-800 font-semibold">About Us</span>
+                </nav>
+            </div>
+
+            <!-- Right: Back Button -->
+            <div class="flex items-center space-x-4">
+                <a href="home.html" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-polyu-red hover:bg-polyu-redhover text-white text-xs sm:text-sm font-bold rounded-full shadow-md transition-all transform hover:-translate-x-0.5">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span>Back</span>
+                </a>
+            </div>
+
+            <!-- Geometric Pattern Overlay -->
+            <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 pointer-events-none hidden md:block">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000&q=80" class="w-full h-full object-cover mix-blend-multiply" alt="Background Texture" />
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 bg-white">
+
+        <!-- SECTION TABS: "About this Project" vs "About our Team" -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
+            <div class="border-b border-slate-200 flex items-center justify-center sm:justify-start space-x-8 text-base sm:text-lg font-bold">
+                <a href="home.html#about" class="pb-3 text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors">
+                    About this Project
+                </a>
+                <a href="team.html" class="pb-3 text-slate-900 border-b-2 border-polyu-red text-polyu-red">
+                    About our Team
+                </a>
+            </div>
+
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed my-8 text-justify">
+                Our interdisciplinary research group brings together experts in Sinophone literature, corpus translation studies, language engineering, and generative AI. Led by academic faculty at the Department of Language Science and Technology at PolyU, our team works to analyze, digitize, and preserve classic Hong Kong literary titles for scholars and general readers world-wide.
+            </p>
+        </section>
+
+        <!-- TEAM & OVERVIEW CONTENT SECTION -->
+        <section class="py-10 bg-slate-50/60 border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                    
+                    <!-- Left Column: Department Description -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <span class="w-1 h-8 bg-polyu-red shrink-0 mt-1"></span>
+                            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 leading-snug">
+                                Department of Language Science and Technology
+                            </h2>
+                        </div>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed text-justify">
+                            The Department of Language Science and Technology at The Hong Kong Polytechnic University leads cutting-edge research in natural language processing, digital humanities, and translation technology. Through strategic academic grants, our faculty continues to pioneer AI-driven tools that honor local cultural nuance while adhering to global translation and archiving standards.
+                        </p>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed text-justify">
+                            Our team members oversee corpus quality, align dual-language literary texts, and construct intuitive, highly accessible e-reading platforms for educational and archival research.
+                        </p>
+                    </div>
+
+                    <!-- Right Column: Profile Cards Grid -->
+                    <div class="lg:col-span-7">
+                        
+                        <div id="team-cards-wrapper" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                            
+                            <!-- Profile 1 -->
+                            <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow text-center flex flex-col items-center">
+                                <div class="w-full aspect-[3/4] bg-slate-100 rounded overflow-hidden mb-4 border border-slate-100">
+                                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Prof. Name" class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300" />
+                                </div>
+                                <h3 class="font-bold text-polyu-red text-sm sm:text-base mb-1">Prof. Name Prof. Name</h3>
+                                <p class="text-xs text-slate-500 font-medium">Principal Investigator</p>
+                            </div>
+
+                            <!-- Profile 2 -->
+                            <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow text-center flex flex-col items-center">
+                                <div class="w-full aspect-[3/4] bg-slate-100 rounded overflow-hidden mb-4 border border-slate-100">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Prof. Name" class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300" />
+                                </div>
+                                <h3 class="font-bold text-polyu-red text-sm sm:text-base mb-1">Prof. Name Prof. Name</h3>
+                                <p class="text-xs text-slate-500 font-medium">Co-Investigator</p>
+                            </div>
+
+                            <!-- Profile 3 -->
+                            <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow text-center flex flex-col items-center">
+                                <div class="w-full aspect-[3/4] bg-slate-100 rounded overflow-hidden mb-4 border border-slate-100">
+                                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80" alt="Prof. Name" class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300" />
+                                </div>
+                                <h3 class="font-bold text-polyu-red text-sm sm:text-base mb-1">Prof. Name Prof. Name</h3>
+                                <p class="text-xs text-slate-500 font-medium">Research Fellow</p>
+                            </div>
+
+                        </div>
+
+                        <!-- Carousel Controls -->
+                        <div class="flex items-center justify-start space-x-2 mt-6">
+                            <button id="btn-team-prev" class="w-9 h-9 bg-slate-800 hover:bg-polyu-red text-white flex items-center justify-center rounded shadow transition-colors" title="Previous">
+                                <i class="fa-solid fa-arrow-left text-xs"></i>
+                            </button>
+                            <button id="btn-team-next" class="w-9 h-9 bg-slate-800 hover:bg-polyu-red text-white flex items-center justify-center rounded shadow transition-colors" title="Next">
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-[#3A3A3C] text-slate-300 py-4 text-xs border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>Copyright © 2026 Department of Language Science and Technology, The Hong Kong Polytechnic University. All Rights Reserved.</p>
+            <div class="flex items-center space-x-4 shrink-0">
+                <a href="#privacy" class="hover:underline hover:text-white">Privacy Policy</a>
+                <span>|</span>
+                <a href="#terms" class="hover:underline hover:text-white">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCROLL TO TOP BUTTON -->
+    <button id="btn-scroll-top" class="fixed bottom-6 right-6 w-9 h-9 bg-slate-500/80 hover:bg-polyu-red text-white rounded flex items-center justify-center transition-colors shadow-lg z-40">
+        <i class="fa-solid fa-arrow-up text-xs"></i>
+    </button>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            document.getElementById('btn-mobile-menu')?.addEventListener('click', () => {
+                document.getElementById('mobile-menu')?.classList.toggle('hidden');
+            });
+
+            // Mobile About Us Accordion Toggle
+            const btnMobileAbout = document.getElementById('btn-mobile-about');
+            const mobileAboutSubmenu = document.getElementById('mobile-about-submenu');
+            const iconMobileAboutArrow = document.getElementById('icon-mobile-about-arrow');
+
+            btnMobileAbout?.addEventListener('click', (e) => {
+                e.preventDefault();
+                mobileAboutSubmenu?.classList.toggle('hidden');
+                iconMobileAboutArrow?.classList.toggle('rotate-180');
+            });
+
+            // Scroll to Top
+            document.getElementById('btn-scroll-top')?.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

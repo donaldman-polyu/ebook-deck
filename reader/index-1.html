@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foliate Reader</title>
+
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --ui-bg: #f4f4f4;
+            --ui-border: #cccccc;
+            --active-item: #0066cc;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --ui-bg: #1e1e1e;
+            --ui-border: #444444;
+            --active-item: #bb86fc;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Top Toolbar */
+        #toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--ui-bg);
+            border-bottom: 1px solid var(--ui-border);
+            align-items: center;
+            flex-wrap: wrap;
+            z-index: 10;
+        }
+
+        button, input, select {
+            padding: 6px 10px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--ui-border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        button:hover, select:hover {
+            opacity: 0.85;
+        }
+
+        #main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Loading Overlay & Empty Placeholder */
+        #loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-color);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 4px solid var(--ui-border);
+            border-top: 4px solid var(--active-item);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Sidebars */
+        .sidebar {
+            width: 320px;
+            background: var(--ui-bg);
+            border-right: 1px solid var(--ui-border);
+            display: none;
+            flex-direction: column;
+            padding: 10px;
+            overflow-y: auto;
+            z-index: 5;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .sidebar li {
+            padding: 8px;
+            border-bottom: 1px solid var(--ui-border);
+            cursor: pointer;
+            font-size: 13px;
+            line-height: 1.4;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar li:hover {
+            background: var(--bg-color);
+        }
+
+        .sidebar li.active {
+            border-left-color: var(--active-item);
+            font-weight: bold;
+            background: var(--bg-color);
+            color: var(--active-item);
+        }
+
+        /* Reader Area */
+        foliate-view {
+            flex: 1;
+            height: 100%;
+            width: 100%;
+            display: block;
+        }
+
+        /* Bottom Footer */
+        #footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 8px 15px;
+            background: var(--ui-bg);
+            border-top: 1px solid var(--ui-border);
+            font-size: 13px;
+            z-index: 10;
+        }
+
+        #progress-slider {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        #page-info {
+            white-space: nowrap;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CONTROL TOOLBAR -->
+    <div id="toolbar">
+        <input type="file" id="file-input" accept=".epub" />
+        
+        <button id="btn-prev">⬅️ Prev</button>
+        <button id="btn-next">Next ➡️</button>
+
+        <button id="btn-toggle-toc">📖 TOC</button>
+
+        <!-- Layout Mode Control -->
+        <select id="select-flow">
+            <option value="paginated">Paginated</option>
+            <option value="scrolled">Scrolled Continuous</option>
+        </select>
+
+        <!-- Writing Direction Control -->
+        <select id="select-dir">
+            <option value="ltr">Horizontal (LTR)</option>
+            <option value="vertical">Vertical</option>
+        </select>
+
+        <!-- Font Controls -->
+        <button id="btn-font-dec">A-</button>
+        <span id="font-size-label">100%</span>
+        <button id="btn-font-inc">A+</button>
+
+        <!-- Theme Toggle -->
+        <button id="btn-theme">🌙 Night Mode</button>
+
+        <!-- Search Input -->
+        <input type="text" id="search-input" placeholder="Search book text..." />
+        <button id="btn-search">Search</button>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <div id="main-container">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay">
+            <div id="loading-spinner" class="spinner" style="display: none;"></div>
+            <span id="loading-text">Please select an EPUB file or pass ?book=filename.epub in URL.</span>
+        </div>
+
+        <!-- TOC Sidebar -->
+        <div id="toc-sidebar" class="sidebar">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong>Table of Contents</strong>
+                <button id="btn-close-toc" style="padding:2px 6px;">X</button>
+            </div>
+            <ul id="toc-list"></ul>
+        </div>
+
+        <!-- Search Results Sidebar -->
+        <div id="search-sidebar" class="sidebar">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong>Search Results</strong>
+                <button id="btn-close-search" style="padding:2px 6px;">X</button>
+            </div>
+            <ul id="search-results"></ul>
+        </div>
+
+        <!-- Ebook Render Component -->
+        <foliate-view id="view"></foliate-view>
+    </div>
+
+    <!-- BOTTOM PAGINATION BAR -->
+    <div id="footer">
+        <input type="range" id="progress-slider" min="0" max="1" step="0.0001" value="0" />
+        <span id="page-info">No book loaded</span>
+    </div>
+
+    <script type="module">
+        import './foliate-js/view.js';
+
+        const view = document.getElementById('view');
+        const fileInput = document.getElementById('file-input');
+        
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const loadingText = document.getElementById('loading-text');
+
+        const tocSidebar = document.getElementById('toc-sidebar');
+        const searchSidebar = document.getElementById('search-sidebar');
+        const tocList = document.getElementById('toc-list');
+        const resultsList = document.getElementById('search-results');
+
+        const selectFlow = document.getElementById('select-flow');
+        const selectDir = document.getElementById('select-dir');
+        const progressSlider = document.getElementById('progress-slider');
+        const pageInfo = document.getElementById('page-info');
+
+        let currentBook = null;
+        let currentFontSize = 100;
+        let isDarkMode = false;
+        const tocItemToElementMap = new Map();
+
+        // -------------------------------------------------------------
+        // 1. FILE & URL LOADING WITH COVER / PAGE 1 AUTO-LOAD
+        // -------------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookParam = urlParams.get('book');
+
+            if (bookParam) {
+                const bookPath = `./books/${bookParam}`;
+                loadBookFromUrl(bookPath);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) loadBook(file);
+        });
+
+        function showLoading(msg) {
+            loadingOverlay.style.display = 'flex';
+            loadingSpinner.style.display = 'block';
+            loadingText.textContent = msg || 'Loading book...';
+        }
+
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        async function loadBookFromUrl(url) {
+            showLoading(`Fetching ${url.split('/').pop()}...`);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const blob = await response.blob();
+                const file = new File([blob], url.split('/').pop(), { type: 'application/epub+zip' });
+                await loadBook(file);
+            } catch (err) {
+                console.error("URL Load Error:", err);
+                loadingSpinner.style.display = 'none';
+                loadingText.textContent = "Could not load EPUB file from URL. Check if file exists in ./books/ folder.";
+            }
+        }
+
+        async function loadBook(fileOrBlob) {
+            showLoading('Parsing EPUB data...');
+            try {
+                await view.open(fileOrBlob);
+                currentBook = view.book;
+
+                // UPDATE WINDOW TITLE
+                updateWindowTitle();
+
+                // UPDATE LAYOUT CONFIG
+                updateLayoutConfig();
+
+                // BUILD TOC
+                if (currentBook && currentBook.toc) {
+                    renderTOC(currentBook.toc);
+                }
+
+                applyStyles();
+                setupWheelListener();
+
+                // FORCE NAVIGATE TO START / COVER / PAGE 1
+                await view.goTo(0);
+
+                // HIDE LOADING OVERLAY WHEN RENDERED
+                hideLoading();
+                console.log("Book successfully loaded!");
+            } catch (err) {
+                console.error("Failed to load book:", err);
+                loadingSpinner.style.display = 'none';
+                loadingText.textContent = "Error rendering EPUB file.";
+            }
+        }
+
+        function updateWindowTitle() {
+            if (!currentBook) return;
+            
+            let title = 'EPUB Reader';
+            if (currentBook.metadata) {
+                if (typeof currentBook.metadata.title === 'string') {
+                    title = currentBook.metadata.title;
+                } else if (currentBook.metadata.title && currentBook.metadata.title.en) {
+                    title = currentBook.metadata.title.en;
+                }
+            }
+            
+            document.title = `${title} - Foliate Reader`;
+        }
+
+        // -------------------------------------------------------------
+        // 2. CONTINUOUS SCROLLING & HORIZONTAL/VERTICAL MODE
+        // -------------------------------------------------------------
+        function updateLayoutConfig() {
+            if (!view) return;
+
+            const flow = selectFlow.value;
+            const dir = selectDir.value;
+
+            view.setAttribute('flow', flow);
+            view.setAttribute('dir', dir);
+
+            if (view.renderer) {
+                view.renderer.setAttribute('flow', flow === 'scrolled' ? 'scrolled' : 'paginated');
+                view.renderer.setAttribute('writing-mode', dir === 'vertical' ? 'vertical-rl' : 'horizontal-tb');
+            }
+        }
+
+        selectFlow.addEventListener('change', updateLayoutConfig);
+        selectDir.addEventListener('change', updateLayoutConfig);
+
+        // -------------------------------------------------------------
+        // 3. MOUSE WHEEL SCROLLING IN PAGINATED MODE
+        // -------------------------------------------------------------
+        let wheelDebounce = false;
+
+        function handleWheelScroll(e) {
+            if (selectFlow.value === 'paginated') {
+                if (wheelDebounce) return;
+                
+                e.preventDefault();
+                
+                wheelDebounce = true;
+                setTimeout(() => wheelDebounce = false, 200);
+
+                if (e.deltaY > 0 || e.deltaX > 0) {
+                    view.goRight();
+                } else if (e.deltaY < 0 || e.deltaX < 0) {
+                    view.goLeft();
+                }
+            }
+        }
+
+        function setupWheelListener() {
+            window.removeEventListener('wheel', handleWheelScroll);
+            window.addEventListener('wheel', handleWheelScroll, { passive: false });
+
+            if (view.renderer && view.renderer.shadowRoot) {
+                const iframe = view.renderer.shadowRoot.querySelector('iframe');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.removeEventListener('wheel', handleWheelScroll);
+                    iframe.contentWindow.addEventListener('wheel', handleWheelScroll, { passive: false });
+                }
+            }
+        }
+
+        view.addEventListener('load', () => setupWheelListener());
+
+        // -------------------------------------------------------------
+        // 4. NAVIGATION & TOC SYNCING
+        // -------------------------------------------------------------
+        document.getElementById('btn-prev').addEventListener('click', () => view.goLeft());
+        document.getElementById('btn-next').addEventListener('click', () => view.goRight());
+
+        window.addEventListener('keydown', (e) => {
+            if (document.activeElement.tagName === 'INPUT') return;
+
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                view.goLeft();
+            } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                view.goRight();
+            }
+        });
+
+        function renderTOC(tocItems) {
+            tocList.innerHTML = '';
+            tocItemToElementMap.clear();
+
+            if (!tocItems || tocItems.length === 0) {
+                tocList.innerHTML = '<li>No Table of Contents available.</li>';
+                return;
+            }
+
+            function appendTocNodes(nodes, container) {
+                nodes.forEach(node => {
+                    const li = document.createElement('li');
+                    li.textContent = node.label ? node.label.trim() : 'Chapter';
+                    tocItemToElementMap.set(node, li);
+
+                    li.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (node.href) view.goTo(node.href);
+                    });
+
+                    container.appendChild(li);
+
+                    if (node.subitems && node.subitems.length > 0) {
+                        const nestedUl = document.createElement('ul');
+                        nestedUl.style.paddingLeft = '12px';
+                        appendTocNodes(node.subitems, nestedUl);
+                        container.appendChild(nestedUl);
+                    }
+                });
+            }
+
+            appendTocNodes(tocItems, tocList);
+        }
+
+        function syncTOC(tocItem) {
+            if (!tocItem) return;
+            tocList.querySelectorAll('li.active').forEach(el => el.classList.remove('active'));
+
+            const activeLi = tocItemToElementMap.get(tocItem);
+            if (activeLi) {
+                activeLi.classList.add('active');
+                activeLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        document.getElementById('btn-toggle-toc').addEventListener('click', () => {
+            searchSidebar.style.display = 'none';
+            tocSidebar.style.display = tocSidebar.style.display === 'flex' ? 'none' : 'flex';
+        });
+        document.getElementById('btn-close-toc').addEventListener('click', () => tocSidebar.style.display = 'none');
+
+        // -------------------------------------------------------------
+        // 5. RELOCATE EVENTS & PAGINATION
+        // -------------------------------------------------------------
+        view.addEventListener('relocate', (e) => {
+            const { detail } = e;
+            const { fraction, location, total, tocItem } = detail;
+
+            if (tocItem) syncTOC(tocItem);
+
+            if (fraction !== undefined) progressSlider.value = fraction;
+
+            const current = location?.current ?? 0;
+            const totalPages = total ?? 0;
+            const pct = Math.round((fraction || 0) * 100);
+
+            if (totalPages > 0) {
+                pageInfo.textContent = `Page ${current} / ${totalPages} (${pct}%)`;
+            } else {
+                pageInfo.textContent = `${pct}%`;
+            }
+        });
+
+        progressSlider.addEventListener('change', (e) => {
+            const fraction = parseFloat(e.target.value);
+            if (view) view.goToFraction(fraction);
+        });
+
+        // -------------------------------------------------------------
+        // 6. FONT & NIGHT MODE
+        // -------------------------------------------------------------
+        function applyStyles() {
+            if (!view) return;
+
+            const themeCSS = `
+                body {
+                    font-size: ${currentFontSize}% !important;
+                    background-color: ${isDarkMode ? '#121212' : '#ffffff'} !important;
+                    color: ${isDarkMode ? '#e0e0e0' : '#333333'} !important;
+                }
+                a {
+                    color: ${isDarkMode ? '#bb86fc' : '#0066cc'} !important;
+                }
+            `;
+
+            if (view.renderer && view.renderer.setStyles) {
+                view.renderer.setStyles(themeCSS);
+            }
+        }
+
+        document.getElementById('btn-font-inc').addEventListener('click', () => {
+            currentFontSize += 10;
+            document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
+            applyStyles();
+        });
+
+        document.getElementById('btn-font-dec').addEventListener('click', () => {
+            if (currentFontSize > 50) {
+                currentFontSize -= 10;
+                document.getElementById('font-size-label').textContent = `${currentFontSize}%`;
+                applyStyles();
+            }
+        });
+
+        const themeBtn = document.getElementById('btn-theme');
+        themeBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            themeBtn.textContent = isDarkMode ? '☀️ Day Mode' : '🌙 Night Mode';
+            applyStyles();
+        });
+
+        // -------------------------------------------------------------
+        // 7. FULL-TEXT SEARCH
+        // -------------------------------------------------------------
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('btn-search');
+
+        searchBtn.addEventListener('click', async () => {
+            const query = searchInput.value.trim();
+            if (!query || !currentBook) return;
+
+            tocSidebar.style.display = 'none';
+            resultsList.innerHTML = '<li>Searching book...</li>';
+            searchSidebar.style.display = 'flex';
+
+            try {
+                resultsList.innerHTML = '';
+                let matchCount = 0;
+
+                if (typeof currentBook.search === 'function') {
+                    const searchIter = currentBook.search(query);
+
+                    for await (const sectionResult of searchIter) {
+                        const subitems = sectionResult.subitems || sectionResult.results || [];
+                        
+                        for (const item of subitems) {
+                            matchCount++;
+                            const li = document.createElement('li');
+                            const excerpt = item.excerpt || item.text || item.snippet || query;
+                            
+                            li.innerHTML = `<strong>Match:</strong> ...${excerpt}...`;
+
+                            li.addEventListener('click', () => {
+                                if (item.cfi) {
+                                    view.goTo(item.cfi);
+                                } else if (item.href) {
+                                    view.goTo(item.href);
+                                }
+                            });
+
+                            resultsList.appendChild(li);
+                        }
+                    }
+                }
+
+                if (matchCount === 0) {
+                    resultsList.innerHTML = '<li>No matches found for search query.</li>';
+                }
+            } catch (err) {
+                console.error("Search failed:", err);
+                resultsList.innerHTML = '<li>Error executing search. Check console.</li>';
+            }
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') searchBtn.click();
+        });
+
+        document.getElementById('btn-close-search').addEventListener('click', () => searchSidebar.style.display = 'none');
+    </script>
+</body>
+</html>
