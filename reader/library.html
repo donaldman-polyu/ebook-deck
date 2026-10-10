@@ -106,7 +106,7 @@
 
     <!-- TOP NAVIGATION HEADER -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-2 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
             <!-- Left: PolyU & LST Official Branding Header (Responsive Scaled) -->
             <div class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 max-w-[calc(100%-3rem)] xl:max-w-none">
@@ -122,7 +122,7 @@
                 </a>
             </div>
 
-            <!-- Right: Navigation Links (Desktop) -->
+            <!-- Right: Navigation Links (Desktop - Strictly One Line) -->
             <nav class="hidden xl:flex items-center space-x-5 lg:space-x-6 text-sm font-bold text-slate-700 flex-nowrap whitespace-nowrap">
                 <a href="home.html" class="hover:text-polyu-red transition-colors">Home</a>
                 <a href="library.html" class="text-polyu-red border-b-2 border-polyu-red pb-1">Translation Library</a>
@@ -153,18 +153,18 @@
                 <a href="?lang=zh" class="text-xs font-semibold px-2 py-1 rounded border border-slate-300 hover:bg-slate-50 transition-colors text-slate-600">繁中</a>
             </nav>
 
-            <!-- Mobile Menu Toggle Button (Strictly Constrained) -->
-            <button id="btn-mobile-menu" class="xl:hidden p-2 text-slate-700 hover:text-polyu-red focus:outline-none shrink-0">
-                <i class="fa-solid fa-bars text-xl sm:text-2xl"></i>
+            <!-- Mobile Menu Toggle Button -->
+            <button id="btn-mobile-menu" class="xl:hidden p-2 text-slate-700 hover:text-polyu-red focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
             </button>
         </div>
 
-        <!-- Mobile Navigation Menu Dropdown -->
-        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 bg-white px-6 py-5 shadow-xl">
+        <!-- Mobile Navigation Menu Dropdown (Accordion Sub-menu) -->
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 bg-white px-8 py-6 shadow-xl">
             <div class="max-w-xs space-y-4 font-normal text-slate-800 text-base">
                 <a href="home.html" class="block hover:text-polyu-red font-medium">Home</a>
-                <a href="library.html" class="block text-polyu-red font-bold text-lg">Translation Library</a>
-                <a href="author.html" class="block hover:text-polyu-red font-medium">Authors</a>
+                <a href="library.html" class="block hover:text-polyu-red font-medium">Translation Library</a>
+                <a href="author.html" class="block text-polyu-red font-bold text-lg">Authors</a>
                 <a href="home.html#categories" class="block hover:text-polyu-red font-medium">Categories</a>
                 
                 <!-- About Us Accordion Toggle -->
