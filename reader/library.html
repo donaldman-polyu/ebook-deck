@@ -108,21 +108,19 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Left: PolyU & LST Official Branding Header (Responsive Scaled) -->
-            <div class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 max-w-[calc(100%-3rem)] xl:max-w-none">
-                <!-- PolyU Main Logo -->
-                <a href = "https://www.polyu.edu.hk">
-                <img src="https://www.polyu.edu.hk/assets/img/main-logo-3x.png" alt="The Hong Kong Polytechnic University" class="h-8 sm:h-10 md:h-12 w-auto object-contain shrink-0" id="polyu-logo" />
-                </a>
-                <div class="h-6 sm:h-8 w-[1px] bg-slate-300 shrink-0"></div>
-                
-                <!-- LST Department Logo -->
-                <a href="https://www.polyu.edu.hk/lst">
-                <img src="https://www.polyu.edu.hk/lst/-/media/department/lst/setting/lst-logo.png" alt="Department of Language Science and Technology" class="h-7 sm:h-9 md:h-11 w-auto object-contain shrink min-w-0" id="lst-logo" />
-                </a>
-            </div>
+            <!-- Left: PolyU & LST Official Branding Header -->
+            <a href="home.html" class="flex items-center space-x-3 sm:space-x-4 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <img src="https://www.polyu.edu.hk/style%20guide/files/v2.1/graphic_standards/polyu_logo/polyu_logo_color.svg" alt="The Hong Kong Polytechnic University" class="h-10 sm:h-12 w-auto object-contain" id="polyu-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/180x45?text=PolyU+Logo';" />
+                    <div class="h-8 w-[1px] bg-slate-300 hidden sm:block"></div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-xs sm:text-sm font-bold tracking-tight text-polyu-red leading-tight">Department of Language Science and Technology</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 font-medium">香港理工大學 語言科學及技術學系</span>
+                    </div>
+                </div>
+            </a>
 
-            <!-- Right: Navigation Links (Desktop - Strictly One Line) -->
+            <!-- Right: Navigation Links (Desktop) -->
             <nav class="hidden xl:flex items-center space-x-5 lg:space-x-6 text-sm font-bold text-slate-700 flex-nowrap whitespace-nowrap">
                 <a href="home.html" class="hover:text-polyu-red transition-colors">Home</a>
                 <a href="library.html" class="text-polyu-red border-b-2 border-polyu-red pb-1">Translation Library</a>
@@ -159,12 +157,12 @@
             </button>
         </div>
 
-        <!-- Mobile Navigation Menu Dropdown (Accordion Sub-menu) -->
+        <!-- Mobile Navigation Menu Dropdown -->
         <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 bg-white px-8 py-6 shadow-xl">
             <div class="max-w-xs space-y-4 font-normal text-slate-800 text-base">
                 <a href="home.html" class="block hover:text-polyu-red font-medium">Home</a>
-                <a href="library.html" class="block hover:text-polyu-red font-medium">Translation Library</a>
-                <a href="author.html" class="block text-polyu-red font-bold text-lg">Authors</a>
+                <a href="library.html" class="block text-polyu-red font-bold text-lg">Translation Library</a>
+                <a href="author.html" class="block hover:text-polyu-red font-medium">Authors</a>
                 <a href="home.html#categories" class="block hover:text-polyu-red font-medium">Categories</a>
                 
                 <!-- About Us Accordion Toggle -->
@@ -480,7 +478,7 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
+                        <!-- Action Buttons (Using Heart Icon & "Add to Wishlist" Text) -->
                         <div class="pt-2 flex items-center space-x-3">
                             <button id="modal-btn-read" onclick="" class="px-6 py-2.5 bg-polyu-red hover:bg-polyu-redhover text-white font-bold text-xs sm:text-sm rounded shadow transition-colors inline-flex items-center space-x-2">
                                 <i class="fa-solid fa-book-open text-xs"></i>
